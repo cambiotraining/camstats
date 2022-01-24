@@ -1,0 +1,12 @@
+book_filename: "Cambio bookdown template"
+new_session: true
+delete_merged_file: true
+
+rmd_files: [
+  "index.Rmd",
+  "example_chapter.Rmd,"
+]
+
+language:
+  ui:
+    chapter_name: "Chapter "
