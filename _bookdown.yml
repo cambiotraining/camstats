@@ -5,9 +5,9 @@ delete_merged_file: true
 rmd_files: [
   "index.Rmd",
 
-  "glm-intro.Rmd",
-  "glm-practical-logistic-binary.Rmd",
-  "resampling-intro.Rmd",
+  #"glm-intro.Rmd",
+  #"glm-practical-logistic-binary.Rmd",
+  #"resampling-intro.Rmd",
   "resampling-practical-single.Rmd",
 ]
 

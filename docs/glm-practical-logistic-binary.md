@@ -186,7 +186,7 @@ library(tidymodels)
 ## x yardstick::spec()   masks readr::spec()
 ## x recipes::step()     masks stats::step()
 ## x infer::t_test()     masks rstatix::t_test()
-## • Use suppressPackageStartupMessages() to eliminate package startup messages
+## • Learn how to get started at https://www.tidymodels.org/start/
 ```
 
 ```r

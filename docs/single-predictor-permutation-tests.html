@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 5 Single predictor permutation tests | CamStats</title>
+<title>Chapter 2 Single predictor permutation tests | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="5.1 Objectives  Questions Objectives   5.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
+<meta name="description" content="2.1 Objectives  Questions Objectives   2.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
 <meta name="generator" content="bookdown 0.24 with bs4_book()">
-<meta property="og:title" content="Chapter 5 Single predictor permutation tests | CamStats">
+<meta property="og:title" content="Chapter 2 Single predictor permutation tests | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="5.1 Objectives  Questions Objectives   5.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
+<meta property="og:description" content="2.1 Objectives  Questions Objectives   2.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 5 Single predictor permutation tests | CamStats">
-<meta name="twitter:description" content="5.1 Objectives  Questions Objectives   5.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
+<meta name="twitter:title" content="Chapter 2 Single predictor permutation tests | CamStats">
+<meta name="twitter:description" content="2.1 Objectives  Questions Objectives   2.2 Purpose and aim If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -22,7 +22,8 @@
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
-<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
 </head>
 <body class="campl-theme-2" data-spy="scroll" data-target="#toc">
 
@@ -340,12 +341,7 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li class="book-part">Generalised linear models</li>
-<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
-<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
-<li class="book-part">Resampling techniques</li>
-<li><a class="" href="resampling-intro.html"><span class="header-section-number">4</span> Introduction</a></li>
-<li><a class="active" href="single-predictor-permutation-tests.html"><span class="header-section-number">5</span> Single predictor permutation tests</a></li>
+<li><a class="active" href="single-predictor-permutation-tests.html"><span class="header-section-number">2</span> Single predictor permutation tests</a></li>
 </ul>
 
         <div class="book-extra">
@@ -353,13 +349,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="single-predictor-permutation-tests" class="section level1" number="5">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="single-predictor-permutation-tests" class="section level1" number="2">
 <h1>
-<span class="header-section-number">5</span> Single predictor permutation tests<a class="anchor" aria-label="anchor" href="#single-predictor-permutation-tests"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2</span> Single predictor permutation tests<a class="anchor" aria-label="anchor" href="#single-predictor-permutation-tests"><i class="fas fa-link"></i></a>
 </h1>
-<div id="objectives-3" class="section level2" number="5.1">
+<div id="objectives" class="section level2" number="2.1">
 <h2>
-<span class="header-section-number">5.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives"><i class="fas fa-link"></i></a>
 </h2>
 <div class="objectives">
 <p><strong>Questions</strong></p>
@@ -372,35 +368,106 @@
 </ul>
 </div>
 </div>
-<div id="purpose-and-aim" class="section level2" number="5.2">
+<div id="purpose-and-aim" class="section level2" number="2.2">
 <h2>
-<span class="header-section-number">5.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim"><i class="fas fa-link"></i></a>
 </h2>
 <p>If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a two-sample permutation test procedure is appropriate. It is also appropriate even if the assumptions of a t-test are met, but in that case, it would be easier to just do the damn t-test.</p>
 <p>One of the additional benefits of permutation test is that we aren’t just restricted to testing hypotheses about the means of the two groups. We can test hypotheses about absolutely anything we want! So, we could see if the ranges of the two groups differed significantly etc.</p>
 </div>
-<div id="data-and-hypotheses" class="section level2" number="5.3">
+<div id="data-and-hypotheses" class="section level2" number="2.3">
 <h2>
-<span class="header-section-number">5.3</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s consider an experimental dataset where we have measured the weights of two groups of 12 female mice (so 24 mice in total). One group of mice was given a perfectly normal diet (control) and the other group of mice was given a high fat diet for several months. We want to test whether there is any difference in the mean weight of the two groups. We still need to specify the hypotheses:</p>
-<p><span class="math inline">\(H_0\)</span>: there is no difference in the means of the two groups
-<span class="math inline">\(H_1\)</span>: there is a difference in the means of the two groups</p>
+<p><span class="math inline">\(H_0\)</span>: there is no difference in the means of the two groups</p>
+<p><span class="math inline">\(H_1\)</span>: there is a difference in the means of the two groups</p>
+<div id="load-the-data" class="section level3 panelset" number="2.3.1">
+<h3>
+<span class="header-section-number">2.3.1</span> Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>First we load the data, then we visualise it.</p>
+<div id="tidyverse" class="section level4 unnumbered">
+<h4>tidyverse<a class="anchor" aria-label="anchor" href="#tidyverse"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load the data</span>
+<span class="va">miceWeight</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/AS2-FemaleMiceWeights.csv"</span><span class="op">)</span>
+
+<span class="co"># view the data</span>
+<span class="va">miceWeight</span></code></pre></div>
+<pre><code>## # A tibble: 24 × 2
+##    Diet    Bodyweight
+##    &lt;chr&gt;        &lt;dbl&gt;
+##  1 control       21.5
+##  2 control       28.1
+##  3 control       24.0
+##  4 control       23.4
+##  5 control       23.7
+##  6 control       19.8
+##  7 control       28.4
+##  8 control       21.0
+##  9 control       22.5
+## 10 control       20.1
+## # … with 14 more rows</code></pre>
 </div>
-<div id="load-the-data-1" class="section level2" number="5.4">
-<h2>
-<span class="header-section-number">5.4</span> Load the data<a class="anchor" aria-label="anchor" href="#load-the-data-1"><i class="fas fa-link"></i></a>
-</h2>
-<p>First we load the data, then we visualise it. If needed, load the tidyverse package using:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></code></pre></div>
+<div id="base-r" class="section level4 unnumbered">
+<h4>base R<a class="anchor" aria-label="anchor" href="#base-r"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load the data</span>
+<span class="va">miceWeight</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/AS2-FemaleMiceWeights.csv"</span><span class="op">)</span>
+
+<span class="co"># view the data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">miceWeight</span><span class="op">)</span></code></pre></div>
+<pre><code>##      Diet Bodyweight
+## 1 control      21.51
+## 2 control      28.14
+## 3 control      24.04
+## 4 control      23.45
+## 5 control      23.68
+## 6 control      19.79</code></pre>
 </div>
-<div id="exercise-1" class="section level2" number="5.5">
+<div id="python" class="section level4 unnumbered">
+<h4>Python<a class="anchor" aria-label="anchor" href="#python"><i class="fas fa-link"></i></a>
+</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="single-predictor-permutation-tests.html#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-2"><a href="single-predictor-permutation-tests.html#cb5-2" aria-hidden="true" tabindex="-1"></a>miceWeight <span class="op">=</span> pd.read_csv(<span class="st">"data/AS2-FemaleMiceWeights.csv"</span>)</span></code></pre></div>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">mtcars</span></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">mtcars</span><span class="op">)</span></code></pre></div>
+<pre><code>##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
+## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
+## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
+## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
+## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
+## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
+## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1</code></pre>
+</div>
+<div class="panel">
+<p><span class="panel-name">anscombe</span></p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">anscombe</span><span class="op">)</span></code></pre></div>
+<pre><code>##   x1 x2 x3 x4   y1   y2    y3   y4
+## 1 10 10 10  8 8.04 9.14  7.46 6.58
+## 2  8  8  8  8 6.95 8.14  6.77 5.76
+## 3 13 13 13  8 7.58 8.74 12.74 7.71
+## 4  9  9  9  8 8.81 8.77  7.11 8.84
+## 5 11 11 11  8 8.33 9.26  7.81 8.47
+## 6 14 14 14  8 9.96 8.10  8.84 7.04</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="exercise" class="section level2" number="2.4">
 <h2>
-<span class="header-section-number">5.5</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.4</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-2" class="exercise"><strong>Exercise 5.1  </strong></span>We can add exercises</p>
+<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>We can add exercises</p>
 <details><summary>
 Answer
 </summary>
@@ -408,9 +475,9 @@ With answers
 </details>
 </div>
 </div>
-<div id="key-points-1" class="section level2" number="5.6">
+<div id="key-points" class="section level2" number="2.5">
 <h2>
-<span class="header-section-number">5.6</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <p>Adding key points</p>
@@ -419,18 +486,19 @@ With answers
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="resampling-intro.html"><span class="header-section-number">4</span> Introduction</a></div>
+<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
 <div class="empty"></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#single-predictor-permutation-tests"><span class="header-section-number">5</span> Single predictor permutation tests</a></li>
-<li><a class="nav-link" href="#objectives-3"><span class="header-section-number">5.1</span> Objectives</a></li>
-<li><a class="nav-link" href="#purpose-and-aim"><span class="header-section-number">5.2</span> Purpose and aim</a></li>
-<li><a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">5.3</span> Data and hypotheses</a></li>
-<li><a class="nav-link" href="#load-the-data-1"><span class="header-section-number">5.4</span> Load the data</a></li>
-<li><a class="nav-link" href="#exercise-1"><span class="header-section-number">5.5</span> Exercise</a></li>
-<li><a class="nav-link" href="#key-points-1"><span class="header-section-number">5.6</span> Key points</a></li>
+<li><a class="nav-link" href="#single-predictor-permutation-tests"><span class="header-section-number">2</span> Single predictor permutation tests</a></li>
+<li><a class="nav-link" href="#objectives"><span class="header-section-number">2.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#purpose-and-aim"><span class="header-section-number">2.2</span> Purpose and aim</a></li>
+<li>
+<a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">2.3</span> Data and hypotheses</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#load-the-data"><span class="header-section-number">2.3.1</span> Load the data</a></li></ul>
+</li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">2.4</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">2.5</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">

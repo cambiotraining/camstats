@@ -3,6 +3,11 @@
 source(file = "setup.R")
 ```
 
+```{r panel-setup, include = FALSE}
+xaringanExtra::use_panelset()
+xaringanExtra::style_panelset(font_family = "inherit")
+```
+
 # Single predictor permutation tests
 
 ## Objectives
@@ -26,14 +31,60 @@ One of the additional benefits of permutation test is that we aren’t just rest
 Let’s consider an experimental dataset where we have measured the weights of two groups of 12 female mice (so 24 mice in total). One group of mice was given a perfectly normal diet (control) and the other group of mice was given a high fat diet for several months. We want to test whether there is any difference in the mean weight of the two groups. We still need to specify the hypotheses:
 
 $H_0$: there is no difference in the means of the two groups
+
 $H_1$: there is a difference in the means of the two groups
 
-## Load the data
-First we load the data, then we visualise it. If needed, load the tidyverse package using:
+### Load the data {.panelset}
+First we load the data, then we visualise it.
 
-```{r, eval=FALSE}
-library(tidyverse)
+#### tidyverse {.unnumbered}
+
+```{r, message=FALSE}
+# load the data
+miceWeight <- read_csv("data/AS2-FemaleMiceWeights.csv")
+
+# view the data
+miceWeight
 ```
+
+#### base R {.unnumbered}
+
+```{r}
+# load the data
+miceWeight <- read.csv("data/AS2-FemaleMiceWeights.csv")
+
+# view the data
+head(miceWeight)
+```
+
+#### Python {.unnumbered}
+
+```{r, include=FALSE}
+library(reticulate)
+```
+
+```{python}
+import pandas as pd
+miceWeight = pd.read_csv("data/AS2-FemaleMiceWeights.csv")
+```
+
+::::: {.panelset}
+
+::: {.panel}
+[mtcars]{.panel-name}
+```{r}
+head(mtcars)
+```
+:::
+
+::: {.panel}
+[anscombe]{.panel-name}
+```{r}
+head(anscombe)
+```
+:::
+
+::::
 
 ## Exercise
 :::exercise
