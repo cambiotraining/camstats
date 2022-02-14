@@ -90,46 +90,6 @@ import pandas as pd
 miceWeight = pd.read_csv("data/AS2-FemaleMiceWeights.csv")
 ```
 
-::::: {.panelset}
-
-::: {.panel}
-[mtcars]{.panel-name}
-
-```r
-head(mtcars)
-```
-
-```
-##                    mpg cyl disp  hp drat    wt  qsec vs am gear carb
-## Mazda RX4         21.0   6  160 110 3.90 2.620 16.46  0  1    4    4
-## Mazda RX4 Wag     21.0   6  160 110 3.90 2.875 17.02  0  1    4    4
-## Datsun 710        22.8   4  108  93 3.85 2.320 18.61  1  1    4    1
-## Hornet 4 Drive    21.4   6  258 110 3.08 3.215 19.44  1  0    3    1
-## Hornet Sportabout 18.7   8  360 175 3.15 3.440 17.02  0  0    3    2
-## Valiant           18.1   6  225 105 2.76 3.460 20.22  1  0    3    1
-```
-:::
-
-::: {.panel}
-[anscombe]{.panel-name}
-
-```r
-head(anscombe)
-```
-
-```
-##   x1 x2 x3 x4   y1   y2    y3   y4
-## 1 10 10 10  8 8.04 9.14  7.46 6.58
-## 2  8  8  8  8 6.95 8.14  6.77 5.76
-## 3 13 13 13  8 7.58 8.74 12.74 7.71
-## 4  9  9  9  8 8.81 8.77  7.11 8.84
-## 5 11 11 11  8 8.33 9.26  7.81 8.47
-## 6 14 14 14  8 9.96 8.10  8.84 7.04
-```
-:::
-
-::::
-
 ## Exercise
 :::exercise
 We can add exercises

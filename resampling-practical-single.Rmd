@@ -68,24 +68,6 @@ import pandas as pd
 miceWeight = pd.read_csv("data/AS2-FemaleMiceWeights.csv")
 ```
 
-::::: {.panelset}
-
-::: {.panel}
-[mtcars]{.panel-name}
-```{r}
-head(mtcars)
-```
-:::
-
-::: {.panel}
-[anscombe]{.panel-name}
-```{r}
-head(anscombe)
-```
-:::
-
-::::
-
 ## Exercise
 :::exercise
 We can add exercises
