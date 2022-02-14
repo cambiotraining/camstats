@@ -1,4 +1,4 @@
-book_filename: "More statistics in R"
+book_filename: "CamStats"
 new_session: true
 delete_merged_file: true
 
@@ -7,6 +7,8 @@ rmd_files: [
 
   "glm-intro.Rmd",
   "glm-practical-logistic-binary.Rmd",
+  "resampling-intro.Rmd",
+  "resampling-practical-single.Rmd",
 ]
 
 language:

@@ -3,8 +3,6 @@
 source(file = "setup.R")
 ```
 
-# (PART) Generalised linear models (Practicals) {.unnumbered}
-
 # Logistic Models – Binary Response
 
 ## Objectives

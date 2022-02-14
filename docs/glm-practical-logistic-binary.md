@@ -1,7 +1,5 @@
 
 
-# (PART) Generalised linear models (Practicals) {.unnumbered}
-
 # Logistic Models – Binary Response
 
 ## Objectives
