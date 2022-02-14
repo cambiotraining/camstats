@@ -1,2 +1,2 @@
-# morestats-in-r
-Additional statistics sessions
+# StatsChats series
+Additional statistics sessions. Under heavy development.

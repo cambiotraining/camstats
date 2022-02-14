@@ -3,15 +3,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 3 Logistic Models – Binary Response | More Statistics in R</title>
-<meta name="author" content="Martin van Rongen Matt Castle">
+<title>Chapter 3 Logistic Models – Binary Response | CamStats</title>
+<meta name="author" content="Martin van Rongen and Matt Castle">
 <meta name="description" content="3.1 Objectives  Questions Objectives   3.2 Data This section uses the following dataset: data/MS1-Diabetes.csv This is a dataset comprising 768 observations of three variables (one dependent and...">
 <meta name="generator" content="bookdown 0.24 with bs4_book()">
-<meta property="og:title" content="Chapter 3 Logistic Models – Binary Response | More Statistics in R">
+<meta property="og:title" content="Chapter 3 Logistic Models – Binary Response | CamStats">
 <meta property="og:type" content="book">
 <meta property="og:description" content="3.1 Objectives  Questions Objectives   3.2 Data This section uses the following dataset: data/MS1-Diabetes.csv This is a dataset comprising 768 observations of three variables (one dependent and...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 3 Logistic Models – Binary Response | More Statistics in R">
+<meta name="twitter:title" content="Chapter 3 Logistic Models – Binary Response | CamStats">
 <meta name="twitter:description" content="3.1 Objectives  Questions Objectives   3.2 Data This section uses the following dataset: data/MS1-Diabetes.csv This is a dataset comprising 768 observations of three variables (one dependent and...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
@@ -20,8 +20,8 @@
 <link rel="stylesheet" href="stylesheets/styleguide.css">
 <link rel="stylesheet" href="stylesheets/style.css">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<link href="libs/bootstrap-4.5.3/bootstrap.min.css" rel="stylesheet">
-<script src="libs/bootstrap-4.5.3/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.2.4/tabs.js"></script><script src="libs/bs3compat-0.2.4/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
 </head>
 <body class="campl-theme-2" data-spy="scroll" data-target="#toc">
@@ -277,7 +277,7 @@
 								<a href="">Training Materials</a>
 							</li>
 							<li>
-								<a href="index.html">More Statistics in R
+								<a href="index.html">CamStats
 							</a>
 </li>
 						</ul>
@@ -313,7 +313,7 @@
 		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
 			<div class="campl-column12">
 				<div class="campl-content-container">
-					<p class="campl-sub-title">More Statistics in R</p>
+					<p class="campl-sub-title">CamStats</p>
 				</div>
 			</div>
 		</div>
@@ -340,9 +340,9 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li class="book-part">MoreStats 1: Generalised linear models</li>
-<li><a class="" href="ms1-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
-<li class="book-part">MoreStats 1 (Practicals)</li>
+<li class="book-part">Generalised linear models</li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li class="book-part">Generalised linear models (Practicals)</li>
 <li><a class="active" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
 </ul>
 
@@ -387,27 +387,20 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidyverse.tidyverse.org">tidyverse</a></span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diabetes</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/MS1-Diabetes.csv"</span><span class="op">)</span></code></pre></div>
-<pre><code>## Rows: 728 Columns: 3</code></pre>
-<pre><code>## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## dbl (3): glucose, diastolic, test</code></pre>
-<pre><code>## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <p>We can plot the data:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diabetes</span> <span class="op">%&gt;%</span> 
   <span class="fu">mutate</span><span class="op">(</span>test <span class="op">=</span> <span class="fu">as_factor</span><span class="op">(</span><span class="va">test</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">test</span>, y <span class="op">=</span> <span class="va">glucose</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="ms1-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
+<div class="inline-figure"><img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
 <p>It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.</p>
 <p>We can visualise that differently by plotting all the data points as a classic binary response plot:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">diabetes</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">glucose</span>, y <span class="op">=</span> <span class="va">test</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="ms1-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
+<div class="inline-figure"><img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
 </div>
 <div id="construct-a-logistic-model" class="section level2" number="3.4">
 <h2>
@@ -417,13 +410,14 @@
 <div class="note">
 <p>Important: if you forget to include the family argument then the <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> function just performs an ordinary linear model fit (same as the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function)</p>
 </div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<p>Right, let’s construct the model:</p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">glm_diabetes</span> <span class="op">&lt;-</span> <span class="va">diabetes</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">test</span> <span class="op">~</span> <span class="va">glucose</span>,
       family <span class="op">=</span> <span class="va">binomial</span>,
       data <span class="op">=</span> <span class="va">.</span><span class="op">)</span></code></pre></div>
 <p>When we summarise the output of the model, we get the following information:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">glm_diabetes</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -474,9 +468,66 @@ It’s important to realise that these two things can be independent of each oth
 <li><p>As we found in the previous practical the AIC value is meaningless by itself, but it will allow us to compare this model to another model with different terms (with the model with the smaller AIC value being the better fitting model).</p></li>
 </ul>
 </div>
-<div id="exercise" class="section level2" number="3.5">
+<div id="assessing-significance" class="section level2" number="3.5">
 <h2>
-<span class="header-section-number">3.5</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.5</span> Assessing significance<a class="anchor" aria-label="anchor" href="#assessing-significance"><i class="fas fa-link"></i></a>
+</h2>
+<p>First, we’ll look at whether the model is “well specified” overall. Roughly speaking “well specified” just means that our model can predict our dataset pretty well.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">glm_diabetes</span> <span class="op">%&gt;%</span> 
+  <span class="co">#augment()</span>
+  <span class="fu">glance</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">deviance</span>, <span class="va">df.residual</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co">#pchisq(x = .[1], df = .[2]) %&gt;% </span>
+  <span class="fu">chisq_test</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 6
+##       n statistic     p    df method          p.signif
+## * &lt;int&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;           &lt;chr&gt;   
+## 1     2     0.464 0.496     1 Chi-square test ns</code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co">#install.packages("tidymodels")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></code></pre></div>
+<pre><code>## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──</code></pre>
+<pre><code>## ✓ dials        0.0.10     ✓ rsample      0.1.1 
+## ✓ infer        1.0.0      ✓ tune         0.1.6 
+## ✓ modeldata    0.1.1      ✓ workflows    0.2.4 
+## ✓ parsnip      0.1.7      ✓ workflowsets 0.1.0 
+## ✓ recipes      0.1.17     ✓ yardstick    0.0.9</code></pre>
+<pre><code>## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x infer::chisq_test() masks rstatix::chisq_test()
+## x scales::discard()   masks purrr::discard()
+## x rstatix::filter()   masks dplyr::filter(), stats::filter()
+## x recipes::fixed()    masks stringr::fixed()
+## x dials::get_n()      masks rstatix::get_n()
+## x dplyr::lag()        masks stats::lag()
+## x infer::prop_test()  masks rstatix::prop_test()
+## x yardstick::spec()   masks readr::spec()
+## x recipes::step()     masks stats::step()
+## x infer::t_test()     masks rstatix::t_test()
+## • Use suppressPackageStartupMessages() to eliminate package startup messages</code></pre>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://glmnet.stanford.edu">glmnet</a></span><span class="op">)</span></code></pre></div>
+<pre><code>## Loading required package: Matrix</code></pre>
+<pre><code>## 
+## Attaching package: 'Matrix'</code></pre>
+<pre><code>## The following objects are masked from 'package:tidyr':
+## 
+##     expand, pack, unpack</code></pre>
+<pre><code>## Loaded glmnet 4.1-3</code></pre>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq</a></span><span class="op">(</span><span class="fl">752.2</span>,<span class="fl">726</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.757072</code></pre>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq</a></span><span class="op">(</span><span class="fl">752.2</span>,<span class="fl">726</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.242928</code></pre>
+</div>
+<div id="exercise" class="section level2" number="3.6">
+<h2>
+<span class="header-section-number">3.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
 <p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 3.1  </strong></span>We can add exercises</p>
@@ -487,9 +538,9 @@ With answers
 </details>
 </div>
 </div>
-<div id="key-points" class="section level2" number="3.6">
+<div id="key-points" class="section level2" number="3.7">
 <h2>
-<span class="header-section-number">3.6</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
+<span class="header-section-number">3.7</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <p>Adding key points</p>
@@ -498,7 +549,7 @@ With answers
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="ms1-intro.html"><span class="header-section-number">2</span> Introduction</a></div>
+<div class="prev"><a href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></div>
 <div class="empty"></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
@@ -508,8 +559,9 @@ With answers
 <li><a class="nav-link" href="#data"><span class="header-section-number">3.2</span> Data</a></li>
 <li><a class="nav-link" href="#load-the-data"><span class="header-section-number">3.3</span> Load the data</a></li>
 <li><a class="nav-link" href="#construct-a-logistic-model"><span class="header-section-number">3.4</span> Construct a logistic model</a></li>
-<li><a class="nav-link" href="#exercise"><span class="header-section-number">3.5</span> Exercise</a></li>
-<li><a class="nav-link" href="#key-points"><span class="header-section-number">3.6</span> Key points</a></li>
+<li><a class="nav-link" href="#assessing-significance"><span class="header-section-number">3.5</span> Assessing significance</a></li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">3.6</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">3.7</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">

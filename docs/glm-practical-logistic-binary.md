@@ -1,9 +1,6 @@
-```{r, echo=FALSE}
-# adjust and load as needed
-source(file = "setup.R")
-```
 
-# (PART) MoreStats 1 (Practicals) {.unnumbered}
+
+# (PART) Generalised linear models (Practicals) {.unnumbered}
 
 # Logistic Models – Binary Response
 
@@ -28,32 +25,40 @@ This is a dataset comprising 768 observations of three variables (one dependent 
 ## Load the data
 First we load the data, then we visualise it. If needed, load the tidyverse package using:
 
-```{r, eval=FALSE}
+
+```r
 library(tidyverse)
 ```
 
-```{r, message=FALSE, warning=FALSE}
+
+```r
 diabetes <- read_csv("data/MS1-Diabetes.csv")
 ```
 
 We can plot the data:
 
-```{r}
+
+```r
 diabetes %>% 
   mutate(test = as_factor(test)) %>% 
   ggplot(aes(x = test, y = glucose)) +
   geom_boxplot()
 ```
 
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+
 It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.
 
 We can visualise that differently by plotting all the data points as a classic binary response plot:
 
-```{r}
+
+```r
 diabetes %>% 
   ggplot(aes(x = glucose, y = test)) +
   geom_point()
 ```
+
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 ## Construct a logistic model
 First we construct a logistic model named `glm_diabetes`. The format of this function is similar to that used by the linear model function `lm()`. The important difference is that we must specify the family of error distribution to use. For logistic regression we must set the family to `binomial`.
@@ -64,7 +69,8 @@ Important: if you forget to include the family argument then the `glm()` functio
 
 Right, let's construct the model:
 
-```{r}
+
+```r
 glm_diabetes <- diabetes %>% 
   glm(test ~ glucose,
       family = binomial,
@@ -73,8 +79,34 @@ glm_diabetes <- diabetes %>%
 
 When we summarise the output of the model, we get the following information:
 
-```{r}
+
+```r
 summary(glm_diabetes)
+```
+
+```
+## 
+## Call:
+## glm(formula = test ~ glucose, family = binomial, data = .)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1353  -0.7819  -0.5189   0.8269   2.2832  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -5.611732   0.442289  -12.69   <2e-16 ***
+## glucose      0.039510   0.003398   11.63   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 936.6  on 727  degrees of freedom
+## Residual deviance: 752.2  on 726  degrees of freedom
+## AIC: 756.2
+## 
+## Number of Fisher Scoring iterations: 4
 ```
 
 There’s a lot to unpack here so take a deep breath (or make sure you have a coffee) before continuing...
@@ -103,32 +135,101 @@ P(positive \ test) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
 ## Assessing significance
 First, we’ll look at whether the model is "well specified" overall. Roughly speaking "well specified" just means that our model can predict our dataset pretty well.
 
-```{r}
+
+```r
 glm_diabetes %>% 
-  augment()
+  #augment()
   glance() %>%
   select(deviance, df.residual) %>% 
   as.numeric() %>% 
-  pchisq(x = .[1], df = .[2])
+  #pchisq(x = .[1], df = .[2]) %>% 
   chisq_test()
+```
 
+```
+## # A tibble: 1 × 6
+##       n statistic     p    df method          p.signif
+## * <int>     <dbl> <dbl> <dbl> <chr>           <chr>   
+## 1     2     0.464 0.496     1 Chi-square test ns
+```
+
+```r
 #install.packages("tidymodels")
 library(tidymodels)
-library(glmnet)
-  
-logistic_reg(engine = "glm") %>% 
-  fit(factor(test) ~ glucose, data = diabetes) %>% 
-  predict()
+```
 
-diabetes %>% 
-  logistic_reg(engine = "glm") %>% 
-  predict()
+```
+## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip
+```
+
+```
+## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──
+```
+
+```
+## ✓ dials        0.0.10     ✓ rsample      0.1.1 
+## ✓ infer        1.0.0      ✓ tune         0.1.6 
+## ✓ modeldata    0.1.1      ✓ workflows    0.2.4 
+## ✓ parsnip      0.1.7      ✓ workflowsets 0.1.0 
+## ✓ recipes      0.1.17     ✓ yardstick    0.0.9
+```
+
+```
+## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x infer::chisq_test() masks rstatix::chisq_test()
+## x scales::discard()   masks purrr::discard()
+## x rstatix::filter()   masks dplyr::filter(), stats::filter()
+## x recipes::fixed()    masks stringr::fixed()
+## x dials::get_n()      masks rstatix::get_n()
+## x dplyr::lag()        masks stats::lag()
+## x infer::prop_test()  masks rstatix::prop_test()
+## x yardstick::spec()   masks readr::spec()
+## x recipes::step()     masks stats::step()
+## x infer::t_test()     masks rstatix::t_test()
+## • Use suppressPackageStartupMessages() to eliminate package startup messages
+```
+
+```r
+library(glmnet)
+```
+
+```
+## Loading required package: Matrix
+```
+
+```
+## 
+## Attaching package: 'Matrix'
+```
+
+```
+## The following objects are masked from 'package:tidyr':
+## 
+##     expand, pack, unpack
+```
+
+```
+## Loaded glmnet 4.1-3
 ```
 
 
-```{r}
+
+```r
 pchisq(752.2,726)
+```
+
+```
+## [1] 0.757072
+```
+
+```r
 1-pchisq(752.2,726)
+```
+
+```
+## [1] 0.242928
 ```
 
 

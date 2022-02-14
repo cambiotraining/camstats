@@ -1,8 +1,8 @@
 
 
-# (PART) MoreStats 1: Generalised linear models {.unnumbered}
+# (PART) Generalised linear models {.unnumbered}
 
-# Introduction {#ms1-intro}
+# Introduction {#glm-intro}
 
 ## Objectives
 :::objectives

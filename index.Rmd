@@ -1,13 +1,13 @@
 --- 
-title: "More Statistics in R"
-author: "Martin van Rongen Matt Castle"
+title: "CamStats"
+author: "Martin van Rongen and Matt Castle"
 date: "`r Sys.Date()`"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
-description: "These are the supporting materials for the More Statistics modules of the Bioinformatics Training Facility, Cambridge University." 
+description: "These are the supporting materials for the CamStats series of the Bioinformatics Training Facility, Cambridge University. They are a collection of course materials on a variety of statistical topics that go beyond the Core statistics programme." 
 ---
 
 ```{r, setup, echo=FALSE}
@@ -16,7 +16,7 @@ source(file = "setup.R")
 
 # Overview
 
-These sessions are intended to enable you to perform additional data analysis techniques appropriately and confidently using R.
+These sessions are intended to enable you to perform additional data analysis techniques appropriately and confidently using R or Python.
 
 - Ongoing formative assessment exercises
 - No formal assessment
@@ -24,7 +24,7 @@ These sessions are intended to enable you to perform additional data analysis te
 - No mathematical derivations
 - No pen and paper calculations
 
-They are **not** a “how to mindlessly use a stats program” course!
+They are **not** a "how to mindlessly use a stats program" course!
 
 ## Core aims
 :::highlight
@@ -37,9 +37,9 @@ To know what to do when presented with an non-standard dataset e.g.
 
 ## Core topics
 
-1. [Generalised linear models](#ms1-intro)
+1. [Generalised linear models](#glm-intro)
 
 
 ## Datasets {#index-datasets}
 
-This course uses various data sets. The easiest way of accessing these is by creating an R-project in RStudio. Then download the `data` folder [here](morestats_data.zip) by right-clicking on the link and <kbd>Save as...</kbd>. Next unzip the file and copy it into your working directory. Your data should then be accessible via `<working-directory-name>/data`.
+This course uses various data sets. The easiest way of accessing these is by creating an R-project in RStudio. Then download the `data` folder [here](camstats_data.zip) by right-clicking on the link and <kbd>Save as...</kbd>. Next unzip the file and copy it into your working directory. Your data should then be accessible via `<working-directory-name>/data`.

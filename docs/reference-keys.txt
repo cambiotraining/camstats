@@ -3,7 +3,7 @@ overview
 core-aims
 core-topics
 index-datasets
-ms1-intro
+glm-intro
 objectives
 background
 logistic-models-binary-response
@@ -11,5 +11,6 @@ objectives-1
 data
 load-the-data
 construct-a-logistic-model
+assessing-significance
 exercise
 key-points

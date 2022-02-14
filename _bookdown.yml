@@ -5,8 +5,8 @@ delete_merged_file: true
 rmd_files: [
   "index.Rmd",
 
-  "ms1-intro.Rmd",
-  "ms1-practical-logistic-binary.Rmd",
+  "glm-intro.Rmd",
+  "glm-practical-logistic-binary.Rmd",
 ]
 
 language:

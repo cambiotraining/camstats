@@ -1,6 +1,9 @@
+```{r, echo=FALSE}
+# adjust and load as needed
+source(file = "setup.R")
+```
 
-
-# (PART) MoreStats 1 (Practicals) {.unnumbered}
+# (PART) Generalised linear models (Practicals) {.unnumbered}
 
 # Logistic Models – Binary Response
 
@@ -25,56 +28,32 @@ This is a dataset comprising 768 observations of three variables (one dependent 
 ## Load the data
 First we load the data, then we visualise it. If needed, load the tidyverse package using:
 
-
-```r
+```{r, eval=FALSE}
 library(tidyverse)
 ```
 
-
-```r
+```{r, message=FALSE, warning=FALSE}
 diabetes <- read_csv("data/MS1-Diabetes.csv")
-```
-
-```
-## Rows: 728 Columns: 3
-```
-
-```
-## ── Column specification ────────────────────────────────────────────────────────
-## Delimiter: ","
-## dbl (3): glucose, diastolic, test
-```
-
-```
-## 
-## ℹ Use `spec()` to retrieve the full column specification for this data.
-## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
 ```
 
 We can plot the data:
 
-
-```r
+```{r}
 diabetes %>% 
   mutate(test = as_factor(test)) %>% 
   ggplot(aes(x = test, y = glucose)) +
   geom_boxplot()
 ```
 
-<img src="ms1-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672" />
-
 It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.
 
 We can visualise that differently by plotting all the data points as a classic binary response plot:
 
-
-```r
+```{r}
 diabetes %>% 
   ggplot(aes(x = glucose, y = test)) +
   geom_point()
 ```
-
-<img src="ms1-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 
 ## Construct a logistic model
 First we construct a logistic model named `glm_diabetes`. The format of this function is similar to that used by the linear model function `lm()`. The important difference is that we must specify the family of error distribution to use. For logistic regression we must set the family to `binomial`.
@@ -83,8 +62,9 @@ First we construct a logistic model named `glm_diabetes`. The format of this fun
 Important: if you forget to include the family argument then the `glm()` function just performs an ordinary linear model fit (same as the `lm()` function)
 :::
 
+Right, let's construct the model:
 
-```r
+```{r}
 glm_diabetes <- diabetes %>% 
   glm(test ~ glucose,
       family = binomial,
@@ -93,34 +73,8 @@ glm_diabetes <- diabetes %>%
 
 When we summarise the output of the model, we get the following information:
 
-
-```r
+```{r}
 summary(glm_diabetes)
-```
-
-```
-## 
-## Call:
-## glm(formula = test ~ glucose, family = binomial, data = .)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -2.1353  -0.7819  -0.5189   0.8269   2.2832  
-## 
-## Coefficients:
-##              Estimate Std. Error z value Pr(>|z|)    
-## (Intercept) -5.611732   0.442289  -12.69   <2e-16 ***
-## glucose      0.039510   0.003398   11.63   <2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 936.6  on 727  degrees of freedom
-## Residual deviance: 752.2  on 726  degrees of freedom
-## AIC: 756.2
-## 
-## Number of Fisher Scoring iterations: 4
 ```
 
 There’s a lot to unpack here so take a deep breath (or make sure you have a coffee) before continuing...
@@ -146,6 +100,29 @@ P(positive \ test) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
     It’s important to realise that these two things can be independent of each other; we can have a model that is significantly better than a null model whilst still being rubbish overall (the null model will have been even more rubbish in comparison), and we can have a model that is brilliant yet still not be better than the null model (in this case the null model was already brilliant).
 * As we found in the previous practical the AIC value is meaningless by itself, but it will allow us to compare this model to another model with different terms (with the model with the smaller AIC value being the better fitting model).
 
+## Assessing significance
+First, we’ll look at whether the model is "well specified" overall. Roughly speaking "well specified" just means that our model can predict our dataset pretty well.
+
+```{r}
+glm_diabetes %>% 
+  #augment()
+  glance() %>%
+  select(deviance, df.residual) %>% 
+  as.numeric() %>% 
+  #pchisq(x = .[1], df = .[2]) %>% 
+  chisq_test()
+
+#install.packages("tidymodels")
+library(tidymodels)
+library(glmnet)
+  
+```
+
+
+```{r}
+pchisq(752.2,726)
+1-pchisq(752.2,726)
+```
 
 
 ## Exercise
