@@ -1,10 +1,12 @@
-book_filename: "Cambio bookdown template"
+book_filename: "More statistics in R"
 new_session: true
 delete_merged_file: true
 
 rmd_files: [
   "index.Rmd",
-  "example_chapter.Rmd,"
+
+  "ms1-intro.Rmd",
+  "ms1-practical-logistic-binary.Rmd",
 ]
 
 language:

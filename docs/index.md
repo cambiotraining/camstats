@@ -1,7 +1,7 @@
 --- 
 title: "More Statistics in R"
 author: "Martin van Rongen Matt Castle"
-date: "`r Sys.Date()`"
+date: "2022-01-24"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]
@@ -10,9 +10,7 @@ bibliography: [book.bib, packages.bib]
 description: "These are the supporting materials for the More Statistics modules of the Bioinformatics Training Facility, Cambridge University." 
 ---
 
-```{r, setup, echo=FALSE}
-source(file = "setup.R")
-```
+
 
 # Overview
 

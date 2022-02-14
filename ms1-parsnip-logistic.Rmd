@@ -1,0 +1,134 @@
+```{r, echo=FALSE}
+# adjust and load as needed
+source(file = "setup.R")
+```
+
+# (PART) MoreStats 1 (Practicals) {.unnumbered}
+
+# Logistic Models – Binary Response
+
+## Objectives
+:::objectives
+**Questions**
+
+- 
+
+**Objectives**
+
+- 
+:::
+
+## Data
+This section uses the following dataset:
+
+`data/MS1-Diabetes.csv`
+
+This is a dataset comprising 768 observations of three variables (one dependent and two predictor variables). This records the results of a diabetes test as a binary variable (1 is a positive result, 0 is a negative result), along with the result of a glucose test and the diastolic blood pressure for each of 767 women. The variables are called `test`, `glucose` and `diastolic`.
+
+## Load the data
+First we load the data, then we visualise it. If needed, load the tidyverse package using:
+
+```{r, eval=FALSE}
+library(tidyverse)
+```
+
+```{r, message=FALSE, warning=FALSE}
+diabetes <- read_csv("data/MS1-Diabetes.csv")
+```
+
+If we look at the data, then we can see that the `test` variable contains a binary outcome. To make sure it is viewed as such by R, we convert it to a factor and update our data set:
+
+```{r}
+diabetes <- diabetes %>% 
+  mutate(test = as_factor(test))
+```
+
+We can plot the data:
+
+```{r}
+diabetes %>% 
+  mutate(test = as_factor(test)) %>% 
+  ggplot(aes(x = test, y = glucose)) +
+  geom_boxplot()
+```
+
+It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.
+
+We can visualise that differently by plotting all the data points as a classic binary response plot:
+
+```{r}
+diabetes %>% 
+  ggplot(aes(x = glucose, y = test)) +
+  geom_point()
+```
+
+## Construct a logistic model
+There are different ways to construct a logistic model in R. One commonly used method is with the `glm()` function. This has some good advantages, for example, it is:
+
+* included in the default `stats` package
+* works in a very similar way as the `lm()` function
+
+However, we are going to use something slightly different: `parsnip`, which is part of the `tidymodels` package. The advantage of using `parsnip` is that the code syntax will stay the same as you do different kind of model comparisons. So, the learning curve might be a bit steeper to start with, but this will pay dividend in the long-term (just like when you started using R!).
+
+First, we need to load `tidymodels` (install it first, if needed):
+
+```{r}
+#install.packages("tidymodels")
+library(tidymodels)
+```
+
+So, let's say we want to explore our `diabetes` data set a bit more.
+
+```{r}
+glm_diabetes <- logistic_reg() %>% 
+  set_engine("glm") %>% 
+  fit(test ~ glucose, data = diabetes)
+```
+
+```{r}
+glm_diabetes %>%
+  extract_fit_engine() %>% 
+  glance()
+```
+
+What if we got some new glucose level data and we wanted to predict if people might have diabetes or not?
+
+We could use the existing model and feed it the new data:
+
+```{r}
+# create a dummy data set using the first 5 values of our data
+diabetes_small <- diabetes %>%  slice(1:5)
+
+# predict if the patients have diabetes or not
+predict(glm_diabetes, new_data = diabetes_small)
+```
+
+We could go even further,
+
+```{r}
+diabetes_small %>% 
+  select(glucose) %>% 
+  bind_cols(predict(glm_diabetes, diabetes_small)) %>% 
+  # add the probabilities for both outcomes
+  bind_cols(predict(glm_diabetes, diabetes_small, type = "prob")) 
+```
+
+
+Example using rstan:
+
+```{r}
+library(rstanarm)
+# using the rstanarm package method
+stan_glm(test ~ glucose, data = diabetes, family = "binomial")
+
+# the equivalent using tidymodels
+
+# Specify the type of model based on its mathematical structure
+glm_diabetes_stan <- logistic_reg() %>% 
+  # Specify the engine for fitting the model.
+  set_engine("stan") %>% 
+  # define the model
+  fit(test ~ glucose, data = diabetes)
+```
+
+
