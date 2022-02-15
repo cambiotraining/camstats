@@ -1,7 +1,7 @@
 --- 
 title: "CamStats"
 author: "Martin van Rongen and Matt Castle"
-date: "2022-02-14"
+date: "2022-02-15"
 site: bookdown::bookdown_site
 documentclass: book
 bibliography: [book.bib, packages.bib]

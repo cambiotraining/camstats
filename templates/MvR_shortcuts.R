@@ -1,5 +1,10 @@
 bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 
+in panelset.css:
+
+  -webkit-box-align: baseline;
+align-items: baseline;
+
 par(mfrow=c(1,2))
 
 
