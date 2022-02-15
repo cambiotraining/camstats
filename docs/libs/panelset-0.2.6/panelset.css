@@ -29,7 +29,7 @@
   -webkit-box-direction: normal;
           flex-direction: row;
   -webkit-box-pack: start;
-          justify-content: start;
+          justify-content: flex-start;
   -webkit-box-align: baseline;
           align-items: baseline;
   overflow-y: visible;
