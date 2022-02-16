@@ -3,10 +3,10 @@ overview
 core-aims
 core-topics
 index-datasets
-single-predictor-permutation-tests
+kmeans
 objectives
-purpose-and-aim
-data-and-hypotheses
-load-the-data
+workflow
+data
+visualise-the-data
 exercise
 key-points

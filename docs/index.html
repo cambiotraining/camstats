@@ -345,7 +345,7 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="active" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">2</span> Single predictor permutation tests</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">2</span> K-means clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -392,11 +392,15 @@
 </h2>
 <p>This course uses various data sets. The easiest way of accessing these is by creating an R-project in RStudio. Then download the <code>data</code> folder <a href="camstats_data.zip">here</a> by right-clicking on the link and <kbd>Save as…</kbd>. Next unzip the file and copy it into your working directory. Your data should then be accessible via <code>&lt;working-directory-name&gt;/data</code>.</p>
 
+<pre><code>## Warning: 'xaringanExtra::style_panelset' is deprecated.
+## Use 'style_panelset_tabs' instead.
+## See help("Deprecated")</code></pre>
+<p><style>.panelset{--panel-tab-font-family: inherit;}</style></p>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="empty"></div>
-<div class="next"><a href="single-predictor-permutation-tests.html"><span class="header-section-number">2</span> Single predictor permutation tests</a></div>
+<div class="next"><a href="kmeans.html"><span class="header-section-number">2</span> K-means clustering</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
@@ -623,34 +627,6 @@
 </div>
 <![endif]-->
 
-	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
-  (function () {
-    var script = document.createElement("script");
-    script.type = "text/javascript";
-    var src = "true";
-    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
-    if (location.protocol !== "file:")
-      if (/^https?:/.test(src))
-        src = src.replace(/^https?:/, '');
-    script.src = src;
-    document.getElementsByTagName("head")[0].appendChild(script);
-  })();
-</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
-for (let popover of popovers) {
-  const div = document.createElement('div');
-  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
-  div.innerHTML = popover.getAttribute('data-content');
-
-  var has_math = div.querySelector("span.math");
-  if (has_math) {
-    document.body.appendChild(div);
-    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
-    MathJax.Hub.Queue(function() {
-      popover.setAttribute('data-content', div.innerHTML);
-      document.body.removeChild(div);
-    })
-  }
-}
-</script>
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script>
 </body>
 </html>

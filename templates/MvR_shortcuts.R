@@ -2,8 +2,17 @@ bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 
 in panelset.css:
 
-  -webkit-box-align: baseline;
-align-items: baseline;
+  .panelset .panel-tabs {
+    display: -webkit-box;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    flex-direction: row;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    -webkit-box-align: center;
+    align-items: baseline;
 
 par(mfrow=c(1,2))
 

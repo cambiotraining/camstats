@@ -30,7 +30,7 @@
           flex-direction: row;
   -webkit-box-pack: start;
           justify-content: flex-start;
-  -webkit-box-align: baseline;
+  -webkit-box-align: center;
           align-items: baseline;
   overflow-y: visible;
   overflow-x: auto;

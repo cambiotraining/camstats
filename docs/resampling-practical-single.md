@@ -1,7 +1,11 @@
 
+```
+## Warning: 'xaringanExtra::style_panelset' is deprecated.
+## Use 'style_panelset_tabs' instead.
+## See help("Deprecated")
+```
 
-
-
+`<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
 # Single predictor permutation tests
 
