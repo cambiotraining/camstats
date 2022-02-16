@@ -149,12 +149,7 @@ ggplot(penguins, aes(x = flipper_length_mm,
 plot(penguins$flipper_length_mm,  # scatter plot
      penguins$bill_length_mm,
      pch = 20,
-<<<<<<< HEAD
      col = penguins$species)      # colour by species
-=======
-     col = penguins$species)
->>>>>>> b22398e385062f343f1bcb4b717c505a984a4490
-
 
 legend("bottomright",             # legend
        legend = levels(penguins$species),
@@ -217,7 +212,6 @@ To do the clustering, we'll be using the `kmeans()` function. This function requ
 
 
 ```r
-<<<<<<< HEAD
 points_r <-
   data.frame(
     penguins$flipper_length_mm,  # get numeric data
@@ -229,17 +223,6 @@ kclust_r <-
          centers = 3)            # using 3 centers
 
 summary(kclust_r)                # summarise output
-=======
-points_r <- data.frame(
-              penguins$flipper_length_mm,  # get numeric data
-              penguins$bill_length_mm) |>  # use base R pipe!
-              na.omit()                    # remove missing data
-
-kclust_r <- kmeans(points_r,               # perform k-means clustering
-                   centers = 3)            # using 3 centers
-
-summary(kclust_r)                          # summarise output
->>>>>>> b22398e385062f343f1bcb4b717c505a984a4490
 ```
 
 ```
@@ -282,15 +265,9 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               <dbl>          <dbl> <int>    <dbl> <fct>  
-<<<<<<< HEAD
-## 1              197.           46.0    93    3932. 1      
-## 2              187.           38.4   120    3494. 2      
-## 3              217.           47.6   129    6658. 3
-=======
 ## 1              187.           38.4   120    3494. 1      
 ## 2              217.           47.6   129    6658. 2      
 ## 3              197.           46.0    93    3932. 3
->>>>>>> b22398e385062f343f1bcb4b717c505a984a4490
 ```
 
 :::note
@@ -324,8 +301,8 @@ kclust_r$centers  # get centroid coordinates
 
 ```
 ##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   196.7312                45.95484
-## 2                   186.9917                38.42750
+## 1                   186.9917                38.42750
+## 2                   196.7312                45.95484
 ## 3                   216.8837                47.56744
 ```
 

@@ -111,12 +111,7 @@ ggplot(penguins, aes(x = flipper_length_mm,
 plot(penguins$flipper_length_mm,  # scatter plot
      penguins$bill_length_mm,
      pch = 20,
-<<<<<<< HEAD
      col = penguins$species)      # colour by species
-
-=======
-     col = penguins$species)
->>>>>>> b22398e385062f343f1bcb4b717c505a984a4490
 
 legend("bottomright",             # legend
        legend = levels(penguins$species),
@@ -162,8 +157,6 @@ Note that the output is a list of vectors, with differing lengths. That's becaus
 To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input.
 
 ```{r}
-<<<<<<< HEAD
-
 points_r <-
   data.frame(
     penguins$flipper_length_mm,  # get numeric data
@@ -175,17 +168,6 @@ kclust_r <-
          centers = 3)            # using 3 centers
 
 summary(kclust_r)                # summarise output
-=======
-points_r <- data.frame(
-              penguins$flipper_length_mm,  # get numeric data
-              penguins$bill_length_mm) |>  # use base R pipe!
-              na.omit()                    # remove missing data
-
-kclust_r <- kmeans(points_r,               # perform k-means clustering
-                   centers = 3)            # using 3 centers
-
-summary(kclust_r)                          # summarise output
->>>>>>> b22398e385062f343f1bcb4b717c505a984a4490
 ```
 
 Note that the output is a list of vectors, with differing lengths. That's because they contain different types of information:
