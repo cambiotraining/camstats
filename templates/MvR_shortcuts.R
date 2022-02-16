@@ -1,6 +1,19 @@
 bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 
-in panelset.css:
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+:::
+
+::: {.panel}
+[base R]{.panel-name}
+:::
+
+:::::
+
+  in panelset.css:
 
   .panelset .panel-tabs {
     display: -webkit-box;
