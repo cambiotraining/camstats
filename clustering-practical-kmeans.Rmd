@@ -134,13 +134,15 @@ Next, we'll do the actual clustering.
 To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input.
 
 ```{r}
-points <- penguins %>% 
+points <-
+  penguins %>% 
   select(flipper_length_mm,      # select data
          bill_length_mm) %>% 
   drop_na()                      # remove missing values
 
-kclust <- kmeans(points,         # perform k-means clustering
-                   centers = 3)  # using 3 centers
+kclust <-
+  kmeans(points,                 # perform k-means clustering
+         centers = 3)            # using 3 centers
 
 summary(kclust)                  # summarise output
 ```

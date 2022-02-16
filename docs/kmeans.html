@@ -303,13 +303,15 @@
 <p><span class="panel-name">tidyverse</span>
 To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
+  <span class="va">penguins</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">flipper_length_mm</span>,      <span class="co"># select data</span>
          <span class="va">bill_length_mm</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span>                      <span class="co"># remove missing values</span>
 
-<span class="va">kclust</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">points</span>,         <span class="co"># perform k-means clustering</span>
-                   centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>  <span class="co"># using 3 centers</span>
+<span class="va">kclust</span> <span class="op">&lt;-</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">points</span>,                 <span class="co"># perform k-means clustering</span>
+         centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>            <span class="co"># using 3 centers</span>
 
 <span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span>                  <span class="co"># summarise output</span></code></pre></div>
 <pre><code>##              Length Class  Mode   
@@ -385,9 +387,9 @@ When we performed the clustering, the centers were calculated. These values give
 <pre><code>## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1              187.           38.4   120    3494. 1      
+## 1              197.           46.0    93    3932. 1      
 ## 2              217.           47.6   129    6658. 2      
-## 3              197.           46.0    93    3932. 3</code></pre>
+## 3              187.           38.4   120    3494. 3</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
@@ -408,9 +410,9 @@ When we performed the clustering, the centers were calculated. These values give
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
 <pre><code>##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   186.9917                38.42750
+## 1                   216.8837                47.56744
 ## 2                   196.7312                45.95484
-## 3                   216.8837                47.56744</code></pre>
+## 3                   186.9917                38.42750</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>

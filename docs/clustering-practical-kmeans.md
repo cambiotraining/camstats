@@ -175,13 +175,15 @@ To do the clustering, we'll be using the `kmeans()` function. This function requ
 
 
 ```r
-points <- penguins %>% 
+points <-
+  penguins %>% 
   select(flipper_length_mm,      # select data
          bill_length_mm) %>% 
   drop_na()                      # remove missing values
 
-kclust <- kmeans(points,         # perform k-means clustering
-                   centers = 3)  # using 3 centers
+kclust <-
+  kmeans(points,                 # perform k-means clustering
+         centers = 3)            # using 3 centers
 
 summary(kclust)                  # summarise output
 ```
@@ -265,9 +267,9 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1              187.           38.4   120    3494. 1      
+## 1              197.           46.0    93    3932. 1      
 ## 2              217.           47.6   129    6658. 2      
-## 3              197.           46.0    93    3932. 3
+## 3              187.           38.4   120    3494. 3
 ```
 
 :::note
@@ -301,9 +303,9 @@ kclust_r$centers  # get centroid coordinates
 
 ```
 ##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   186.9917                38.42750
+## 1                   216.8837                47.56744
 ## 2                   196.7312                45.95484
-## 3                   216.8837                47.56744
+## 3                   186.9917                38.42750
 ```
 
 :::note
