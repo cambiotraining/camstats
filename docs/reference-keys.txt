@@ -5,8 +5,12 @@ core-topics
 index-datasets
 kmeans
 objectives
+libraries-and-functions
 workflow
 data
 visualise-the-data
+clustering
+visualise-clusters
+optimising-cluster-number
 exercise
 key-points
