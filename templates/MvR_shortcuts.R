@@ -13,6 +13,31 @@ bookdown::render_book(output_dir = "docs", "index.Rmd", "bookdown::bs4_book")
 
 :::::
 
+# Exercise with different languages
+:::exercise ::::::
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+:::
+::: {.panel}
+[base R]{.panel-name}
+:::
+:::::
+
+<details><summary>Answer</summary>
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+:::
+  ::: {.panel}
+[base R]{.panel-name}
+:::
+:::::
+</details>
+
+::::::::::::::::::
+
   in panelset.css:
 
   .panelset .panel-tabs {

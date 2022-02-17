@@ -1,6 +1,6 @@
 # essential libraries
 library(knitr)
-library(modeldata)
+library(palmerpenguins)
 suppressPackageStartupMessages(library(tidyverse))
 library(broom)
 suppressPackageStartupMessages(library(patchwork))

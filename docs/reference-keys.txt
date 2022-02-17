@@ -1,4 +1,5 @@
 exr:unlabeled-div-1
+exr:unlabeled-div-2
 overview
 core-aims
 core-topics
@@ -7,10 +8,12 @@ kmeans
 objectives
 libraries-and-functions
 workflow
-data
+datasets
 visualise-the-data
+exercise---bill-depth-and-length
 clustering
 visualise-clusters
 optimising-cluster-number
+elbow-plot
 exercise
 key-points
