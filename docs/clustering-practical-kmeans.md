@@ -136,6 +136,33 @@ head(penguins)
 ```
 :::
 
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+from plotnine import *
+from plotnine.data import *
+import numpy as np
+import pandas as pd
+```
+
+
+```python
+penguins = pd.read_csv("data/penguins.csv")
+```
+
+
+```python
+ggplot(data = penguins) +\
+geom_point(mapping = aes(x = "flipper_length_mm",
+                         y="bill_length_mm",
+                         colour="species"))
+```
+
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-8-1.png" width="614" />
+
+:::
+
 :::::
 
 So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins' weight plus sex was recorded.
@@ -153,7 +180,7 @@ ggplot(penguins, aes(x = flipper_length_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-3.png" width="672" />
 :::
 
 ::: {.panel}
@@ -171,7 +198,7 @@ legend("bottomright",             # legend
        col = factor(levels(penguins$species)))
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 :::
 :::::
 
@@ -202,7 +229,7 @@ penguins %>%
   facet_wrap(facets = vars(<FIXME>))
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-12-1.png" width="672" />
 :::
 ::: {.panel}
 [base R]{.panel-name}
@@ -228,7 +255,7 @@ legend("bottomright",
 title(main = "Biscoe")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-14-1.png" width="672" />
 
 :::
 :::::
@@ -382,8 +409,8 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1              187.           38.4   120    3494. 1      
-## 2              197.           46.0    93    3932. 2      
+## 1              197.           46.0    93    3932. 1      
+## 2              187.           38.4   120    3494. 2      
 ## 3              217.           47.6   129    6658. 3
 ```
 
@@ -404,7 +431,7 @@ kclust %>%                              # take clustering data
              size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-20-1.png" width="672" />
 :::
 
 ::: {.panel}
@@ -418,9 +445,9 @@ kclust_r$centers  # get centroid coordinates
 
 ```
 ##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   186.9917                38.42750
-## 2                   216.8837                47.56744
-## 3                   196.7312                45.95484
+## 1                   216.8837                47.56744
+## 2                   196.7312                45.95484
+## 3                   186.9917                38.42750
 ```
 
 :::note
@@ -440,7 +467,7 @@ points(kclust_r$centers,      # add cluster centers
        lwd = 3)
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 :::
 :::::
 
@@ -535,7 +562,7 @@ ggplot(assignments,
              shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you're looking for clusters that are distinct, _i.e._ are separated from one another. For example, using `k = 4` gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.
 :::
@@ -575,7 +602,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 :::
 
@@ -639,7 +666,7 @@ ggplot(finches, aes(x = beak_depth_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-30-1.png" width="672" />
 
 #### Clustering {.unnumbered}
 Next, we perform the clustering.
@@ -699,7 +726,7 @@ kclust %>%                              # take clustering data
              size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
 
 #### Optimise clusters {.unnumbered}
 It looks like two clusters is a reasonable choice. But let's explore this a bit more.
@@ -745,7 +772,7 @@ ggplot(assignments,
              shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672" />
 
 Create an elbow plot to have a closer look.
 
@@ -759,7 +786,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-34-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 #### Conclusions {.unnumbered}
 Our initial clustering was done using two clusters, basically capturing the two different finch species.

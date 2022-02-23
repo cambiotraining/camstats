@@ -101,6 +101,28 @@ head(penguins)
 ```
 :::
 
+::: {.panel}
+[Python]{.panel-name}
+```{python}
+from plotnine import *
+from plotnine.data import *
+import numpy as np
+import pandas as pd
+```
+
+```{python}
+penguins = pd.read_csv("data/penguins.csv")
+```
+
+```{python, warning=F, message=F, results='hide'}
+ggplot(data = penguins) +\
+geom_point(mapping = aes(x = "flipper_length_mm",
+                         y="bill_length_mm",
+                         colour="species"))
+```
+
+:::
+
 :::::
 
 So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins' weight plus sex was recorded.
