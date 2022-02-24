@@ -33,7 +33,7 @@ pre code {
 	#851735 page header colours/global footer
 */
 
-.box, .exercise, .keypoints, .objectives, .highlight, .warning, .note{background-color: #f7f8fa}
+div.box, div.exercise, div.keypoints, div.objectives, div.highlight, div.warning, div.note{background-color: #f7f8fa}
 
 /* change the border colour to match the theme */
 div.highlight, div.keypoints, div.objectives{border-left: 10px solid #106470}

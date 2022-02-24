@@ -41,6 +41,20 @@ xaringanExtra::style_panelset(font_family = "inherit")
 
 :::
 
+::: {.panel}
+[Python]{.panel-name}
+
+| Library| Description|
+|:- |:- |
+|`plotnine`| The Python equivalent of `ggplot2`.|
+|`pandas`| A Python data analysis and manipulation tool.|
+
+```{python}
+from plotnine import *
+import pandas as pd
+```
+:::
+
 :::::
 
 ## Workflow
@@ -103,24 +117,15 @@ head(penguins)
 
 ::: {.panel}
 [Python]{.panel-name}
-```{python}
-from plotnine import *
-from plotnine.data import *
-import numpy as np
-import pandas as pd
-```
-
+The `palmerpenguins` package is not available in Python, so I've provided the data separately. To load the data into Python we do the following:
 ```{python}
 penguins = pd.read_csv("data/penguins.csv")
 ```
 
-```{python, warning=F, message=F, results='hide'}
-ggplot(data = penguins) +\
-geom_point(mapping = aes(x = "flipper_length_mm",
-                         y="bill_length_mm",
-                         colour="species"))
+And let's have a look at the data:
+```{python}
+penguins.head()
 ```
-
 :::
 
 :::::
@@ -152,6 +157,16 @@ legend("bottomright",             # legend
        legend = levels(penguins$species),
        pch = 20,
        col = factor(levels(penguins$species)))
+```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+```{python, warning=F, message=F, results='hide'}
+ggplot(data = penguins) +\
+geom_point(mapping = aes(x = "flipper_length_mm",
+                         y = "bill_length_mm",
+                         colour = "species"))
 ```
 :::
 :::::
@@ -397,12 +412,12 @@ In the example we set the number of clusters to 3. This made sense, because the 
 
 However, it might be that the cluster number to choose is a lot less obvious. In that case it would be helpful to explore clustering your data into a range of clusters.
 
-Reiterating over a range of _k_ values is reasonably straightforward using tidyverse. In short, we determine which values of _k_ we want to explore and then loop through these values, repeating the workflow we looked at previously.
+In short, we determine which values of _k_ we want to explore and then loop through these values, repeating the workflow we looked at previously.
 
 ::::: {.panelset}
 ::: {.panel}
 [tidyverse]{.panel-name}
-Although we could write our own function to loop through these _k_ values, tidyverse has a series of `map()` functions that can do this for you. More information on them [here](https://purrr.tidyverse.org/reference/map.html).
+Reiterating over a range of _k_ values is reasonably straightforward using tidyverse. Although we could write our own function to loop through these _k_ values, tidyverse has a series of `map()` functions that can do this for you. More information on them [here](https://purrr.tidyverse.org/reference/map.html).
 
 In short, the `map()` function spits out a [list](https://www.w3schools.com/r/r_lists.asp) which contains the output. When we do this on our data, we can create a table that contains lists with all of the information that we need.
 

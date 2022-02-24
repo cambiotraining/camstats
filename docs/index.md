@@ -1,10 +1,10 @@
 --- 
 title: "CamStats"
 author: "Martin van Rongen and Matt Castle"
-date: "2022-02-23"
+date: "2022-02-24"
 site: bookdown::bookdown_site
 documentclass: book
-bibliography: [book.bib, packages.bib]
+#bibliography: [book.bib, packages.bib]
 # url: your book url like https://bookdown.org/yihui/bookdown
 # cover-image: path to the social sharing image like images/cover.jpg
 description: "These are the supporting materials for the CamStats series of the Bioinformatics Training Facility, Cambridge University. They are a collection of course materials on a variety of statistical topics that go beyond the Core statistics programme." 

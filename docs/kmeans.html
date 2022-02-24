@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Chapter 2 K-means clustering | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
 <meta name="description" content="2.1 Objectives  Understand how k-means clustering works Be able to perform k-means clustering Be able to optimise cluster number   2.2 Libraries and functions  tidyverse Library Description...">
@@ -14,23 +13,102 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 2 K-means clustering | CamStats">
 <meta name="twitter:description" content="2.1 Objectives  Understand how k-means clustering works Be able to perform k-means clustering Be able to optimise cluster number   2.2 Libraries and functions  tidyverse Library Description...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
 <!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
-<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- CSS -->
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
 
-<div class="container-fluid">
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">CamStats
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<!-- <p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">CamStats</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
 <div class="row">
   <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
 
     <div class="d-flex align-items-start justify-content-between">
-      <h1>
-        <a href="index.html" title="">CamStats</a>
-      </h1>
-      <button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
     </div>
 
     <div id="main-nav" class="collapse-lg">
@@ -114,6 +192,27 @@
 </tr></tbody>
 </table></div>
 </div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="inline-table"><table class="table table-sm">
+<thead><tr class="header">
+<th align="left">Library</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>plotnine</code></td>
+<td align="left">The Python equivalent of <code>ggplot2</code>.</td>
+</tr>
+<tr class="even">
+<td align="left"><code>pandas</code></td>
+<td align="left">A Python data analysis and manipulation tool.</td>
+</tr>
+</tbody>
+</table></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="kmeans.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="kmeans.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div>
+</div>
 </div>
 </div>
 <div id="workflow" class="section level2" number="2.3">
@@ -138,7 +237,7 @@
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">Data</span></p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># attach the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">'palmerpenguins'</span><span class="op">)</span></code></pre></div>
 </div>
@@ -150,7 +249,7 @@ The <code>penguins</code> data set comes from <code>palmerpenguins</code> packag
 <p><span class="panel-name">Darwin’s finches</span>
 The <code>finches</code> dataset has been adapted from the <a href="https://doi.org/10.5061/dryad.g6g3h">accompanying website</a> to <em>40 years of evolution. Darwin’s finches on Daphne Major Island</em> by Peter R. Grant and Rosemary B. Grant.</p>
 <p>A really interesting lecture on the findings by the Grants can be found <a href="https://carnegiescience.edu/news/multimedia/40-years-evolution-darwins-finches">here</a> (1h10min).</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load the data</span>
 <span class="va">finches</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/finch_beaks.csv"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -164,7 +263,7 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguins</span></code></pre></div>
 <pre><code>## # A tibble: 344 × 8
 ##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
@@ -183,7 +282,7 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 8
 ##   species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g sex  
@@ -197,17 +296,19 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 ## # … with 1 more variable: year &lt;int&gt;</code></pre>
 </div>
 <div class="panel">
-<p><span class="panel-name">Python</span></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="kmeans.html#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb8-2"><a href="kmeans.html#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine.data <span class="im">import</span> <span class="op">*</span></span>
-<span id="cb8-3"><a href="kmeans.html#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb8-4"><a href="kmeans.html#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code></pre></div>
+<p><span class="panel-name">Python</span>
+The <code>palmerpenguins</code> package is not available in Python, so I’ve provided the data separately. To load the data into Python we do the following:</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="kmeans.html#cb9-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pd.read_csv(<span class="st">"data/penguins.csv"</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="kmeans.html#cb10-1" aria-hidden="true" tabindex="-1"></a>ggplot(data <span class="op">=</span> penguins) <span class="op">+\</span></span>
-<span id="cb10-2"><a href="kmeans.html#cb10-2" aria-hidden="true" tabindex="-1"></a>geom_point(mapping <span class="op">=</span> aes(x <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
-<span id="cb10-3"><a href="kmeans.html#cb10-3" aria-hidden="true" tabindex="-1"></a>                         y<span class="op">=</span><span class="st">"bill_length_mm"</span>,</span>
-<span id="cb10-4"><a href="kmeans.html#cb10-4" aria-hidden="true" tabindex="-1"></a>                         colour<span class="op">=</span><span class="st">"species"</span>))</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-8-1.png" width="614"></div>
+<p>And let’s have a look at the data:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="kmeans.html#cb10-1" aria-hidden="true" tabindex="-1"></a>penguins.head()</span></code></pre></div>
+<pre><code>##   species     island  bill_length_mm  ...  body_mass_g     sex  year
+## 0  Adelie  Torgersen            39.1  ...       3750.0    male  2007
+## 1  Adelie  Torgersen            39.5  ...       3800.0  female  2007
+## 2  Adelie  Torgersen            40.3  ...       3250.0  female  2007
+## 3  Adelie  Torgersen             NaN  ...          NaN     NaN  2007
+## 4  Adelie  Torgersen            36.7  ...       3450.0  female  2007
+## 
+## [5 rows x 8 columns]</code></pre>
 </div>
 </div>
 <p>So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins’ weight plus sex was recorded.</p>
@@ -215,16 +316,16 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">penguins</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,
                      y <span class="op">=</span> <span class="va">bill_length_mm</span>,
                      colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-3.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">flipper_length_mm</span>,  <span class="co"># scatter plot</span>
      <span class="va">penguins</span><span class="op">$</span><span class="va">bill_length_mm</span>,
      pch <span class="op">=</span> <span class="fl">20</span>,
@@ -235,6 +336,14 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
        pch <span class="op">=</span> <span class="fl">20</span>,
        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">species</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-10-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="kmeans.html#cb14-1" aria-hidden="true" tabindex="-1"></a>ggplot(data <span class="op">=</span> penguins) <span class="op">+\</span></span>
+<span id="cb14-2"><a href="kmeans.html#cb14-2" aria-hidden="true" tabindex="-1"></a>geom_point(mapping <span class="op">=</span> aes(x <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
+<span id="cb14-3"><a href="kmeans.html#cb14-3" aria-hidden="true" tabindex="-1"></a>                         y <span class="op">=</span> <span class="st">"bill_length_mm"</span>,</span>
+<span id="cb14-4"><a href="kmeans.html#cb14-4" aria-hidden="true" tabindex="-1"></a>                         colour <span class="op">=</span> <span class="st">"species"</span>))</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-11-1.png" width="614"></div>
 </div>
 </div>
 <p>We can already see that the data appear to cluster quite closely by species. A great example to illustrate K-means clustering (you’d almost think I chose the example on purpose!)</p>
@@ -250,34 +359,34 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="kmeans.html#cb13-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">%&gt;%</span> </span>
-<span id="cb13-2"><a href="kmeans.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span>                     </span>
-<span id="cb13-3"><a href="kmeans.html#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
-<span id="cb13-4"><a href="kmeans.html#cb13-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> bill_length_mm,</span>
-<span id="cb13-5"><a href="kmeans.html#cb13-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>)) <span class="sc">+</span></span>
-<span id="cb13-6"><a href="kmeans.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  geom_<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>() <span class="sc">+</span></span>
-<span id="cb13-7"><a href="kmeans.html#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>))</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="kmeans.html#cb15-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">%&gt;%</span> </span>
+<span id="cb15-2"><a href="kmeans.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span>                     </span>
+<span id="cb15-3"><a href="kmeans.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
+<span id="cb15-4"><a href="kmeans.html#cb15-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> bill_length_mm,</span>
+<span id="cb15-5"><a href="kmeans.html#cb15-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>)) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="kmeans.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  geom_<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>() <span class="sc">+</span></span>
+<span id="cb15-7"><a href="kmeans.html#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>))</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-13-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span>
 Things are bit more convoluted using base R, compared to tidyverse. That’s because there is no faceting equivalent as such that you can implement directly.</p>
 <p>What you could do is split the data by island and create a loop to plot for each island. I’m loathe to go through that here, so I’ll just use <code>Biscoe</code> island as an example and I’m sure that you’re able to adapt things accordingly for <code>Dream</code> and <code>Torgersen</code> islands!</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="kmeans.html#cb14-1" aria-hidden="true" tabindex="-1"></a>biscoe <span class="ot">&lt;-</span> </span>
-<span id="cb14-2"><a href="kmeans.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  penguins[penguins<span class="sc">$</span>island <span class="sc">==</span> <span class="st">"&lt;FIXME&gt;"</span>, ]</span>
-<span id="cb14-3"><a href="kmeans.html#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="kmeans.html#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
-<span id="cb14-5"><a href="kmeans.html#cb14-5" aria-hidden="true" tabindex="-1"></a>     biscoe<span class="sc">$</span>bill_length_mm,</span>
-<span id="cb14-6"><a href="kmeans.html#cb14-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>,</span>
-<span id="cb14-7"><a href="kmeans.html#cb14-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>)</span>
-<span id="cb14-8"><a href="kmeans.html#cb14-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-9"><a href="kmeans.html#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>,</span>
-<span id="cb14-10"><a href="kmeans.html#cb14-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">levels</span>(biscoe<span class="sc">$</span>sex),</span>
-<span id="cb14-11"><a href="kmeans.html#cb14-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">20</span>,</span>
-<span id="cb14-12"><a href="kmeans.html#cb14-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(biscoe<span class="sc">$</span>sex)))</span>
-<span id="cb14-13"><a href="kmeans.html#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-14"><a href="kmeans.html#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Biscoe"</span>)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-14-1.png" width="672"></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="kmeans.html#cb16-1" aria-hidden="true" tabindex="-1"></a>biscoe <span class="ot">&lt;-</span> </span>
+<span id="cb16-2"><a href="kmeans.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  penguins[penguins<span class="sc">$</span>island <span class="sc">==</span> <span class="st">"&lt;FIXME&gt;"</span>, ]</span>
+<span id="cb16-3"><a href="kmeans.html#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="kmeans.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
+<span id="cb16-5"><a href="kmeans.html#cb16-5" aria-hidden="true" tabindex="-1"></a>     biscoe<span class="sc">$</span>bill_length_mm,</span>
+<span id="cb16-6"><a href="kmeans.html#cb16-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb16-7"><a href="kmeans.html#cb16-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>)</span>
+<span id="cb16-8"><a href="kmeans.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="kmeans.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>,</span>
+<span id="cb16-10"><a href="kmeans.html#cb16-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">levels</span>(biscoe<span class="sc">$</span>sex),</span>
+<span id="cb16-11"><a href="kmeans.html#cb16-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb16-12"><a href="kmeans.html#cb16-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(biscoe<span class="sc">$</span>sex)))</span>
+<span id="cb16-13"><a href="kmeans.html#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="kmeans.html#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Biscoe"</span>)</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-15-1.png" width="672"></div>
 </div>
 </div>
 <details><summary>
@@ -285,7 +394,7 @@ Answer
 </summary><div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguins</span> <span class="op">%&gt;%</span> 
   <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                     
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_depth_mm</span>,
@@ -296,7 +405,7 @@ Answer
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">biscoe</span> <span class="op">&lt;-</span> 
   <span class="va">penguins</span><span class="op">[</span><span class="va">penguins</span><span class="op">$</span><span class="va">island</span> <span class="op">==</span> <span class="st">"Biscoe"</span>, <span class="op">]</span>
 
@@ -325,7 +434,7 @@ Answer
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
   <span class="va">penguins</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">flipper_length_mm</span>,      <span class="co"># select data</span>
@@ -360,7 +469,7 @@ To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stat
 <div class="panel">
 <p><span class="panel-name">base R</span>
 To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input.</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points_r</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
     <span class="va">penguins</span><span class="op">$</span><span class="va">flipper_length_mm</span>,  <span class="co"># get numeric data</span>
@@ -403,21 +512,21 @@ To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stat
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_clust</span> <span class="op">&lt;-</span> <span class="fu">tidy</span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span> <span class="co"># get centroid coordinates</span>
 
 <span class="va">tidy_clust</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1              197.           46.0    93    3932. 1      
-## 2              187.           38.4   120    3494. 2      
+## 1              187.           38.4   120    3494. 1      
+## 2              197.           46.0    93    3932. 2      
 ## 3              217.           47.6   129    6658. 3</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
 <p>Next, we want to visualise the which data points belong to which cluster. We can do that as follows:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust</span> <span class="op">%&gt;%</span>                              <span class="co"># take clustering data</span>
   <span class="fu">augment</span><span class="op">(</span><span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span>                   <span class="co"># combine with original data</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,     <span class="co"># plot the original data</span>
@@ -425,22 +534,22 @@ When we performed the clustering, the centers were calculated. These values give
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># colour by classification</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">tidy_clust</span>,
              size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-20-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span>
 When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
 <pre><code>##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   216.8837                47.56744
+## 1                   186.9917                38.42750
 ## 2                   196.7312                45.95484
-## 3                   186.9917                38.42750</code></pre>
+## 3                   216.8837                47.56744</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
 <p>Next, we want to visualise the which data points belong to which cluster. We can do that as follows:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">points_r</span>,                <span class="co"># plot original data</span>
      col <span class="op">=</span> <span class="va">kclust_r</span><span class="op">$</span><span class="va">cluster</span>,  <span class="co"># colour by cluster</span>
      pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
@@ -448,7 +557,7 @@ When we performed the clustering, the centers were calculated. These values give
 <span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">kclust_r</span><span class="op">$</span><span class="va">centers</span>,      <span class="co"># add cluster centers</span>
        pch <span class="op">=</span> <span class="fl">4</span>,
        lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-23-1.png" width="672"></div>
 </div>
 </div>
 </div>
@@ -458,11 +567,11 @@ When we performed the clustering, the centers were calculated. These values give
 </h2>
 <p>In the example we set the number of clusters to 3. This made sense, because the data already visually separated in roughly three groups - one for each species.</p>
 <p>However, it might be that the cluster number to choose is a lot less obvious. In that case it would be helpful to explore clustering your data into a range of clusters.</p>
-<p>Reiterating over a range of <em>k</em> values is reasonably straightforward using tidyverse. In short, we determine which values of <em>k</em> we want to explore and then loop through these values, repeating the workflow we looked at previously.</p>
+<p>In short, we determine which values of <em>k</em> we want to explore and then loop through these values, repeating the workflow we looked at previously.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
-Although we could write our own function to loop through these <em>k</em> values, tidyverse has a series of <code>map()</code> functions that can do this for you. More information on them <a href="https://purrr.tidyverse.org/reference/map.html">here</a>.</p>
+Reiterating over a range of <em>k</em> values is reasonably straightforward using tidyverse. Although we could write our own function to loop through these <em>k</em> values, tidyverse has a series of <code>map()</code> functions that can do this for you. More information on them <a href="https://purrr.tidyverse.org/reference/map.html">here</a>.</p>
 <p>In short, the <code>map()</code> function spits out a <a href="https://www.w3schools.com/r/r_lists.asp">list</a> which contains the output. When we do this on our data, we can create a table that contains lists with all of the information that we need.</p>
 <p>Here we calculate the following:</p>
 <ol style="list-style-type: decimal">
@@ -472,7 +581,7 @@ Although we could write our own function to loop through these <em>k</em> values
 <li>the <code>glanced</code> column contains single-row summary for each <em>k</em> - we’ll use the <code>tot.withinss</code> values a little bit later on</li>
 <li>the <code>augmented</code> column contains the original data, augmented with the classification that was calculated by the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function</li>
 </ol>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclusts</span> <span class="op">&lt;-</span> 
   <span class="fu">tibble</span><span class="op">(</span>k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># check for k = 1 to 6</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -496,7 +605,7 @@ Although we could write our own function to loop through these <em>k</em> values
 <p>The way I see lists in this context is as containers. We have one huge table <code>kclusts</code> that contains all of the information that we need. Each ‘cell’ in this table has a container with the relevant data. The <code>kclust</code> column is a list with <code>kmeans</code> objects (the output of our <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> for each of the <em>k</em> values), whereas the other columns are lists of tibbles (because the <code>tidy()</code>, <code>glance()</code> and <code>augment()</code> functions output a tibble with the information for each value of <em>k</em>).</p>
 <p>For us to use the data in the lists, it makes sense to extract them on a column-by-column basis. We’re ignoring the <code>kclust</code> column, because we don’t need the actual <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> output any more.</p>
 <p>To extract the data from the lists we use the <code>unnest()</code> function.</p>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clusters</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span><span class="op">)</span>
@@ -512,7 +621,7 @@ Although we could write our own function to loop through these <em>k</em> values
 <p>The (augmented) data are in <code>assignments</code>. Have a look at the structure of the table.</p>
 <p>We facet the data by <em>k</em>, so we get a single panel for each value of <em>k</em>.</p>
 <p>We also add the calculated cluster centres, which are stored in <code>clusters</code>.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">assignments</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,     <span class="co"># plot data</span>
            y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
@@ -522,12 +631,12 @@ Although we could write our own function to loop through these <em>k</em> values
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,         <span class="co"># add centers</span>
              size <span class="op">=</span> <span class="fl">7</span>,
              shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
 <p>Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you’re looking for clusters that are distinct, <em>i.e.</em> are separated from one another. For example, using <code>k = 4</code> gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.</p>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#baseR explore</span></code></pre></div>
 </div>
 </div>
@@ -543,7 +652,7 @@ Although we could write our own function to loop through these <em>k</em> values
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function includes <code>tot.withinss</code> - this is the total within-cluster sum of squares.</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -551,7 +660,7 @@ The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-28-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
@@ -583,9 +692,9 @@ Answer
 <div id="load-the-data" class="section level4 unnumbered">
 <h4>Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">finches</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/finch_beaks.csv"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">finches</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 5
 ##    band species beak_length_mm beak_depth_mm  year
@@ -601,18 +710,18 @@ Answer
 <h4>Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Let’s have a look at the data.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">finches</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,
                      y <span class="op">=</span> <span class="va">beak_length_mm</span>,
                      colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-30-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-31-1.png" width="672"></div>
 </div>
 <div id="clustering-1" class="section level4 unnumbered">
 <h4>Clustering<a class="anchor" aria-label="anchor" href="#clustering-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Next, we perform the clustering.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
   <span class="va">finches</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">beak_depth_mm</span>,         <span class="co"># select data</span>
@@ -634,7 +743,7 @@ Answer
 ## size           2    -none- numeric
 ## iter           1    -none- numeric
 ## ifault         1    -none- numeric</code></pre>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_clust</span> <span class="op">&lt;-</span> <span class="fu">tidy</span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span> <span class="co"># get centroid coordinates</span>
 
 <span class="va">tidy_clust</span></code></pre></div>
@@ -647,7 +756,7 @@ Answer
 <div id="visualise-the-clusters" class="section level4 unnumbered">
 <h4>Visualise the clusters<a class="anchor" aria-label="anchor" href="#visualise-the-clusters"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust</span> <span class="op">%&gt;%</span>                              <span class="co"># take clustering data</span>
   <span class="fu">augment</span><span class="op">(</span><span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span>                   <span class="co"># combine with original data</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,     <span class="co"># plot the original data</span>
@@ -655,13 +764,13 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># colour by classification</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">tidy_clust</span>,
              size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-34-1.png" width="672"></div>
 </div>
 <div id="optimise-clusters" class="section level4 unnumbered">
 <h4>Optimise clusters<a class="anchor" aria-label="anchor" href="#optimise-clusters"><i class="fas fa-link"></i></a>
 </h4>
 <p>It looks like two clusters is a reasonable choice. But let’s explore this a bit more.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclusts</span> <span class="op">&lt;-</span> 
   <span class="fu">tibble</span><span class="op">(</span>k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># check for k = 1 to 6</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -671,7 +780,7 @@ Answer
     augmented <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">kclust</span>, <span class="va">augment</span>, <span class="va">points</span><span class="op">)</span>  <span class="co"># add classification to data set</span>
   <span class="op">)</span></code></pre></div>
 <p>Extract the relevant data.</p>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clusters</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span><span class="op">)</span>
@@ -684,7 +793,7 @@ Answer
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">glanced</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Visualise the result.</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">assignments</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,        <span class="co"># plot data</span>
            y <span class="op">=</span> <span class="va">beak_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
@@ -694,9 +803,9 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,         <span class="co"># add centers</span>
              size <span class="op">=</span> <span class="fl">7</span>,
              shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672"></div>
 <p>Create an elbow plot to have a closer look.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -704,7 +813,7 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-38-1.png" width="672"></div>
 </div>
 <div id="conclusions" class="section level4 unnumbered">
 <h4>Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"><i class="fas fa-link"></i></a>
@@ -777,17 +886,77 @@ To be added.</p>
 </div>
 </div> <!-- .container -->
 
-<footer class="bg-primary text-light mt-5"><div class="container"><div class="row">
+					</div>
+				</div>
 
-  <div class="col-12 col-md-6 mt-3">
-    <p>"<strong>CamStats</strong>" was written by Martin van Rongen and Matt Castle. It was last built on 2022-02-23.</p>
-  </div>
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
 
-  <div class="col-12 col-md-6 mt-3">
-    <p>This book was built by the <a class="text-light" href="https://bookdown.org">bookdown</a> R package.</p>
-  </div>
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
 
-</div></div>
-</footer>
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script>
 </body>
 </html>

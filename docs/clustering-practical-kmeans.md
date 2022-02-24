@@ -42,6 +42,21 @@
 
 :::
 
+::: {.panel}
+[Python]{.panel-name}
+
+| Library| Description|
+|:- |:- |
+|`plotnine`| The Python equivalent of `ggplot2`.|
+|`pandas`| A Python data analysis and manipulation tool.|
+
+
+```python
+from plotnine import *
+import pandas as pd
+```
+:::
+
 :::::
 
 ## Workflow
@@ -138,29 +153,28 @@ head(penguins)
 
 ::: {.panel}
 [Python]{.panel-name}
-
-```python
-from plotnine import *
-from plotnine.data import *
-import numpy as np
-import pandas as pd
-```
-
+The `palmerpenguins` package is not available in Python, so I've provided the data separately. To load the data into Python we do the following:
 
 ```python
 penguins = pd.read_csv("data/penguins.csv")
 ```
 
+And let's have a look at the data:
 
 ```python
-ggplot(data = penguins) +\
-geom_point(mapping = aes(x = "flipper_length_mm",
-                         y="bill_length_mm",
-                         colour="species"))
+penguins.head()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-8-1.png" width="614" />
-
+```
+##   species     island  bill_length_mm  ...  body_mass_g     sex  year
+## 0  Adelie  Torgersen            39.1  ...       3750.0    male  2007
+## 1  Adelie  Torgersen            39.5  ...       3800.0  female  2007
+## 2  Adelie  Torgersen            40.3  ...       3250.0  female  2007
+## 3  Adelie  Torgersen             NaN  ...          NaN     NaN  2007
+## 4  Adelie  Torgersen            36.7  ...       3450.0  female  2007
+## 
+## [5 rows x 8 columns]
+```
 :::
 
 :::::
@@ -180,7 +194,7 @@ ggplot(penguins, aes(x = flipper_length_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-3.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 :::
 
 ::: {.panel}
@@ -199,6 +213,19 @@ legend("bottomright",             # legend
 ```
 
 <img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```python
+ggplot(data = penguins) +\
+geom_point(mapping = aes(x = "flipper_length_mm",
+                         y = "bill_length_mm",
+                         colour = "species"))
+```
+
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-11-1.png" width="614" />
 :::
 :::::
 
@@ -229,7 +256,7 @@ penguins %>%
   facet_wrap(facets = vars(<FIXME>))
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-13-1.png" width="672" />
 :::
 ::: {.panel}
 [base R]{.panel-name}
@@ -255,7 +282,7 @@ legend("bottomright",
 title(main = "Biscoe")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-14-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-15-1.png" width="672" />
 
 :::
 :::::
@@ -409,8 +436,8 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   flipper_length_mm bill_length_mm  size withinss cluster
 ##               <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1              197.           46.0    93    3932. 1      
-## 2              187.           38.4   120    3494. 2      
+## 1              187.           38.4   120    3494. 1      
+## 2              197.           46.0    93    3932. 2      
 ## 3              217.           47.6   129    6658. 3
 ```
 
@@ -431,7 +458,7 @@ kclust %>%                              # take clustering data
              size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-21-1.png" width="672" />
 :::
 
 ::: {.panel}
@@ -445,9 +472,9 @@ kclust_r$centers  # get centroid coordinates
 
 ```
 ##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   216.8837                47.56744
+## 1                   186.9917                38.42750
 ## 2                   196.7312                45.95484
-## 3                   186.9917                38.42750
+## 3                   216.8837                47.56744
 ```
 
 :::note
@@ -467,7 +494,7 @@ points(kclust_r$centers,      # add cluster centers
        lwd = 3)
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-23-1.png" width="672" />
 :::
 :::::
 
@@ -476,12 +503,12 @@ In the example we set the number of clusters to 3. This made sense, because the 
 
 However, it might be that the cluster number to choose is a lot less obvious. In that case it would be helpful to explore clustering your data into a range of clusters.
 
-Reiterating over a range of _k_ values is reasonably straightforward using tidyverse. In short, we determine which values of _k_ we want to explore and then loop through these values, repeating the workflow we looked at previously.
+In short, we determine which values of _k_ we want to explore and then loop through these values, repeating the workflow we looked at previously.
 
 ::::: {.panelset}
 ::: {.panel}
 [tidyverse]{.panel-name}
-Although we could write our own function to loop through these _k_ values, tidyverse has a series of `map()` functions that can do this for you. More information on them [here](https://purrr.tidyverse.org/reference/map.html).
+Reiterating over a range of _k_ values is reasonably straightforward using tidyverse. Although we could write our own function to loop through these _k_ values, tidyverse has a series of `map()` functions that can do this for you. More information on them [here](https://purrr.tidyverse.org/reference/map.html).
 
 In short, the `map()` function spits out a [list](https://www.w3schools.com/r/r_lists.asp) which contains the output. When we do this on our data, we can create a table that contains lists with all of the information that we need.
 
@@ -562,7 +589,7 @@ ggplot(assignments,
              shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-26-1.png" width="672" />
 
 Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you're looking for clusters that are distinct, _i.e._ are separated from one another. For example, using `k = 4` gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.
 :::
@@ -602,7 +629,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-28-1.png" width="672" />
 
 :::
 
@@ -666,7 +693,7 @@ ggplot(finches, aes(x = beak_depth_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-30-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-31-1.png" width="672" />
 
 #### Clustering {.unnumbered}
 Next, we perform the clustering.
@@ -726,7 +753,7 @@ kclust %>%                              # take clustering data
              size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-34-1.png" width="672" />
 
 #### Optimise clusters {.unnumbered}
 It looks like two clusters is a reasonable choice. But let's explore this a bit more.
@@ -772,7 +799,7 @@ ggplot(assignments,
              shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 Create an elbow plot to have a closer look.
 
@@ -786,7 +813,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-38-1.png" width="672" />
 
 #### Conclusions {.unnumbered}
 Our initial clustering was done using two clusters, basically capturing the two different finch species.
