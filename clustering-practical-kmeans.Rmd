@@ -49,10 +49,15 @@ xaringanExtra::style_panelset(font_family = "inherit")
 |`plotnine`| The Python equivalent of `ggplot2`.|
 |`pandas`| A Python data analysis and manipulation tool.|
 
-```{python}
+```{python, warning=F}
 from plotnine import *
 import pandas as pd
+from datar.all import *
+from pipda import options
+
+options.assume_all_piping = True
 ```
+
 :::
 
 :::::
@@ -71,14 +76,6 @@ K-means clustering is an iterative process. It follows the following steps:
 First we need some data! To liven things up a bit, we'll be using data from the `palmerpenguins` package. This package has a whole bunch of data on penguins. What's not to love?
 
 ::::: {.panelset}
-::: {.panel}
-[Data]{.panel-name}
-```{r}
-# attach the data
-data(package = 'palmerpenguins')
-```
-:::
-
 ::: {.panel}
 [Penguins]{.panel-name}
 The `penguins` data set comes from `palmerpenguins` package (for more information, see [the GitHub page](https://github.com/allisonhorst/palmerpenguins)).
@@ -103,40 +100,16 @@ First of all, let's have a look at the data. It is always a good idea to get a s
 ::::: {.panelset}
 ::: {.panel}
 [tidyverse]{.panel-name}
+First, we load and inspect the data:
 ```{r}
+# attach the data
+data(package = 'palmerpenguins')
+
+# inspect the data
 penguins
 ```
-:::
 
-::: {.panel}
-[base R]{.panel-name}
-```{r}
-head(penguins)
-```
-:::
-
-::: {.panel}
-[Python]{.panel-name}
-The `palmerpenguins` package is not available in Python, so I've provided the data separately. To load the data into Python we do the following:
-```{python}
-penguins = pd.read_csv("data/penguins.csv")
-```
-
-And let's have a look at the data:
-```{python}
-penguins.head()
-```
-:::
-
-:::::
-
-So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins' weight plus sex was recorded.
-
-So let's have a look at flipper length versus bill length, as an example.
-
-::::: {.panelset}
-::: {.panel}
-[tidyverse]{.panel-name}
+Next, we plot the data:
 ```{r, warning = FALSE}
 ggplot(penguins, aes(x = flipper_length_mm,
                      y = bill_length_mm,
@@ -147,6 +120,16 @@ ggplot(penguins, aes(x = flipper_length_mm,
 
 ::: {.panel}
 [base R]{.panel-name}
+First, we load and inspect the data:
+```{r}
+# attach the data
+data(package = 'palmerpenguins')
+
+# inspect the data
+head(penguins)
+```
+
+Next, we plot the data:
 ```{r}
 plot(penguins$flipper_length_mm,  # scatter plot
      penguins$bill_length_mm,
@@ -162,14 +145,32 @@ legend("bottomright",             # legend
 
 ::: {.panel}
 [Python]{.panel-name}
+The `palmerpenguins` package is not available in Python, so I've provided the data separately. To load the data into Python we do the following:
+```{python}
+# load the data
+penguins = pd.read_csv("data/penguins.csv")
+
+# inspect the data
+penguins.head()
+```
+
+Next, we plot the data:
 ```{python, warning=F, message=F, results='hide'}
-ggplot(data = penguins) +\
-geom_point(mapping = aes(x = "flipper_length_mm",
-                         y = "bill_length_mm",
-                         colour = "species"))
+(
+  ggplot(penguins,
+    aes(x = "flipper_length_mm",
+        y = "bill_length_mm",
+        colour = "species"))
+  + geom_point()
+)
 ```
 :::
+
 :::::
+
+So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins' weight plus sex was recorded.
+
+As an example, we also have a look at flipper length versus bill length.
 
 We can already see that the data appear to cluster quite closely by species. A great example to illustrate K-means clustering (you'd almost think I chose the example on purpose!)
 
@@ -207,6 +208,7 @@ penguins %>%
   facet_wrap(facets = vars(island))
 ```
 :::
+
 ::: {.panel}
 [base R]{.panel-name}
 Things are bit more convoluted using base R, compared to tidyverse. That's because there is no faceting equivalent as such that you can implement directly.
@@ -246,7 +248,33 @@ legend("bottomright",
 
 title(main = "Biscoe")
 ```
+:::
 
+::: {.panel}
+[Python]{.panel-name}
+```{python, eval=FALSE}
+(
+  penguins >> \
+  drop_na() >> \
+  ggplot(aes(x = '<FIXME>',
+             y = 'bill_length_mm',
+             colour = '<FIXME>'))
+         + geom_<FIXME>()
+         + facet_wrap('<FIXME>')
+)
+```
+
+```{python, echo=FALSE, results='hide'}
+(
+  penguins >> \
+  drop_na() >> \
+  ggplot(aes(x = 'bill_depth_mm',
+             y = 'bill_length_mm',
+             colour = 'sex'))
+         + geom_point()
+         + facet_wrap('island')
+)
+```
 :::
 :::::
 
@@ -286,6 +314,23 @@ legend("bottomright",
 
 title(main = "Biscoe")
 ```
+:::
+
+::: {.panel}
+[Python]{.panel-name}
+
+```{python, results='hide', fig.show='hide'}
+(
+  penguins >> \
+  drop_na() >> \
+  ggplot(aes(x = 'bill_depth_mm',
+             y = 'bill_length_mm',
+             colour = 'sex'))
+         + geom_point()
+         + facet_wrap('island')
+)
+```
+
 :::
 :::::
 
