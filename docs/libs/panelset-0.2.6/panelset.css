@@ -36,6 +36,7 @@
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0 0 2px 0;
+  margin-bottom: 10px; /*add space */
   box-shadow: inset 0 -2px 0px var(--panel-tabs-border-bottom);
 }
 
