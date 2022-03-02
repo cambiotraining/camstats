@@ -10,7 +10,7 @@ libraries-and-functions
 workflow
 datasets
 visualise-the-data
-exercise---flipper-and-bill-length
+exercise---bill-depth-and-length
 clustering
 visualise-clusters
 optimising-cluster-number

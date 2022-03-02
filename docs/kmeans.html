@@ -213,19 +213,12 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="kmeans.html#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> plotnine <span class="im">import</span> <span class="op">*</span></span>
 <span id="cb2-2"><a href="kmeans.html#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb2-3"><a href="kmeans.html#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datar.<span class="bu">all</span> <span class="im">import</span> <span class="op">*</span></span></code></pre></div>
-<pre><code>## [2022-02-24 15:58:30][datar][WARNING] Builtin name "min" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "max" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "sum" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "abs" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "round" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "all" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "any" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "re" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "filter" has been overriden by datar.
-## [2022-02-24 15:58:30][datar][WARNING] Builtin name "slice" has been overriden by datar.</code></pre>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="kmeans.html#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipda <span class="im">import</span> options</span>
-<span id="cb4-2"><a href="kmeans.html#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="kmeans.html#cb4-3" aria-hidden="true" tabindex="-1"></a>options.assume_all_piping <span class="op">=</span> <span class="va">True</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="kmeans.html#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipda <span class="im">import</span> options</span>
+<span id="cb3-2"><a href="kmeans.html#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.cluster <span class="im">import</span> KMeans</span>
+<span id="cb3-3"><a href="kmeans.html#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> silhouette_score</span>
+<span id="cb3-4"><a href="kmeans.html#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> StandardScaler</span>
+<span id="cb3-5"><a href="kmeans.html#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="kmeans.html#cb3-6" aria-hidden="true" tabindex="-1"></a>options.assume_all_piping <span class="op">=</span> <span class="va">True</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -257,7 +250,7 @@ The <code>penguins</code> data set comes from <code>palmerpenguins</code> packag
 <p><span class="panel-name">Darwin’s finches</span>
 The <code>finches</code> dataset has been adapted from the <a href="https://doi.org/10.5061/dryad.g6g3h">accompanying website</a> to <em>40 years of evolution. Darwin’s finches on Daphne Major Island</em> by Peter R. Grant and Rosemary B. Grant.</p>
 <p>A really interesting lecture on the findings by the Grants can be found <a href="https://carnegiescience.edu/news/multimedia/40-years-evolution-darwins-finches">here</a> (1h10min).</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># load the data</span>
 <span class="va">finches</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/finch_beaks.csv"</span><span class="op">)</span></code></pre></div>
 </div>
@@ -272,7 +265,7 @@ The <code>finches</code> dataset has been adapted from the <a href="https://doi.
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 First, we load and inspect the data:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># attach the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">'palmerpenguins'</span><span class="op">)</span>
 
@@ -293,8 +286,8 @@ First, we load and inspect the data:</p>
 ## 10 Adelie  Torgersen           42            20.2               190        4250
 ## # … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
 <p>Next, we plot the data:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">penguins</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">penguins</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_depth_mm</span>,
                      y <span class="op">=</span> <span class="va">bill_length_mm</span>,
                      colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
@@ -303,7 +296,7 @@ First, we load and inspect the data:</p>
 <div class="panel">
 <p><span class="panel-name">base R</span>
 First, we load and inspect the data:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># attach the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">'palmerpenguins'</span><span class="op">)</span>
 
@@ -320,8 +313,8 @@ First, we load and inspect the data:</p>
 ## 6 Adelie  Torge…           39.3          20.6              190        3650 male 
 ## # … with 1 more variable: year &lt;int&gt;</code></pre>
 <p>Next, we plot the data:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">flipper_length_mm</span>,  <span class="co"># scatter plot</span>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">penguins</span><span class="op">$</span><span class="va">bill_depth_mm</span>,      <span class="co"># scatter plot</span>
      <span class="va">penguins</span><span class="op">$</span><span class="va">bill_length_mm</span>,
      pch <span class="op">=</span> <span class="fl">20</span>,
      col <span class="op">=</span> <span class="va">penguins</span><span class="op">$</span><span class="va">species</span><span class="op">)</span>      <span class="co"># colour by species</span>
@@ -335,11 +328,11 @@ First, we load and inspect the data:</p>
 <div class="panel">
 <p><span class="panel-name">Python</span>
 The <code>palmerpenguins</code> package is not available in Python, so I’ve provided the data separately. To load the data into Python we do the following:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="kmeans.html#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
-<span id="cb12-2"><a href="kmeans.html#cb12-2" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pd.read_csv(<span class="st">"data/penguins.csv"</span>)</span>
-<span id="cb12-3"><a href="kmeans.html#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="kmeans.html#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the data</span></span>
-<span id="cb12-5"><a href="kmeans.html#cb12-5" aria-hidden="true" tabindex="-1"></a>penguins.head()</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="kmeans.html#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># load the data</span></span>
+<span id="cb11-2"><a href="kmeans.html#cb11-2" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">=</span> pd.read_csv(<span class="st">'data/penguins.csv'</span>)</span>
+<span id="cb11-3"><a href="kmeans.html#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="kmeans.html#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># inspect the data</span></span>
+<span id="cb11-5"><a href="kmeans.html#cb11-5" aria-hidden="true" tabindex="-1"></a>penguins.head()</span></code></pre></div>
 <pre><code>##    species     island  bill_length_mm  ...  body_mass_g      sex    year
 ##   &lt;object&gt;   &lt;object&gt;       &lt;float64&gt;  ...    &lt;float64&gt; &lt;object&gt; &lt;int64&gt;
 ## 0   Adelie  Torgersen            39.1  ...       3750.0     male    2007
@@ -350,71 +343,71 @@ The <code>palmerpenguins</code> package is not available in Python, so I’ve pr
 ## 
 ## [5 rows x 8 columns]</code></pre>
 <p>Next, we plot the data:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="kmeans.html#cb14-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb14-2"><a href="kmeans.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  ggplot(penguins,</span>
-<span id="cb14-3"><a href="kmeans.html#cb14-3" aria-hidden="true" tabindex="-1"></a>    aes(x <span class="op">=</span> <span class="st">"flipper_length_mm"</span>,</span>
-<span id="cb14-4"><a href="kmeans.html#cb14-4" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="st">"bill_length_mm"</span>,</span>
-<span id="cb14-5"><a href="kmeans.html#cb14-5" aria-hidden="true" tabindex="-1"></a>        colour <span class="op">=</span> <span class="st">"species"</span>))</span>
-<span id="cb14-6"><a href="kmeans.html#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point()</span>
-<span id="cb14-7"><a href="kmeans.html#cb14-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="kmeans.html#cb13-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb13-2"><a href="kmeans.html#cb13-2" aria-hidden="true" tabindex="-1"></a>  ggplot(penguins,</span>
+<span id="cb13-3"><a href="kmeans.html#cb13-3" aria-hidden="true" tabindex="-1"></a>    aes(x <span class="op">=</span> <span class="st">'bill_depth_mm'</span>,</span>
+<span id="cb13-4"><a href="kmeans.html#cb13-4" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
+<span id="cb13-5"><a href="kmeans.html#cb13-5" aria-hidden="true" tabindex="-1"></a>        colour <span class="op">=</span> <span class="st">'species'</span>))</span>
+<span id="cb13-6"><a href="kmeans.html#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">+</span> geom_point()</span>
+<span id="cb13-7"><a href="kmeans.html#cb13-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-9-1.png" width="614"></div>
 </div>
 </div>
 <p>So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins’ weight plus sex was recorded.</p>
-<p>As an example, we also have a look at flipper length versus bill length.</p>
+<p>As an example, we also have a look at bill depth versus bill length.</p>
 <p>We can already see that the data appear to cluster quite closely by species. A great example to illustrate K-means clustering (you’d almost think I chose the example on purpose!)</p>
 </div>
-<div id="exercise---bill-depth-and-length" class="section level2" number="2.6">
+<div id="exercise---flipper-and-bill-length" class="section level2" number="2.6">
 <h2>
-<span class="header-section-number">2.6</span> Exercise - Bill depth and length<a class="anchor" aria-label="anchor" href="#exercise---bill-depth-and-length"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.6</span> Exercise - Flipper and bill length<a class="anchor" aria-label="anchor" href="#exercise---flipper-and-bill-length"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>For this exercise I’d like you to create a scatter plot of the bill depth against the bill length. We’ll be using colour to separate female/male data. Lastly, we’re creating individual panels for each island.</p>
+<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>For this exercise I’d like you to create a scatter plot of the flipper length against the bill length. We’ll be using colour to separate female/male data. Lastly, we’re creating individual panels for each island.</p>
 <p>Most of the code is given below and I would like you to replace the <code>&lt;FIXME&gt;</code> parts with the required code.</p>
 <p>Have a think about how many clusters you would try and divide these data in.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="kmeans.html#cb15-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">%&gt;%</span> </span>
-<span id="cb15-2"><a href="kmeans.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span>                     </span>
-<span id="cb15-3"><a href="kmeans.html#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
-<span id="cb15-4"><a href="kmeans.html#cb15-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> bill_length_mm,</span>
-<span id="cb15-5"><a href="kmeans.html#cb15-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>)) <span class="sc">+</span></span>
-<span id="cb15-6"><a href="kmeans.html#cb15-6" aria-hidden="true" tabindex="-1"></a>  geom_<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>() <span class="sc">+</span></span>
-<span id="cb15-7"><a href="kmeans.html#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="kmeans.html#cb14-1" aria-hidden="true" tabindex="-1"></a>penguins <span class="sc">%&gt;%</span> </span>
+<span id="cb14-2"><a href="kmeans.html#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>() <span class="sc">%&gt;%</span>                     </span>
+<span id="cb14-3"><a href="kmeans.html#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
+<span id="cb14-4"><a href="kmeans.html#cb14-4" aria-hidden="true" tabindex="-1"></a>             <span class="at">y =</span> bill_length_mm,</span>
+<span id="cb14-5"><a href="kmeans.html#cb14-5" aria-hidden="true" tabindex="-1"></a>             <span class="at">colour =</span> <span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>)) <span class="sc">+</span></span>
+<span id="cb14-6"><a href="kmeans.html#cb14-6" aria-hidden="true" tabindex="-1"></a>  geom_<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>() <span class="sc">+</span></span>
+<span id="cb14-7"><a href="kmeans.html#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="at">facets =</span> <span class="fu">vars</span>(<span class="sc">&lt;</span>FIXME<span class="sc">&gt;</span>))</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-11-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span>
 Things are bit more convoluted using base R, compared to tidyverse. That’s because there is no faceting equivalent as such that you can implement directly.</p>
 <p>What you could do is split the data by island and create a loop to plot for each island. I’m loathe to go through that here, so I’ll just use <code>Biscoe</code> island as an example and I’m sure that you’re able to adapt things accordingly for <code>Dream</code> and <code>Torgersen</code> islands!</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="kmeans.html#cb16-1" aria-hidden="true" tabindex="-1"></a>biscoe <span class="ot">&lt;-</span> </span>
-<span id="cb16-2"><a href="kmeans.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  penguins[penguins<span class="sc">$</span>island <span class="sc">==</span> <span class="st">"&lt;FIXME&gt;"</span>, ]</span>
-<span id="cb16-3"><a href="kmeans.html#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="kmeans.html#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
-<span id="cb16-5"><a href="kmeans.html#cb16-5" aria-hidden="true" tabindex="-1"></a>     biscoe<span class="sc">$</span>bill_length_mm,</span>
-<span id="cb16-6"><a href="kmeans.html#cb16-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>,</span>
-<span id="cb16-7"><a href="kmeans.html#cb16-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>)</span>
-<span id="cb16-8"><a href="kmeans.html#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-9"><a href="kmeans.html#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>,</span>
-<span id="cb16-10"><a href="kmeans.html#cb16-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">levels</span>(biscoe<span class="sc">$</span>sex),</span>
-<span id="cb16-11"><a href="kmeans.html#cb16-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">20</span>,</span>
-<span id="cb16-12"><a href="kmeans.html#cb16-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(biscoe<span class="sc">$</span>sex)))</span>
-<span id="cb16-13"><a href="kmeans.html#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-14"><a href="kmeans.html#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Biscoe"</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="kmeans.html#cb15-1" aria-hidden="true" tabindex="-1"></a>biscoe <span class="ot">&lt;-</span> </span>
+<span id="cb15-2"><a href="kmeans.html#cb15-2" aria-hidden="true" tabindex="-1"></a>  penguins[penguins<span class="sc">$</span>island <span class="sc">==</span> <span class="st">'&lt;FIXME&gt;'</span>, ]</span>
+<span id="cb15-3"><a href="kmeans.html#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="kmeans.html#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>,</span>
+<span id="cb15-5"><a href="kmeans.html#cb15-5" aria-hidden="true" tabindex="-1"></a>     biscoe<span class="sc">$</span>bill_length_mm,</span>
+<span id="cb15-6"><a href="kmeans.html#cb15-6" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb15-7"><a href="kmeans.html#cb15-7" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> biscoe<span class="sc">$</span><span class="er">&lt;</span>FIXME<span class="sc">&gt;</span>)</span>
+<span id="cb15-8"><a href="kmeans.html#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="kmeans.html#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"bottomright"</span>,</span>
+<span id="cb15-10"><a href="kmeans.html#cb15-10" aria-hidden="true" tabindex="-1"></a>       <span class="at">legend =</span> <span class="fu">levels</span>(biscoe<span class="sc">$</span>sex),</span>
+<span id="cb15-11"><a href="kmeans.html#cb15-11" aria-hidden="true" tabindex="-1"></a>       <span class="at">pch =</span> <span class="dv">20</span>,</span>
+<span id="cb15-12"><a href="kmeans.html#cb15-12" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">factor</span>(<span class="fu">levels</span>(biscoe<span class="sc">$</span>sex)))</span>
+<span id="cb15-13"><a href="kmeans.html#cb15-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="kmeans.html#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span>(<span class="at">main =</span> <span class="st">"Biscoe"</span>)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-13-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="kmeans.html#cb17-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb17-2"><a href="kmeans.html#cb17-2" aria-hidden="true" tabindex="-1"></a>  penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb17-3"><a href="kmeans.html#cb17-3" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb17-4"><a href="kmeans.html#cb17-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">'&lt;FIXME&gt;'</span>,</span>
-<span id="cb17-5"><a href="kmeans.html#cb17-5" aria-hidden="true" tabindex="-1"></a>             y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
-<span id="cb17-6"><a href="kmeans.html#cb17-6" aria-hidden="true" tabindex="-1"></a>             colour <span class="op">=</span> <span class="st">'&lt;FIXME&gt;'</span>))</span>
-<span id="cb17-7"><a href="kmeans.html#cb17-7" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> geom_<span class="op">&lt;</span>FIXME<span class="op">&gt;</span>()</span>
-<span id="cb17-8"><a href="kmeans.html#cb17-8" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> facet_wrap(<span class="st">'&lt;FIXME&gt;'</span>)</span>
-<span id="cb17-9"><a href="kmeans.html#cb17-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="kmeans.html#cb16-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb16-2"><a href="kmeans.html#cb16-2" aria-hidden="true" tabindex="-1"></a>  penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb16-3"><a href="kmeans.html#cb16-3" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb16-4"><a href="kmeans.html#cb16-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">'&lt;FIXME&gt;'</span>,</span>
+<span id="cb16-5"><a href="kmeans.html#cb16-5" aria-hidden="true" tabindex="-1"></a>             y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
+<span id="cb16-6"><a href="kmeans.html#cb16-6" aria-hidden="true" tabindex="-1"></a>             colour <span class="op">=</span> <span class="st">'&lt;FIXME&gt;'</span>))</span>
+<span id="cb16-7"><a href="kmeans.html#cb16-7" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> geom_<span class="op">&lt;</span>FIXME<span class="op">&gt;</span>()</span>
+<span id="cb16-8"><a href="kmeans.html#cb16-8" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> facet_wrap(<span class="st">'&lt;FIXME&gt;'</span>)</span>
+<span id="cb16-9"><a href="kmeans.html#cb16-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-15-1.png" width="614"></div>
 </div>
 </div>
@@ -423,10 +416,10 @@ Answer
 </summary><div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguins</span> <span class="op">%&gt;%</span> 
   <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                     
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_depth_mm</span>,
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,
              y <span class="op">=</span> <span class="va">bill_length_mm</span>,
              colour <span class="op">=</span> <span class="va">sex</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -434,11 +427,11 @@ Answer
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">biscoe</span> <span class="op">&lt;-</span> 
-  <span class="va">penguins</span><span class="op">[</span><span class="va">penguins</span><span class="op">$</span><span class="va">island</span> <span class="op">==</span> <span class="st">"Biscoe"</span>, <span class="op">]</span>
+  <span class="va">penguins</span><span class="op">[</span><span class="va">penguins</span><span class="op">$</span><span class="va">island</span> <span class="op">==</span> <span class="st">'Biscoe'</span>, <span class="op">]</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">biscoe</span><span class="op">$</span><span class="va">bill_depth_mm</span>,
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">biscoe</span><span class="op">$</span><span class="va">flipper_length_mm</span>,
      <span class="va">biscoe</span><span class="op">$</span><span class="va">bill_length_mm</span>,
      pch <span class="op">=</span> <span class="fl">20</span>,
      col <span class="op">=</span> <span class="va">biscoe</span><span class="op">$</span><span class="va">sex</span><span class="op">)</span>
@@ -448,19 +441,19 @@ Answer
        pch <span class="op">=</span> <span class="fl">20</span>,
        col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/levels.html">levels</a></span><span class="op">(</span><span class="va">biscoe</span><span class="op">$</span><span class="va">sex</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">"Biscoe"</span><span class="op">)</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/graphics/title.html">title</a></span><span class="op">(</span>main <span class="op">=</span> <span class="st">'Biscoe'</span><span class="op">)</span></code></pre></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">Python</span></p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="kmeans.html#cb20-1" aria-hidden="true" tabindex="-1"></a>(</span>
-<span id="cb20-2"><a href="kmeans.html#cb20-2" aria-hidden="true" tabindex="-1"></a>  penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb20-3"><a href="kmeans.html#cb20-3" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
-<span id="cb20-4"><a href="kmeans.html#cb20-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">'bill_depth_mm'</span>,</span>
-<span id="cb20-5"><a href="kmeans.html#cb20-5" aria-hidden="true" tabindex="-1"></a>             y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
-<span id="cb20-6"><a href="kmeans.html#cb20-6" aria-hidden="true" tabindex="-1"></a>             colour <span class="op">=</span> <span class="st">'sex'</span>))</span>
-<span id="cb20-7"><a href="kmeans.html#cb20-7" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> geom_point()</span>
-<span id="cb20-8"><a href="kmeans.html#cb20-8" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> facet_wrap(<span class="st">'island'</span>)</span>
-<span id="cb20-9"><a href="kmeans.html#cb20-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="kmeans.html#cb19-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb19-2"><a href="kmeans.html#cb19-2" aria-hidden="true" tabindex="-1"></a>  penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb19-3"><a href="kmeans.html#cb19-3" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb19-4"><a href="kmeans.html#cb19-4" aria-hidden="true" tabindex="-1"></a>  ggplot(aes(x <span class="op">=</span> <span class="st">'flipper_length_mm'</span>,</span>
+<span id="cb19-5"><a href="kmeans.html#cb19-5" aria-hidden="true" tabindex="-1"></a>             y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
+<span id="cb19-6"><a href="kmeans.html#cb19-6" aria-hidden="true" tabindex="-1"></a>             colour <span class="op">=</span> <span class="st">'sex'</span>))</span>
+<span id="cb19-7"><a href="kmeans.html#cb19-7" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> geom_point()</span>
+<span id="cb19-8"><a href="kmeans.html#cb19-8" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> facet_wrap(<span class="st">'island'</span>)</span>
+<span id="cb19-9"><a href="kmeans.html#cb19-9" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
 </div>
 </div>
 </details>
@@ -474,13 +467,18 @@ Answer
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
-To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
   <span class="va">penguins</span> <span class="op">%&gt;%</span> 
-  <span class="fu">select</span><span class="op">(</span><span class="va">flipper_length_mm</span>,      <span class="co"># select data</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">bill_depth_mm</span>,          <span class="co"># select data</span>
          <span class="va">bill_length_mm</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span>                      <span class="co"># remove missing values</span>
+  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                  <span class="co"># remove missing values</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                    <span class="co"># scale the data</span>
+  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">rename</span><span class="op">(</span>bill_depth_scaled <span class="op">=</span> <span class="va">bill_depth_mm</span>,
+         bill_length_scaled <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span>
+
 
 <span class="va">kclust</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">points</span>,                 <span class="co"># perform k-means clustering</span>
@@ -509,19 +507,24 @@ To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stat
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span>
-To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.</p>
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points_r</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html">data.frame</a></span><span class="op">(</span>
-    <span class="va">penguins</span><span class="op">$</span><span class="va">flipper_length_mm</span>,  <span class="co"># get numeric data</span>
+    <span class="va">penguins</span><span class="op">$</span><span class="va">bill_depth_mm</span>,      <span class="co"># get the numeric data</span>
     <span class="va">penguins</span><span class="op">$</span><span class="va">bill_length_mm</span><span class="op">)</span> |&gt;  <span class="co"># use base R pipe!</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span>                      <span class="co"># remove missing data</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/na.fail.html">na.omit</a></span><span class="op">(</span><span class="op">)</span> |&gt;                   <span class="co"># remove missing data</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span>                        <span class="co"># scale the data</span>
 
-<span class="va">kclust_r</span> <span class="op">&lt;-</span>
+<span class="co"># and rename the columns to avoid confusion</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">points_r</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">'bill_depth_scaled'</span>
+<span class="fu"><a href="https://rdrr.io/r/base/names.html">names</a></span><span class="op">(</span><span class="va">points_r</span><span class="op">)</span><span class="op">[</span><span class="fl">2</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">'bill_length_scaled'</span>
+
+<span class="va">kclusts_r</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">points_r</span>,               <span class="co"># perform k-means clustering</span>
          centers <span class="op">=</span> <span class="fl">3</span><span class="op">)</span>            <span class="co"># using 3 centers</span>
 
-<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">kclust_r</span><span class="op">)</span>                <span class="co"># summarise output</span></code></pre></div>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">kclusts_r</span><span class="op">)</span>                <span class="co"># summarise output</span></code></pre></div>
 <pre><code>##              Length Class  Mode   
 ## cluster      342    -none- numeric
 ## centers        6    -none- numeric
@@ -542,6 +545,29 @@ To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stat
 <code>totss</code>, <code>tot.withinss</code>, <code>betweenss</code>, and <code>iter</code> contain information about the full clustering</li>
 </ul>
 </div>
+<div class="panel">
+<p><span class="panel-name">Python</span>
+To do the clustering, we’ll be using the <code>KMeans()</code> function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="kmeans.html#cb24-1" aria-hidden="true" tabindex="-1"></a>scaler <span class="op">=</span> StandardScaler()</span>
+<span id="cb24-2"><a href="kmeans.html#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="kmeans.html#cb24-3" aria-hidden="true" tabindex="-1"></a>points_py <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb24-4"><a href="kmeans.html#cb24-4" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb24-5"><a href="kmeans.html#cb24-5" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb24-6"><a href="kmeans.html#cb24-6" aria-hidden="true" tabindex="-1"></a>  select(<span class="st">'bill_depth_mm'</span>, <span class="st">'bill_length_mm'</span>)</span>
+<span id="cb24-7"><a href="kmeans.html#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="kmeans.html#cb24-8" aria-hidden="true" tabindex="-1"></a>points_py <span class="op">=</span> scaler.fit_transform(points_py)</span>
+<span id="cb24-9"><a href="kmeans.html#cb24-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="kmeans.html#cb24-10" aria-hidden="true" tabindex="-1"></a>kmeans <span class="op">=</span> KMeans(</span>
+<span id="cb24-11"><a href="kmeans.html#cb24-11" aria-hidden="true" tabindex="-1"></a>init <span class="op">=</span> <span class="st">'random'</span>,</span>
+<span id="cb24-12"><a href="kmeans.html#cb24-12" aria-hidden="true" tabindex="-1"></a>n_clusters <span class="op">=</span> <span class="dv">3</span>,</span>
+<span id="cb24-13"><a href="kmeans.html#cb24-13" aria-hidden="true" tabindex="-1"></a>n_init <span class="op">=</span> <span class="dv">10</span>,</span>
+<span id="cb24-14"><a href="kmeans.html#cb24-14" aria-hidden="true" tabindex="-1"></a>max_iter <span class="op">=</span> <span class="dv">300</span>,</span>
+<span id="cb24-15"><a href="kmeans.html#cb24-15" aria-hidden="true" tabindex="-1"></a>random_state <span class="op">=</span> <span class="dv">42</span></span>
+<span id="cb24-16"><a href="kmeans.html#cb24-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-17"><a href="kmeans.html#cb24-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="kmeans.html#cb24-18" aria-hidden="true" tabindex="-1"></a>kmeans.fit(points_py)</span></code></pre></div>
+<pre><code>## KMeans(init='random', n_clusters=3, random_state=42)</code></pre>
+</div>
 </div>
 </div>
 <div id="visualise-clusters" class="section level2" number="2.8">
@@ -553,52 +579,99 @@ To do the clustering, we’ll be using the <code><a href="https://rdrr.io/r/stat
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_clust</span> <span class="op">&lt;-</span> <span class="fu">tidy</span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span> <span class="co"># get centroid coordinates</span>
 
 <span class="va">tidy_clust</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 5
-##   flipper_length_mm bill_length_mm  size withinss cluster
-##               &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1              187.           38.4   120    3494. 1      
-## 2              217.           47.6   129    6658. 2      
-## 3              197.           46.0    93    3932. 3</code></pre>
+##   bill_depth_scaled bill_length_scaled  size withinss cluster
+##               &lt;dbl&gt;              &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
+## 1             0.799              1.10     64     39.0 1      
+## 2             0.560             -0.943   153     88.0 2      
+## 3            -1.09               0.590   125     59.4 3</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
-<p>Next, we want to visualise the which data points belong to which cluster. We can do that as follows:</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p>Next, we want to visualise to which data points belong to which cluster. We can do that as follows:</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust</span> <span class="op">%&gt;%</span>                              <span class="co"># take clustering data</span>
   <span class="fu">augment</span><span class="op">(</span><span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span>                   <span class="co"># combine with original data</span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,     <span class="co"># plot the original data</span>
-             y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_depth_scaled</span>,     <span class="co"># plot the scaled data</span>
+             y <span class="op">=</span> <span class="va">bill_length_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># colour by classification</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">tidy_clust</span>,
-             size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
+             size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">'x'</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-23-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span>
 When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">kclust_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
-<pre><code>##   penguins.flipper_length_mm penguins.bill_length_mm
-## 1                   196.7312                45.95484
-## 2                   186.9917                38.42750
-## 3                   216.8837                47.56744</code></pre>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">kclusts_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
+<pre><code>##   penguins.bill_depth_mm penguins.bill_length_mm
+## 1             -1.0937700               0.5903143
+## 2              0.5595723              -0.9431819
+## 3              0.7985421               1.1018368</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
-<p>Next, we want to visualise the which data points belong to which cluster. We can do that as follows:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">points_r</span>,                <span class="co"># plot original data</span>
-     col <span class="op">=</span> <span class="va">kclust_r</span><span class="op">$</span><span class="va">cluster</span>,  <span class="co"># colour by cluster</span>
+<p>Next, we want to visualise to which data points belong to which cluster. We can do that as follows:</p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">points_r</span>,                <span class="co"># plot scaled data</span>
+     col <span class="op">=</span> <span class="va">kclusts_r</span><span class="op">$</span><span class="va">cluster</span>,  <span class="co"># colour by cluster</span>
      pch <span class="op">=</span> <span class="fl">20</span><span class="op">)</span>
 
-<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">kclust_r</span><span class="op">$</span><span class="va">centers</span>,      <span class="co"># add cluster centers</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/points.html">points</a></span><span class="op">(</span><span class="va">kclusts_r</span><span class="op">$</span><span class="va">centers</span>,      <span class="co"># add cluster centers</span>
        pch <span class="op">=</span> <span class="fl">4</span>,
        lwd <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-24-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">Python</span>
+When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="kmeans.html#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="co"># calculate the cluster centers</span></span>
+<span id="cb32-2"><a href="kmeans.html#cb32-2" aria-hidden="true" tabindex="-1"></a>kclusts_py <span class="op">=</span> kmeans.cluster_centers_</span>
+<span id="cb32-3"><a href="kmeans.html#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="kmeans.html#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co"># convert to tibble and rename columns</span></span>
+<span id="cb32-5"><a href="kmeans.html#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="co"># use base0_ = True because indices are 0-based</span></span>
+<span id="cb32-6"><a href="kmeans.html#cb32-6" aria-hidden="true" tabindex="-1"></a>kclusts_py <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb32-7"><a href="kmeans.html#cb32-7" aria-hidden="true" tabindex="-1"></a>tibble(kclusts_py) <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb32-8"><a href="kmeans.html#cb32-8" aria-hidden="true" tabindex="-1"></a>rename(bill_depth_scaled <span class="op">=</span> <span class="dv">0</span>,</span>
+<span id="cb32-9"><a href="kmeans.html#cb32-9" aria-hidden="true" tabindex="-1"></a>       bill_length_scaled <span class="op">=</span> <span class="dv">1</span>, base0_<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-10"><a href="kmeans.html#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="kmeans.html#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># and show the coordinates</span></span>
+<span id="cb32-12"><a href="kmeans.html#cb32-12" aria-hidden="true" tabindex="-1"></a>kclusts_py</span></code></pre></div>
+<pre><code>##    bill_depth_scaled  bill_length_scaled
+##            &lt;float64&gt;           &lt;float64&gt;
+## 0          -1.098055            0.586444
+## 1           0.795036            1.088684
+## 2           0.553935           -0.950240</code></pre>
+<div class="note">
+<p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
+</div>
+<p>Next, we want to visualise to which data points belong to which cluster. We can do that as follows:</p>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="kmeans.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># convert NumPy arrays to data frame</span></span>
+<span id="cb34-2"><a href="kmeans.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="co"># use base0_ = True because indices are 0-based</span></span>
+<span id="cb34-3"><a href="kmeans.html#cb34-3" aria-hidden="true" tabindex="-1"></a>points_py <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb34-4"><a href="kmeans.html#cb34-4" aria-hidden="true" tabindex="-1"></a>tibble(points_py) <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb34-5"><a href="kmeans.html#cb34-5" aria-hidden="true" tabindex="-1"></a>rename(bill_depth_scaled <span class="op">=</span> <span class="dv">0</span>,</span>
+<span id="cb34-6"><a href="kmeans.html#cb34-6" aria-hidden="true" tabindex="-1"></a>       bill_length_scaled <span class="op">=</span> <span class="dv">1</span>, base0_ <span class="op">=</span> <span class="va">True</span>)</span>
+<span id="cb34-7"><a href="kmeans.html#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="kmeans.html#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># merge with original data</span></span>
+<span id="cb34-9"><a href="kmeans.html#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="co"># add predicted clusters</span></span>
+<span id="cb34-10"><a href="kmeans.html#cb34-10" aria-hidden="true" tabindex="-1"></a>penguins_clusters <span class="op">=</span> <span class="op">\</span></span>
+<span id="cb34-11"><a href="kmeans.html#cb34-11" aria-hidden="true" tabindex="-1"></a>penguins <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb34-12"><a href="kmeans.html#cb34-12" aria-hidden="true" tabindex="-1"></a>  drop_na() <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb34-13"><a href="kmeans.html#cb34-13" aria-hidden="true" tabindex="-1"></a>  bind_cols(points_py) <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
+<span id="cb34-14"><a href="kmeans.html#cb34-14" aria-hidden="true" tabindex="-1"></a>  mutate(cluster <span class="op">=</span> factor(kmeans.fit_predict(points_py)))</span></code></pre></div>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="kmeans.html#cb35-1" aria-hidden="true" tabindex="-1"></a>(</span>
+<span id="cb35-2"><a href="kmeans.html#cb35-2" aria-hidden="true" tabindex="-1"></a>ggplot(penguins_clusters,</span>
+<span id="cb35-3"><a href="kmeans.html#cb35-3" aria-hidden="true" tabindex="-1"></a>       aes(x <span class="op">=</span> <span class="st">'bill_depth_mm'</span>,</span>
+<span id="cb35-4"><a href="kmeans.html#cb35-4" aria-hidden="true" tabindex="-1"></a>           y <span class="op">=</span> <span class="st">'bill_length_mm'</span>,</span>
+<span id="cb35-5"><a href="kmeans.html#cb35-5" aria-hidden="true" tabindex="-1"></a>           colour <span class="op">=</span> <span class="st">'cluster'</span>))</span>
+<span id="cb35-6"><a href="kmeans.html#cb35-6" aria-hidden="true" tabindex="-1"></a>         <span class="op">+</span> geom_point()</span>
+<span id="cb35-7"><a href="kmeans.html#cb35-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-28-1.png" width="614"></div>
 </div>
 </div>
 </div>
@@ -622,7 +695,7 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <li>the <code>glanced</code> column contains single-row summary for each <em>k</em> - we’ll use the <code>tot.withinss</code> values a little bit later on</li>
 <li>the <code>augmented</code> column contains the original data, augmented with the classification that was calculated by the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function</li>
 </ol>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclusts</span> <span class="op">&lt;-</span> 
   <span class="fu">tibble</span><span class="op">(</span>k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># check for k = 1 to 6</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -646,7 +719,7 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <p>The way I see lists in this context is as containers. We have one huge table <code>kclusts</code> that contains all of the information that we need. Each ‘cell’ in this table has a container with the relevant data. The <code>kclust</code> column is a list with <code>kmeans</code> objects (the output of our <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> for each of the <em>k</em> values), whereas the other columns are lists of tibbles (because the <code>tidy()</code>, <code>glance()</code> and <code>augment()</code> functions output a tibble with the information for each value of <em>k</em>).</p>
 <p>For us to use the data in the lists, it makes sense to extract them on a column-by-column basis. We’re ignoring the <code>kclust</code> column, because we don’t need the actual <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> output any more.</p>
 <p>To extract the data from the lists we use the <code>unnest()</code> function.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clusters</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span><span class="op">)</span>
@@ -658,26 +731,26 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <span class="va">clusterings</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">glanced</span><span class="op">)</span><span class="op">)</span></code></pre></div>
-<p>Next, we can visualise some of the data. We’ll start by plotting the original data and colouring the data points based on the final cluster it has been assigned to by the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function.</p>
+<p>Next, we can visualise some of the data. We’ll start by plotting the scaled data and colouring the data points based on the final cluster it has been assigned to by the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function.</p>
 <p>The (augmented) data are in <code>assignments</code>. Have a look at the structure of the table.</p>
 <p>We facet the data by <em>k</em>, so we get a single panel for each value of <em>k</em>.</p>
 <p>We also add the calculated cluster centres, which are stored in <code>clusters</code>.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">assignments</span>,
-       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,     <span class="co"># plot data</span>
-           y <span class="op">=</span> <span class="va">bill_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
+       <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">bill_depth_scaled</span>,     <span class="co"># plot data</span>
+           y <span class="op">=</span> <span class="va">bill_length_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span>,   <span class="co"># colour by cluster</span>
              alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span>           <span class="co"># add transparency</span>
   <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">k</span><span class="op">)</span> <span class="op">+</span>                   <span class="co"># facet for each k</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,         <span class="co"># add centers</span>
              size <span class="op">=</span> <span class="fl">7</span>,
              shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-31-1.png" width="672"></div>
 <p>Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you’re looking for clusters that are distinct, <em>i.e.</em> are separated from one another. For example, using <code>k = 4</code> gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.</p>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#baseR explore</span></code></pre></div>
 </div>
 </div>
@@ -693,7 +766,7 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function includes <code>tot.withinss</code> - this is the total within-cluster sum of squares.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -701,7 +774,7 @@ The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-29-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672"></div>
 </div>
 <div class="panel">
 <p><span class="panel-name">base R</span></p>
@@ -733,9 +806,9 @@ Answer
 <div id="load-the-data" class="section level4 unnumbered">
 <h4>Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">finches</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/finch_beaks.csv"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">finches</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 5
 ##    band species beak_length_mm beak_depth_mm  year
@@ -751,23 +824,23 @@ Answer
 <h4>Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Let’s have a look at the data.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">finches</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,
                      y <span class="op">=</span> <span class="va">beak_length_mm</span>,
                      colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-32-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672"></div>
 </div>
 <div id="clustering-1" class="section level4 unnumbered">
 <h4>Clustering<a class="anchor" aria-label="anchor" href="#clustering-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Next, we perform the clustering.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
   <span class="va">finches</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">beak_depth_mm</span>,         <span class="co"># select data</span>
          <span class="va">beak_length_mm</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span>                      <span class="co"># remove missing values</span>
+  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span>                     <span class="co"># remove missing values</span>
 
 <span class="va">kclust</span> <span class="op">&lt;-</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/kmeans.html">kmeans</a></span><span class="op">(</span><span class="va">points</span>,                 <span class="co"># perform k-means clustering</span>
@@ -784,34 +857,34 @@ Answer
 ## size           2    -none- numeric
 ## iter           1    -none- numeric
 ## ifault         1    -none- numeric</code></pre>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_clust</span> <span class="op">&lt;-</span> <span class="fu">tidy</span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span> <span class="co"># get centroid coordinates</span>
 
 <span class="va">tidy_clust</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1          9.16           13.7   220     237. 1      
-## 2          8.98           10.5   431     442. 2</code></pre>
+## 1          8.98           10.5   431     442. 1      
+## 2          9.16           13.7   220     237. 2</code></pre>
 </div>
 <div id="visualise-the-clusters" class="section level4 unnumbered">
 <h4>Visualise the clusters<a class="anchor" aria-label="anchor" href="#visualise-the-clusters"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust</span> <span class="op">%&gt;%</span>                              <span class="co"># take clustering data</span>
   <span class="fu">augment</span><span class="op">(</span><span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span>                   <span class="co"># combine with original data</span>
-  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,     <span class="co"># plot the original data</span>
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,         <span class="co"># plot the original data</span>
              y <span class="op">=</span> <span class="va">beak_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># colour by classification</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">tidy_clust</span>,
-             size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-35-1.png" width="672"></div>
+             size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">'x'</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-39-1.png" width="672"></div>
 </div>
 <div id="optimise-clusters" class="section level4 unnumbered">
 <h4>Optimise clusters<a class="anchor" aria-label="anchor" href="#optimise-clusters"><i class="fas fa-link"></i></a>
 </h4>
 <p>It looks like two clusters is a reasonable choice. But let’s explore this a bit more.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclusts</span> <span class="op">&lt;-</span> 
   <span class="fu">tibble</span><span class="op">(</span>k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># check for k = 1 to 6</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -821,7 +894,7 @@ Answer
     augmented <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">kclust</span>, <span class="va">augment</span>, <span class="va">points</span><span class="op">)</span>  <span class="co"># add classification to data set</span>
   <span class="op">)</span></code></pre></div>
 <p>Extract the relevant data.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clusters</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span><span class="op">)</span>
@@ -834,19 +907,19 @@ Answer
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">glanced</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Visualise the result.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">assignments</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,        <span class="co"># plot data</span>
            y <span class="op">=</span> <span class="va">beak_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
-  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span>,   <span class="co"># colour by cluster</span>
-             alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span>           <span class="co"># add transparency</span>
-  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">k</span><span class="op">)</span> <span class="op">+</span>                   <span class="co"># facet for each k</span>
-  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,         <span class="co"># add centers</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span>,  <span class="co"># colour by cluster</span>
+             alpha <span class="op">=</span> <span class="fl">0.8</span><span class="op">)</span> <span class="op">+</span>          <span class="co"># add transparency</span>
+  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">k</span><span class="op">)</span> <span class="op">+</span>                  <span class="co"># facet for each k</span>
+  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,        <span class="co"># add centers</span>
              size <span class="op">=</span> <span class="fl">7</span>,
-             shape <span class="op">=</span> <span class="st">"x"</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-38-1.png" width="672"></div>
+             shape <span class="op">=</span> <span class="st">'x'</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672"></div>
 <p>Create an elbow plot to have a closer look.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -854,7 +927,7 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-39-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-43-1.png" width="672"></div>
 </div>
 <div id="conclusions" class="section level4 unnumbered">
 <h4>Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"><i class="fas fa-link"></i></a>
@@ -906,7 +979,7 @@ To be added.</p>
 <li><a class="nav-link" href="#workflow"><span class="header-section-number">2.3</span> Workflow</a></li>
 <li><a class="nav-link" href="#datasets"><span class="header-section-number">2.4</span> Datasets</a></li>
 <li><a class="nav-link" href="#visualise-the-data"><span class="header-section-number">2.5</span> Visualise the data</a></li>
-<li><a class="nav-link" href="#exercise---bill-depth-and-length"><span class="header-section-number">2.6</span> Exercise - Bill depth and length</a></li>
+<li><a class="nav-link" href="#exercise---flipper-and-bill-length"><span class="header-section-number">2.6</span> Exercise - Flipper and bill length</a></li>
 <li><a class="nav-link" href="#clustering"><span class="header-section-number">2.7</span> Clustering</a></li>
 <li><a class="nav-link" href="#visualise-clusters"><span class="header-section-number">2.8</span> Visualise clusters</a></li>
 <li>

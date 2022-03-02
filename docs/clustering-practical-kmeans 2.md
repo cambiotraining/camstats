@@ -57,11 +57,21 @@ import pandas as pd
 from datar.all import *
 ```
 
+```
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "min" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "max" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "sum" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "abs" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "round" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "all" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "any" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "re" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "filter" has been overriden by datar.
+## [2022-02-24 15:46:28][datar][WARNING] Builtin name "slice" has been overriden by datar.
+```
+
 ```python
 from pipda import options
-from sklearn.cluster import KMeans
-from sklearn.metrics import silhouette_score
-from sklearn.preprocessing import StandardScaler
 
 options.assume_all_piping = True
 ```
@@ -139,7 +149,7 @@ penguins
 Next, we plot the data:
 
 ```r
-ggplot(penguins, aes(x = bill_depth_mm,
+ggplot(penguins, aes(x = flipper_length_mm,
                      y = bill_length_mm,
                      colour = species)) +
   geom_point()
@@ -176,7 +186,7 @@ head(penguins)
 Next, we plot the data:
 
 ```r
-plot(penguins$bill_depth_mm,      # scatter plot
+plot(penguins$flipper_length_mm,  # scatter plot
      penguins$bill_length_mm,
      pch = 20,
      col = penguins$species)      # colour by species
@@ -196,7 +206,7 @@ The `palmerpenguins` package is not available in Python, so I've provided the da
 
 ```python
 # load the data
-penguins = pd.read_csv('data/penguins.csv')
+penguins = pd.read_csv("data/penguins.csv")
 
 # inspect the data
 penguins.head()
@@ -219,9 +229,9 @@ Next, we plot the data:
 ```python
 (
   ggplot(penguins,
-    aes(x = 'bill_depth_mm',
-        y = 'bill_length_mm',
-        colour = 'species'))
+    aes(x = "flipper_length_mm",
+        y = "bill_length_mm",
+        colour = "species"))
   + geom_point()
 )
 ```
@@ -233,15 +243,15 @@ Next, we plot the data:
 
 So we have different types of penguins, from different islands. Bill and flipper measurements were taken, and the penguins' weight plus sex was recorded.
 
-As an example, we also have a look at bill depth versus bill length.
+As an example, we also have a look at flipper length versus bill length.
 
 We can already see that the data appear to cluster quite closely by species. A great example to illustrate K-means clustering (you'd almost think I chose the example on purpose!)
 
-## Exercise - Flipper and bill length
+## Exercise - Bill depth and length
 
 :::exercise ::::::
 
-For this exercise I'd like you to create a scatter plot of the flipper length against the bill length. We'll be using colour to separate female/male data. Lastly, we're creating individual panels for each island.
+For this exercise I'd like you to create a scatter plot of the bill depth against the bill length. We'll be using colour to separate female/male data. Lastly, we're creating individual panels for each island.
 
 Most of the code is given below and I would like you to replace the `<FIXME>` parts with the required code.
 
@@ -274,7 +284,7 @@ What you could do is split the data by island and create a loop to plot for each
 
 ```r
 biscoe <- 
-  penguins[penguins$island == '<FIXME>', ]
+  penguins[penguins$island == "<FIXME>", ]
 
 plot(biscoe$<FIXME>,
      biscoe$bill_length_mm,
@@ -290,24 +300,7 @@ title(main = "Biscoe")
 ```
 
 <img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-13-1.png" width="672" />
-:::
 
-::: {.panel}
-[Python]{.panel-name}
-
-```python
-(
-  penguins >> \
-  drop_na() >> \
-  ggplot(aes(x = '<FIXME>',
-             y = 'bill_length_mm',
-             colour = '<FIXME>'))
-         + geom_<FIXME>()
-         + facet_wrap('<FIXME>')
-)
-```
-
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-15-1.png" width="614" />
 :::
 :::::
 
@@ -322,7 +315,7 @@ title(main = "Biscoe")
 ```r
 penguins %>% 
   drop_na() %>%                     
-  ggplot(aes(x = flipper_length_mm,
+  ggplot(aes(x = bill_depth_mm,
              y = bill_length_mm,
              colour = sex)) +
   geom_point() +
@@ -335,9 +328,9 @@ penguins %>%
 
 ```r
 biscoe <- 
-  penguins[penguins$island == 'Biscoe', ]
+  penguins[penguins$island == "Biscoe", ]
 
-plot(biscoe$flipper_length_mm,
+plot(biscoe$bill_depth_mm,
      biscoe$bill_length_mm,
      pch = 20,
      col = biscoe$sex)
@@ -347,7 +340,7 @@ legend("bottomright",
        pch = 20,
        col = factor(levels(biscoe$sex)))
 
-title(main = 'Biscoe')
+title(main = "Biscoe")
 ```
 :::
 
@@ -359,13 +352,15 @@ title(main = 'Biscoe')
 (
   penguins >> \
   drop_na() >> \
-  ggplot(aes(x = 'flipper_length_mm',
+  ggplot(aes(x = 'bill_depth_mm',
              y = 'bill_length_mm',
              colour = 'sex'))
          + geom_point()
          + facet_wrap('island')
 )
 ```
+
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-16-1.png" width="614" />
 
 :::
 :::::
@@ -382,20 +377,15 @@ Next, we'll do the actual clustering.
 
 ::: {.panel}
 [tidyverse]{.panel-name}
-To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.
+To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input.
 
 
 ```r
 points <-
   penguins %>% 
-  select(bill_depth_mm,          # select data
+  select(flipper_length_mm,      # select data
          bill_length_mm) %>% 
-  drop_na() %>%                  # remove missing values
-  scale() %>%                    # scale the data
-  as_tibble() %>% 
-  rename(bill_depth_scaled = bill_depth_mm,
-         bill_length_scaled = bill_length_mm)
-
+  drop_na()                      # remove missing values
 
 kclust <-
   kmeans(points,                 # perform k-means clustering
@@ -426,26 +416,21 @@ Note that the output is a list of vectors, with differing lengths. That's becaus
 
 ::: {.panel}
 [base R]{.panel-name}
-To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.
+To do the clustering, we'll be using the `kmeans()` function. This function requires numeric data as its input.
 
 
 ```r
 points_r <-
   data.frame(
-    penguins$bill_depth_mm,      # get the numeric data
+    penguins$flipper_length_mm,  # get numeric data
     penguins$bill_length_mm) |>  # use base R pipe!
-  na.omit() |>                   # remove missing data
-  scale()                        # scale the data
+  na.omit()                      # remove missing data
 
-# and rename the columns to avoid confusion
-names(points_r)[1] <- 'bill_depth_scaled'
-names(points_r)[2] <- 'bill_length_scaled'
-
-kclusts_r <-
+kclust_r <-
   kmeans(points_r,               # perform k-means clustering
          centers = 3)            # using 3 centers
 
-summary(kclusts_r)                # summarise output
+summary(kclust_r)                # summarise output
 ```
 
 ```
@@ -467,38 +452,6 @@ Note that the output is a list of vectors, with differing lengths. That's becaus
 * `centers`, `withinss`, and `size` contain information about each cluster
 * `totss`, `tot.withinss`, `betweenss`, and `iter` contain information about the full clustering
 :::
-
-::: {.panel}
-[Python]{.panel-name}
-To do the clustering, we'll be using the `KMeans()` function. This function requires numeric data as its input. We are also scaling the data. Although it is not required in this case, because both variables have the same unit (millimetres) it is good practice. In other scenarios it could be that there are different units that are being compared, which could affect the clustering.
-
-
-```python
-scaler = StandardScaler()
-
-points_py = \
-penguins >> \
-  drop_na() >> \
-  select('bill_depth_mm', 'bill_length_mm')
-
-points_py = scaler.fit_transform(points_py)
-
-kmeans = KMeans(
-init = 'random',
-n_clusters = 3,
-n_init = 10,
-max_iter = 300,
-random_state = 42
-)
-
-kmeans.fit(points_py)
-```
-
-```
-## KMeans(init='random', n_clusters=3, random_state=42)
-```
-
-:::
 :::::
 
 ## Visualise clusters
@@ -518,31 +471,31 @@ tidy_clust
 
 ```
 ## # A tibble: 3 × 5
-##   bill_depth_scaled bill_length_scaled  size withinss cluster
-##               <dbl>              <dbl> <int>    <dbl> <fct>  
-## 1             0.799              1.10     64     39.0 1      
-## 2             0.560             -0.943   153     88.0 2      
-## 3            -1.09               0.590   125     59.4 3
+##   flipper_length_mm bill_length_mm  size withinss cluster
+##               <dbl>          <dbl> <int>    <dbl> <fct>  
+## 1              197.           46.0    93    3932. 1      
+## 2              187.           38.4   120    3494. 2      
+## 3              217.           47.6   129    6658. 3
 ```
 
 :::note
 The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That's normal!
 :::
 
-Next, we want to visualise to which data points belong to which cluster. We can do that as follows:
+Next, we want to visualise the which data points belong to which cluster. We can do that as follows:
 
 
 ```r
 kclust %>%                              # take clustering data
   augment(points) %>%                   # combine with original data
-  ggplot(aes(x = bill_depth_scaled,     # plot the scaled data
-             y = bill_length_scaled)) +
+  ggplot(aes(x = flipper_length_mm,     # plot the original data
+             y = bill_length_mm)) +
   geom_point(aes(colour = .cluster)) +  # colour by classification
   geom_point(data = tidy_clust,
-             size = 7, shape = 'x')     # add the cluster centers
+             size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-20-1.png" width="672" />
 :::
 
 ::: {.panel}
@@ -551,102 +504,34 @@ When we performed the clustering, the centers were calculated. These values give
 
 
 ```r
-kclusts_r$centers  # get centroid coordinates
+kclust_r$centers  # get centroid coordinates
 ```
 
 ```
-##   penguins.bill_depth_mm penguins.bill_length_mm
-## 1             -1.0937700               0.5903143
-## 2              0.5595723              -0.9431819
-## 3              0.7985421               1.1018368
+##   penguins.flipper_length_mm penguins.bill_length_mm
+## 1                   196.7312                45.95484
+## 2                   216.8837                47.56744
+## 3                   186.9917                38.42750
 ```
 
 :::note
 The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That's normal!
 :::
 
-Next, we want to visualise to which data points belong to which cluster. We can do that as follows:
+Next, we want to visualise the which data points belong to which cluster. We can do that as follows:
 
 
 ```r
-plot(points_r,                # plot scaled data
-     col = kclusts_r$cluster,  # colour by cluster
+plot(points_r,                # plot original data
+     col = kclust_r$cluster,  # colour by cluster
      pch = 20)
 
-points(kclusts_r$centers,      # add cluster centers
+points(kclust_r$centers,      # add cluster centers
        pch = 4,
        lwd = 3)
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672" />
-:::
-
-:::{.panel}
-[Python]{.panel-name}
-When we performed the clustering, the centers were calculated. These values give the (x, y) coordinates of the centroids.
-
-
-```python
-# calculate the cluster centers
-kclusts_py = kmeans.cluster_centers_
-
-# convert to tibble and rename columns
-# use base0_ = True because indices are 0-based
-kclusts_py = \
-tibble(kclusts_py) >> \
-rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_=True)
-
-# and show the coordinates
-kclusts_py
-```
-
-```
-##    bill_depth_scaled  bill_length_scaled
-##            <float64>           <float64>
-## 0          -1.098055            0.586444
-## 1           0.795036            1.088684
-## 2           0.553935           -0.950240
-```
-
-:::note
-The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That's normal!
-:::
-
-Next, we want to visualise to which data points belong to which cluster. We can do that as follows:
-
-
-```python
-# convert NumPy arrays to data frame
-# use base0_ = True because indices are 0-based
-points_py = \
-tibble(points_py) >> \
-rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_ = True)
-
-# merge with original data
-# add predicted clusters
-penguins_clusters = \
-penguins >> \
-  drop_na() >> \
-  bind_cols(points_py) >> \
-  mutate(cluster = factor(kmeans.fit_predict(points_py)))
-```
-
-
-
-```python
-(
-ggplot(penguins_clusters,
-       aes(x = 'bill_depth_mm',
-           y = 'bill_length_mm',
-           colour = 'cluster'))
-         + geom_point()
-)
-```
-
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-28-1.png" width="614" />
-
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-22-1.png" width="672" />
 :::
 :::::
 
@@ -720,7 +605,7 @@ clusterings <-
   unnest(cols = c(glanced))
 ```
 
-Next, we can visualise some of the data. We'll start by plotting the scaled data and colouring the data points based on the final cluster it has been assigned to by the `kmeans()` function.
+Next, we can visualise some of the data. We'll start by plotting the original data and colouring the data points based on the final cluster it has been assigned to by the `kmeans()` function.
 
 The (augmented) data are in `assignments`. Have a look at the structure of the table.
 
@@ -731,8 +616,8 @@ We also add the calculated cluster centres, which are stored in `clusters`.
 
 ```r
 ggplot(assignments,
-       aes(x = bill_depth_scaled,     # plot data
-           y = bill_length_scaled)) +  
+       aes(x = flipper_length_mm,     # plot data
+           y = bill_length_mm)) +  
   geom_point(aes(color = .cluster),   # colour by cluster
              alpha = 0.8) +           # add transparency
   facet_wrap(~ k) +                   # facet for each k
@@ -741,7 +626,7 @@ ggplot(assignments,
              shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-31-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-25-1.png" width="672" />
 
 Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you're looking for clusters that are distinct, _i.e._ are separated from one another. For example, using `k = 4` gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.
 :::
@@ -781,7 +666,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
 :::
 
@@ -845,7 +730,7 @@ ggplot(finches, aes(x = beak_depth_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-30-1.png" width="672" />
 
 #### Clustering {.unnumbered}
 Next, we perform the clustering.
@@ -856,7 +741,7 @@ points <-
   finches %>% 
   select(beak_depth_mm,         # select data
          beak_length_mm) %>% 
-  drop_na()                     # remove missing values
+  drop_na()                      # remove missing values
 
 kclust <-
   kmeans(points,                 # perform k-means clustering
@@ -889,8 +774,8 @@ tidy_clust
 ## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1          8.98           10.5   431     442. 1      
-## 2          9.16           13.7   220     237. 2
+## 1          9.16           13.7   220     237. 1      
+## 2          8.98           10.5   431     442. 2
 ```
 
 #### Visualise the clusters {.unnumbered}
@@ -898,14 +783,14 @@ tidy_clust
 ```r
 kclust %>%                              # take clustering data
   augment(points) %>%                   # combine with original data
-  ggplot(aes(x = beak_depth_mm,         # plot the original data
+  ggplot(aes(x = beak_depth_mm,     # plot the original data
              y = beak_length_mm)) +
   geom_point(aes(colour = .cluster)) +  # colour by classification
   geom_point(data = tidy_clust,
-             size = 7, shape = 'x')     # add the cluster centers
+             size = 7, shape = "x")     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
 
 #### Optimise clusters {.unnumbered}
 It looks like two clusters is a reasonable choice. But let's explore this a bit more.
@@ -943,15 +828,15 @@ Visualise the result.
 ggplot(assignments,
        aes(x = beak_depth_mm,        # plot data
            y = beak_length_mm)) +  
-  geom_point(aes(color = .cluster),  # colour by cluster
-             alpha = 0.8) +          # add transparency
-  facet_wrap(~ k) +                  # facet for each k
-  geom_point(data = clusters,        # add centers
+  geom_point(aes(color = .cluster),   # colour by cluster
+             alpha = 0.8) +           # add transparency
+  facet_wrap(~ k) +                   # facet for each k
+  geom_point(data = clusters,         # add centers
              size = 7,
-             shape = 'x')
+             shape = "x")
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672" />
 
 Create an elbow plot to have a closer look.
 
@@ -965,7 +850,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-43-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-37-1.png" width="672" />
 
 #### Conclusions {.unnumbered}
 Our initial clustering was done using two clusters, basically capturing the two different finch species.
