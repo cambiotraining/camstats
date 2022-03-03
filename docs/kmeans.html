@@ -587,8 +587,8 @@ When we performed the clustering, the centers were calculated. These values give
 ##   bill_depth_scaled bill_length_scaled  size withinss cluster
 ##               &lt;dbl&gt;              &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
 ## 1             0.799              1.10     64     39.0 1      
-## 2             0.560             -0.943   153     88.0 2      
-## 3            -1.09               0.590   125     59.4 3</code></pre>
+## 2            -1.09               0.590   125     59.4 2      
+## 3             0.560             -0.943   153     88.0 3</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
@@ -610,8 +610,8 @@ When we performed the clustering, the centers were calculated. These values give
 <code class="sourceCode R"><span class="va">kclusts_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
 <pre><code>##   penguins.bill_depth_mm penguins.bill_length_mm
 ## 1             -1.0937700               0.5903143
-## 2              0.5595723              -0.9431819
-## 3              0.7985421               1.1018368</code></pre>
+## 2              0.7985421               1.1018368
+## 3              0.5595723              -0.9431819</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
@@ -637,7 +637,7 @@ When we performed the clustering, the centers were calculated. These values give
 <span id="cb32-6"><a href="kmeans.html#cb32-6" aria-hidden="true" tabindex="-1"></a>kclusts_py <span class="op">=</span> <span class="op">\</span></span>
 <span id="cb32-7"><a href="kmeans.html#cb32-7" aria-hidden="true" tabindex="-1"></a>tibble(kclusts_py) <span class="op">&gt;&gt;</span> <span class="op">\</span></span>
 <span id="cb32-8"><a href="kmeans.html#cb32-8" aria-hidden="true" tabindex="-1"></a>rename(bill_depth_scaled <span class="op">=</span> <span class="dv">0</span>,</span>
-<span id="cb32-9"><a href="kmeans.html#cb32-9" aria-hidden="true" tabindex="-1"></a>       bill_length_scaled <span class="op">=</span> <span class="dv">1</span>, base0_<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb32-9"><a href="kmeans.html#cb32-9" aria-hidden="true" tabindex="-1"></a>       bill_length_scaled <span class="op">=</span> <span class="dv">1</span>, base0_ <span class="op">=</span> <span class="va">True</span>)</span>
 <span id="cb32-10"><a href="kmeans.html#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb32-11"><a href="kmeans.html#cb32-11" aria-hidden="true" tabindex="-1"></a><span class="co"># and show the coordinates</span></span>
 <span id="cb32-12"><a href="kmeans.html#cb32-12" aria-hidden="true" tabindex="-1"></a>kclusts_py</span></code></pre></div>
@@ -748,11 +748,6 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-31-1.png" width="672"></div>
 <p>Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you’re looking for clusters that are distinct, <em>i.e.</em> are separated from one another. For example, using <code>k = 4</code> gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.</p>
 </div>
-<div class="panel">
-<p><span class="panel-name">base R</span></p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#baseR explore</span></code></pre></div>
-</div>
 </div>
 <div id="elbow-plot" class="section level3" number="2.9.1">
 <h3>
@@ -766,7 +761,7 @@ Reiterating over a range of <em>k</em> values is reasonably straightforward usin
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</a></code> function includes <code>tot.withinss</code> - this is the total within-cluster sum of squares.</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -774,10 +769,7 @@ The output of the <code><a href="https://rdrr.io/r/stats/kmeans.html">kmeans()</
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672"></div>
-</div>
-<div class="panel">
-<p><span class="panel-name">base R</span></p>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-32-1.png" width="672"></div>
 </div>
 </div>
 <p>We can see that the total within-cluster sum of squares decreases as the number of clusters increases. We can also see that from <code>k = 3</code> onwards the slope of the line becomes much shallower. This “elbow” or bending point is a useful gauge to find the optimum number of clusters.</p>
@@ -806,9 +798,9 @@ Answer
 <div id="load-the-data" class="section level4 unnumbered">
 <h4>Load the data<a class="anchor" aria-label="anchor" href="#load-the-data"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">finches</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/finch_beaks.csv"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">finches</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 6 × 5
 ##    band species beak_length_mm beak_depth_mm  year
@@ -824,18 +816,18 @@ Answer
 <h4>Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Let’s have a look at the data.</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">finches</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,
                      y <span class="op">=</span> <span class="va">beak_length_mm</span>,
                      colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-35-1.png" width="672"></div>
 </div>
 <div id="clustering-1" class="section level4 unnumbered">
 <h4>Clustering<a class="anchor" aria-label="anchor" href="#clustering-1"><i class="fas fa-link"></i></a>
 </h4>
 <p>Next, we perform the clustering.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">points</span> <span class="op">&lt;-</span>
   <span class="va">finches</span> <span class="op">%&gt;%</span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">beak_depth_mm</span>,         <span class="co"># select data</span>
@@ -857,20 +849,20 @@ Answer
 ## size           2    -none- numeric
 ## iter           1    -none- numeric
 ## ifault         1    -none- numeric</code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">tidy_clust</span> <span class="op">&lt;-</span> <span class="fu">tidy</span><span class="op">(</span><span class="va">kclust</span><span class="op">)</span> <span class="co"># get centroid coordinates</span>
 
 <span class="va">tidy_clust</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1          8.98           10.5   431     442. 1      
-## 2          9.16           13.7   220     237. 2</code></pre>
+## 1          9.16           13.7   220     237. 1      
+## 2          8.98           10.5   431     442. 2</code></pre>
 </div>
 <div id="visualise-the-clusters" class="section level4 unnumbered">
 <h4>Visualise the clusters<a class="anchor" aria-label="anchor" href="#visualise-the-clusters"><i class="fas fa-link"></i></a>
 </h4>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclust</span> <span class="op">%&gt;%</span>                              <span class="co"># take clustering data</span>
   <span class="fu">augment</span><span class="op">(</span><span class="va">points</span><span class="op">)</span> <span class="op">%&gt;%</span>                   <span class="co"># combine with original data</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,         <span class="co"># plot the original data</span>
@@ -878,13 +870,13 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">.cluster</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># colour by classification</span>
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">tidy_clust</span>,
              size <span class="op">=</span> <span class="fl">7</span>, shape <span class="op">=</span> <span class="st">'x'</span><span class="op">)</span>     <span class="co"># add the cluster centers</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-39-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-38-1.png" width="672"></div>
 </div>
 <div id="optimise-clusters" class="section level4 unnumbered">
 <h4>Optimise clusters<a class="anchor" aria-label="anchor" href="#optimise-clusters"><i class="fas fa-link"></i></a>
 </h4>
 <p>It looks like two clusters is a reasonable choice. But let’s explore this a bit more.</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">kclusts</span> <span class="op">&lt;-</span> 
   <span class="fu">tibble</span><span class="op">(</span>k <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fl">6</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># check for k = 1 to 6</span>
   <span class="fu">mutate</span><span class="op">(</span>
@@ -894,7 +886,7 @@ Answer
     augmented <span class="op">=</span> <span class="fu">map</span><span class="op">(</span><span class="va">kclust</span>, <span class="va">augment</span>, <span class="va">points</span><span class="op">)</span>  <span class="co"># add classification to data set</span>
   <span class="op">)</span></code></pre></div>
 <p>Extract the relevant data.</p>
-<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clusters</span> <span class="op">&lt;-</span> 
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">tidied</span><span class="op">)</span><span class="op">)</span>
@@ -907,7 +899,7 @@ Answer
   <span class="va">kclusts</span> <span class="op">%&gt;%</span>
   <span class="fu">unnest</span><span class="op">(</span>cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="va">glanced</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>Visualise the result.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">assignments</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">beak_depth_mm</span>,        <span class="co"># plot data</span>
            y <span class="op">=</span> <span class="va">beak_length_mm</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  
@@ -917,9 +909,9 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">clusters</span>,        <span class="co"># add centers</span>
              size <span class="op">=</span> <span class="fl">7</span>,
              shape <span class="op">=</span> <span class="st">'x'</span><span class="op">)</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-41-1.png" width="672"></div>
 <p>Create an elbow plot to have a closer look.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">clusterings</span>,
        <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">k</span>,                <span class="co"># for each k plot...</span>
            y <span class="op">=</span> <span class="va">tot.withinss</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>  <span class="co"># total within variance</span>
@@ -927,7 +919,7 @@ Answer
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">scale_x_continuous</span><span class="op">(</span>
     breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">6</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span>       <span class="co"># set the x-axis breaks</span></code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-43-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672"></div>
 </div>
 <div id="conclusions" class="section level4 unnumbered">
 <h4>Conclusions<a class="anchor" aria-label="anchor" href="#conclusions"><i class="fas fa-link"></i></a>
@@ -941,10 +933,6 @@ Answer
 <p>In the example above we used data that were collected at two different time points: 1975 and 2012.</p>
 <p>In the analysis we’ve kept these data together. However, the original premises of these data was to see if there is any indication of evolution going on in these species of finches. Think about how you would approach this question!</p>
 </div>
-</div>
-<div class="panel">
-<p><span class="panel-name">base R</span>
-To be added.</p>
 </div>
 </div>
 </details>

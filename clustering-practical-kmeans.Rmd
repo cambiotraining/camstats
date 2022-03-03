@@ -508,7 +508,7 @@ kclusts_py = kmeans.cluster_centers_
 kclusts_py = \
 tibble(kclusts_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_=True)
+       bill_length_scaled = 1, base0_ = True)
 
 # and show the coordinates
 kclusts_py
@@ -629,13 +629,6 @@ ggplot(assignments,
 
 Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you're looking for clusters that are distinct, _i.e._ are separated from one another. For example, using `k = 4` gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-```{r}
-#baseR explore
-```
-:::
 :::::
 
 ### Elbow plot
@@ -664,11 +657,6 @@ ggplot(clusterings,
 ```
 
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-:::
-
 :::::
 
 We can see that the total within-cluster sum of squares decreases as the number of clusters increases. We can also see that from `k = 3` onwards the slope of the line becomes much shallower. This "elbow" or bending point is a useful gauge to find the optimum number of clusters.
@@ -806,12 +794,6 @@ In the example above we used data that were collected at two different time poin
 
 In the analysis we've kept these data together. However, the original premises of these data was to see if there is any indication of evolution going on in these species of finches. Think about how you would approach this question!
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-To be added.
-:::
-
 :::::
 </details>
 :::

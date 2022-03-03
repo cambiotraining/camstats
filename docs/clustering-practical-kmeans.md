@@ -521,8 +521,8 @@ tidy_clust
 ##   bill_depth_scaled bill_length_scaled  size withinss cluster
 ##               <dbl>              <dbl> <int>    <dbl> <fct>  
 ## 1             0.799              1.10     64     39.0 1      
-## 2             0.560             -0.943   153     88.0 2      
-## 3            -1.09               0.590   125     59.4 3
+## 2            -1.09               0.590   125     59.4 2      
+## 3             0.560             -0.943   153     88.0 3
 ```
 
 :::note
@@ -557,8 +557,8 @@ kclusts_r$centers  # get centroid coordinates
 ```
 ##   penguins.bill_depth_mm penguins.bill_length_mm
 ## 1             -1.0937700               0.5903143
-## 2              0.5595723              -0.9431819
-## 3              0.7985421               1.1018368
+## 2              0.7985421               1.1018368
+## 3              0.5595723              -0.9431819
 ```
 
 :::note
@@ -595,7 +595,7 @@ kclusts_py = kmeans.cluster_centers_
 kclusts_py = \
 tibble(kclusts_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_=True)
+       bill_length_scaled = 1, base0_ = True)
 
 # and show the coordinates
 kclusts_py
@@ -745,14 +745,6 @@ ggplot(assignments,
 
 Looking at this plot shows what we already knew (if only things were this easy all the time!): three clusters is a pretty good choice for these data. Remember that you're looking for clusters that are distinct, _i.e._ are separated from one another. For example, using `k = 4` gives you four nice groups, but two of them are directly adjacent, suggesting that they would do equally well in a single cluster.
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-
-```r
-#baseR explore
-```
-:::
 :::::
 
 ### Elbow plot
@@ -781,14 +773,9 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-33-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-32-1.png" width="672" />
 
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-:::
-
 :::::
 
 We can see that the total within-cluster sum of squares decreases as the number of clusters increases. We can also see that from `k = 3` onwards the slope of the line becomes much shallower. This "elbow" or bending point is a useful gauge to find the optimum number of clusters.
@@ -845,7 +832,7 @@ ggplot(finches, aes(x = beak_depth_mm,
   geom_point()
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-36-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-35-1.png" width="672" />
 
 #### Clustering {.unnumbered}
 Next, we perform the clustering.
@@ -889,8 +876,8 @@ tidy_clust
 ## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1          8.98           10.5   431     442. 1      
-## 2          9.16           13.7   220     237. 2
+## 1          9.16           13.7   220     237. 1      
+## 2          8.98           10.5   431     442. 2
 ```
 
 #### Visualise the clusters {.unnumbered}
@@ -905,7 +892,7 @@ kclust %>%                              # take clustering data
              size = 7, shape = 'x')     # add the cluster centers
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-39-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-38-1.png" width="672" />
 
 #### Optimise clusters {.unnumbered}
 It looks like two clusters is a reasonable choice. But let's explore this a bit more.
@@ -951,7 +938,7 @@ ggplot(assignments,
              shape = 'x')
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-41-1.png" width="672" />
 
 Create an elbow plot to have a closer look.
 
@@ -965,7 +952,7 @@ ggplot(clusterings,
     breaks = seq(1, 6, 1))       # set the x-axis breaks
 ```
 
-<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-43-1.png" width="672" />
+<img src="clustering-practical-kmeans_files/figure-html/unnamed-chunk-42-1.png" width="672" />
 
 #### Conclusions {.unnumbered}
 Our initial clustering was done using two clusters, basically capturing the two different finch species.
@@ -977,12 +964,6 @@ In the example above we used data that were collected at two different time poin
 
 In the analysis we've kept these data together. However, the original premises of these data was to see if there is any indication of evolution going on in these species of finches. Think about how you would approach this question!
 :::
-
-::: {.panel}
-[base R]{.panel-name}
-To be added.
-:::
-
 :::::
 </details>
 :::
