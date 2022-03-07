@@ -6,10 +6,10 @@ rmd_files: [
   "index.Rmd",
 
   #"glm-intro.Rmd",
-  #"glm-practical-logistic-binary.Rmd",
+  "glm-practical-logistic-binary.Rmd",
   #"resampling-intro.Rmd",
   #"resampling-practical-single.Rmd",
-  "clustering-practical-kmeans.Rmd",
+  #"clustering-practical-kmeans.Rmd",
 ]
 
 language:

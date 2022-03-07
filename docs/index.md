@@ -1,7 +1,7 @@
 --- 
 title: "CamStats"
 author: "Martin van Rongen and Matt Castle"
-date: "2022-03-03"
+date: "2022-03-07"
 site: bookdown::bookdown_site
 documentclass: book
 #bibliography: [book.bib, packages.bib]
@@ -11,6 +11,34 @@ description: "These are the supporting materials for the CamStats series of the 
 ---
 
 
+```
+## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip
+```
+
+```
+## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──
+```
+
+```
+## ✓ dials        0.1.0     ✓ rsample      0.1.1
+## ✓ infer        1.0.0     ✓ tune         0.1.6
+## ✓ modeldata    0.1.1     ✓ workflows    0.2.4
+## ✓ parsnip      0.1.7     ✓ workflowsets 0.1.0
+## ✓ recipes      0.2.0     ✓ yardstick    0.0.9
+```
+
+```
+## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## • Dig deeper into tidy modeling with R at https://www.tmwr.org
+```
 
 # Overview
 

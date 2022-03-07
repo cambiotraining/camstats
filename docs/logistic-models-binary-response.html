@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Chapter 2 Logistic Models – Binary Response | CamStats</title>
+<meta name="author" content="Martin van Rongen and Matt Castle">
+<meta name="description" content="2.1 Objectives  Questions Objectives   2.2 Libraries and functions  tidyverse Library Description tidyverse A collection of R packages designed for data science tidymodels A collection of packages...">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 2 Logistic Models – Binary Response | CamStats">
+<meta property="og:type" content="book">
+<meta property="og:description" content="2.1 Objectives  Questions Objectives   2.2 Libraries and functions  tidyverse Library Description tidyverse A collection of R packages designed for data science tidymodels A collection of packages...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 2 Logistic Models – Binary Response | CamStats">
+<meta name="twitter:description" content="2.1 Objectives  Questions Objectives   2.2 Libraries and functions  tidyverse Library Description tidyverse A collection of R packages designed for data science tidymodels A collection of packages...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.11/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+</head>
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
+
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">CamStats
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<!-- <p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">CamStats</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li><a class="active" href="logistic-models-binary-response.html"><span class="header-section-number">2</span> Logistic Models – Binary Response</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="logistic-models-binary-response" class="section level1" number="2">
+<h1>
+<span class="header-section-number">2</span> Logistic Models – Binary Response<a class="anchor" aria-label="anchor" href="#logistic-models-binary-response"><i class="fas fa-link"></i></a>
+</h1>
+<div id="objectives" class="section level2" number="2.1">
+<h2>
+<span class="header-section-number">2.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives"><i class="fas fa-link"></i></a>
+</h2>
+<div class="objectives">
+<p><strong>Questions</strong></p>
+<ul>
+<li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>
+</ul>
+</div>
+</div>
+<div id="libraries-and-functions" class="section level2" number="2.2">
+<h2>
+<span class="header-section-number">2.2</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Library</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>tidyverse</code></td>
+<td align="left">A collection of R packages designed for data science</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tidymodels</code></td>
+<td align="left">A collection of packages for modelling and machine learning using tidyverse principles</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div id="datasets" class="section level2" number="2.3">
+<h2>
+<span class="header-section-number">2.3</span> Datasets<a class="anchor" aria-label="anchor" href="#datasets"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">Diabetes</span></p>
+<p>The example in this section uses the following data set:</p>
+<p><code>data/diabetes.csv</code></p>
+<p>This is a data set comprising 768 observations of three variables (one dependent and two predictor variables). This records the results of a diabetes test_result as a binary variable (1 is a positive result, 0 is a negative result), along with the result of a glucose test and the diastolic blood pressure for each of 767 women. The variables are called <code>test_result</code>, <code>glucose</code> and <code>diastolic</code>.</p>
+</div>
+</div>
+</div>
+<div id="visualise-the-data" class="section level2" number="2.4">
+<h2>
+<span class="header-section-number">2.4</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data"><i class="fas fa-link"></i></a>
+</h2>
+<p>First we load the data, then we visualise it. If needed, load the tidyverse package using:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+First, we load and inspect the data:</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/diabetes.csv"</span><span class="op">)</span></code></pre></div>
+<p>Looking at the data, we can see that the <code>test_result</code> column contains zeros and ones. These are test result outcomes and not actually numeric representations.</p>
+<p>This will cause problems later, so we need to tell R to see these values as factors.</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes</span> <span class="op">&lt;-</span> <span class="va">diabetes</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>test_result <span class="op">=</span> <span class="fu">as_factor</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>We can plot the data:</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">test_result</span>, y <span class="op">=</span> <span class="va">glucose</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
+<p>It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.</p>
+<p>We can visualise that differently by plotting all the data points as a classic binary response plot:</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">glucose</span>, y <span class="op">=</span> <span class="va">test_result</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
+</div>
+</div>
+</div>
+<div id="construct-the-model" class="section level2" number="2.5">
+<h2>
+<span class="header-section-number">2.5</span> Construct the model<a class="anchor" aria-label="anchor" href="#construct-the-model"><i class="fas fa-link"></i></a>
+</h2>
+<p>There are different ways to construct a logistic model in either R or Python.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>In tidyverse we have access to a very useful package: <code>parsnip</code>, which is part of the <code>tidymodels</code> package. The advantage of using <code>parsnip</code> is that the code syntax will stay the same as you do different kind of model comparisons. So, the learning curve might be a bit steeper to start with, but this will pay dividend in the long-term (just like when you started using R!).</p>
+<p>First, we need to load <code>tidymodels</code> (install it first, if needed):</p>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("tidymodels")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span></code></pre></div>
+<p>Next, we can create the model:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">glm_diabetes</span> <span class="op">&lt;-</span> <span class="fu">logistic_reg</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">set_engine</span><span class="op">(</span><span class="st">"glm"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span><span class="va">test_result</span> <span class="op">~</span> <span class="va">glucose</span>, data <span class="op">=</span> <span class="va">diabetes</span><span class="op">)</span></code></pre></div>
+<p>When we summarise the output of the model, we get the following information:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">glm_diabetes</span><span class="op">)</span></code></pre></div>
+<pre><code>##         Length Class        Mode     
+## lvl      2     -none-       character
+## spec     6     logistic_reg list     
+## fit     30     glm          list     
+## preproc  1     -none-       list     
+## elapsed  5     proc_time    numeric</code></pre>
+<p>This does not look very informative. What we get is actually a <em>list</em> of objects that contain all kinds of information.</p>
+<p>We can get more insight into the model parameters with the following:</p>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">glm_diabetes</span> <span class="op">%&gt;%</span>
+  <span class="fu">extract_fit_engine</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">glance</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1          937.     727  -376.  756.  765.     752.         726   728</code></pre>
+</div>
+<div class="panel">
+<p><span class="panel-name">base R</span>
+In base R we use the <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> function, which works in a very similar way as the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function.</p>
+<p>We define the model as follows:</p>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">glm_diabetes_r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/glm.html">glm</a></span><span class="op">(</span><span class="va">test_result</span> <span class="op">~</span> <span class="va">glucose</span>,
+                      data <span class="op">=</span> <span class="va">diabetes</span>,
+                      family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></code></pre></div>
+<div class="note">
+<p>If you forget to include the family argument then the glm function just performs an ordinary linear model fit (same as the lm function)</p>
+</div>
+<p>Next, we can summarise the model with:</p>
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">glm_diabetes_r</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## glm(formula = test_result ~ glucose, family = binomial, data = diabetes)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1353  -0.7819  -0.5189   0.8269   2.2832  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept) -5.611732   0.442289  -12.69   &lt;2e-16 ***
+## glucose      0.039510   0.003398   11.63   &lt;2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 936.6  on 727  degrees of freedom
+## Residual deviance: 752.2  on 726  degrees of freedom
+## AIC: 756.2
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>There’s a lot to unpack here so take a deep breath (or make sure you have a coffee) before continuing…</p>
+<ul>
+<li><p>The first lines just confirm which model we’ve been fitting (trust me, this can be useful when you’re in the middle of a load of analysis and you’ve lost track of what the hell is going on!)</p></li>
+<li><p>The next block is called <code>Deviance Residuals</code>. This isn’t particularly useful, but just so you know: for linear models the residuals were calculated for each data point and then squared and added up to get the SS (sum of squares), which is used to fit the model. For generalised linear models we don’t use SS to fit the model and instead we use an entirely different method called maximum likelihood. This fitting procedure generates a different quantity, called Deviance, which is the analogue of SS. A deviance of zero indicates the best model we could hope for and bigger values indicate a model that doesn’t fit quite as well. The deviance residuals are then values associated with each data point, that when squared and summed give the deviance for the model (an exact analogy to normal residuals). You’re unlikely to ever need to know this, but I had some time on my hands and decided to share this little nugget with you 😉.</p></li>
+<li><p>The <code>Coefficients</code> block is next. The main numbers to extract from the output are the two numbers underneath <code>Estimate.Std</code>: we have <code>(Intercept) -5.611732</code> and <code>glucose 0.039510</code>.These are the coefficients of the logistic model equation and need to be placed in the correct equation if we want to be able to calculate the probability of having a positive diabetes test result for a given glucose level.</p></li>
+</ul>
+<p><span class="math display">\[\begin{equation}
+P(positive \ test_result) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
+\end{equation}\]</span></p>
+<ul>
+<li><p>The p values (<code>Pr(&gt;|z|</code>) at the end of each coefficient row merely show whether that particular coefficient is significantly different from zero. This is similar to the p-values obtained in the summary output of a linear model, and as before, for continuous predictors these p-values can be used as a rough guide as to whether that predictor is important (so in this case glucose appears to be significant). However, these p-values aren’t great when we have multiple predictor variables, or when we have categorical predictors with multiple levels (since the output will give us a p-value for each level rather than for the predictor as a whole).</p></li>
+<li><p>The next line tells us that the dispersion parameter was assumed to be 1 for this binomial model. Dispersion is a property that says whether the data were more or less spread out around the logistic curve than we would expect. A dispersion parameter of 1 says that the data are spread out exactly as we would expect. Greater than 1 is called over-dispersion and less than 1 is called under-dispersion. Here this line is saying that when we fitted this model, we were assuming that the dispersion of the data was exactly 1. For binary data, like we have here, the data cannot be over- or under-dispersed but this is something that we’ll need to check for other sorts of generalised linear models.</p></li>
+<li>
+<p>The last three lines relate to quantities called deviance and AIC (Akaike Information Criterion).</p>
+<ul>
+<li>As we said just above, the deviance values are the equivalent of Sums of Squares values in linear models (and are a product of the technique used to fit the curve to the data). They can be used as a metric of goodness of fit for the model, with a deviance of 0 indicating a perfect fitting model. The deviance for the null model (i.e. the model without any predictors, basically saying that the probability of getting a positive diabetes score is constant and doesn’t depend on glucose level) is given by the first line and the deviance for the actual model is given by the residual deviance line. We will see how we can use the deviance to do two things.
+<ol style="list-style-type: decimal">
+<li>to check of whether the model is actually any good (i.e. does it in any way look like it’s close to the data). This is akin to what we were doing with R2 values in linear models.</li>
+<li>to check if the model we’ve specified is better than the null model.
+It’s important to realise that these two things can be independent of each other; we can have a model that is significantly better than a null model whilst still being rubbish overall (the null model will have been even more rubbish in comparison), and we can have a model that is brilliant yet still not be better than the null model (in this case the null model was already brilliant).</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>As we found in the previous practical the AIC value is meaningless by itself, but it will allow us to compare this model to another model with different terms (with the model with the smaller AIC value being the better fitting model).</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="using-the-model-to-make-predictions" class="section level2" number="2.6">
+<h2>
+<span class="header-section-number">2.6</span> Using the model to make predictions<a class="anchor" aria-label="anchor" href="#using-the-model-to-make-predictions"><i class="fas fa-link"></i></a>
+</h2>
+<p>What if we got some new glucose level data and we wanted to predict if people might have diabetes or not?</p>
+<p>We could use the existing model and feed it the some data:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create a dummy data set using some hypothetical glucose measurements</span>
+<span class="va">diabetes_newdata</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>glucose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">188</span>, <span class="fl">122</span>, <span class="fl">83</span>, <span class="fl">76</span>, <span class="fl">144</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># predict if the patients have diabetes or not</span>
+<span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">glm_diabetes</span>, new_data <span class="op">=</span> <span class="va">diabetes_newdata</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 1
+##   .pred_class
+##   &lt;fct&gt;      
+## 1 1          
+## 2 0          
+## 3 0          
+## 4 0          
+## 5 1</code></pre>
+<p>Although you are able to get the predicted outcomes, I would like to stress that this is not the point of running the model. It is important to realise that the model (as with all statistical models) creates a predicted outcome based on certain <em>probabilities</em>. It is therefore much more informative to look at how probable these predicted outcomes are. We can do that as follows:</p>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_newdata</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="va">glucose</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">bind_cols</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">glm_diabetes</span>, <span class="va">diabetes_newdata</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="co"># add the probabilities for both outcomes</span>
+  <span class="fu">bind_cols</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html">predict</a></span><span class="op">(</span><span class="va">glm_diabetes</span>, <span class="va">diabetes_newdata</span>, type <span class="op">=</span> <span class="st">"prob"</span><span class="op">)</span><span class="op">)</span> </code></pre></div>
+<pre><code>## # A tibble: 5 × 4
+##   glucose .pred_class .pred_0 .pred_1
+##     &lt;dbl&gt; &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+## 1     188 1             0.140  0.860 
+## 2     122 0             0.688  0.312 
+## 3      83 0             0.912  0.0885
+## 4      76 0             0.931  0.0686
+## 5     144 1             0.481  0.519</code></pre>
+<p>So here we see that the predicted outcomes, as encoded in <code>.pred_class</code> remain the same, but there are now two new columns present: <code>.pred_0</code> and <code>.pred_1</code>. These give you the probability that the outcome is <code>0</code> or <code>1</code>. For the first value this means that there is a 14% chance that the diabetes test will return a negative result and around 86% chance that it will return a positive result.</p>
+</div>
+</div>
+</div>
+<div id="model-evaluation" class="section level2" number="2.7">
+<h2>
+<span class="header-section-number">2.7</span> Model evaluation<a class="anchor" aria-label="anchor" href="#model-evaluation"><i class="fas fa-link"></i></a>
+</h2>
+<p>So far we’ve constructed the logistic model and fed it some new data to make predictions to the possible outcome of a diabetes test, depending on the glucose level of a given patient. This gave us some diabetes test predictions but, more importantly, the probabilities of whether the test could come back negative (0) or positive (1).</p>
+<p>The question we’d like to ask ourselves at this point: how reliable is the model?</p>
+<p>To explore this, we need to take a step back.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div id="split-the-data" class="section level3" number="2.7.1">
+<h3>
+<span class="header-section-number">2.7.1</span> Split the data<a class="anchor" aria-label="anchor" href="#split-the-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>When we created the model, we used <em>all</em> of the data. However, a good way of assessing a model fit is to actually split the data into two:</p>
+<ol style="list-style-type: decimal">
+<li>a <strong>training data set</strong> that you use to fit your model</li>
+<li>a <strong>test data set</strong> to validate your model and measure model performance</li>
+</ol>
+<p>Before we split the data, let’s have a closer look at the data set. If we count how many diabetes test results are negative (0) and positive (1), we see that these counts are not evenly split.</p>
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes</span> <span class="op">%&gt;%</span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   test_result     n  prop
+##   &lt;fct&gt;       &lt;int&gt; &lt;dbl&gt;
+## 1 0             478 0.657
+## 2 1             250 0.343</code></pre>
+<p>This can have some consequences if we start splitting our data into a training and test set. By splitting the data into two parts - where most of the data goes into your training set - you have data left afterwards that you can use to test how good the predictions of your model are. However, we need to make sure that the <em>proportion</em> of negative and positive diabetes test outcomes remains roughly the same.</p>
+<p>The <code>rsample</code> package has a couple of useful functions that allow us to do just that and we can use the <code>strata</code> argument to keep these proportions more or less the same.</p>
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Use 75% of the data to create the training data set</span>
+<span class="va">data_split</span> <span class="op">&lt;-</span> <span class="fu">initial_split</span><span class="op">(</span><span class="va">diabetes</span>, strata <span class="op">=</span> <span class="va">test_result</span><span class="op">)</span>
+
+<span class="co"># Create data frames for the two sets:</span>
+<span class="va">train_data</span> <span class="op">&lt;-</span> <span class="fu">training</span><span class="op">(</span><span class="va">data_split</span><span class="op">)</span>
+<span class="va">test_data</span>  <span class="op">&lt;-</span> <span class="fu">testing</span><span class="op">(</span><span class="va">data_split</span><span class="op">)</span></code></pre></div>
+<p>We can check what the <code>initial_split()</code> function as done:</p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># proportion of data allocated to the training set</span>
+<span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">train_data</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html">nrow</a></span><span class="op">(</span><span class="va">diabetes</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.7486264</code></pre>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># proportion of diabetes test results for the training and test data sets</span>
+<span class="va">train_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   test_result     n  prop
+##   &lt;fct&gt;       &lt;int&gt; &lt;dbl&gt;
+## 1 0             358 0.657
+## 2 1             187 0.343</code></pre>
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">test_data</span> <span class="op">%&gt;%</span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   test_result     n  prop
+##   &lt;fct&gt;       &lt;int&gt; &lt;dbl&gt;
+## 1 0             120 0.656
+## 2 1              63 0.344</code></pre>
+</div>
+<div id="create-a-recipe" class="section level3" number="2.7.2">
+<h3>
+<span class="header-section-number">2.7.2</span> Create a recipe<a class="anchor" aria-label="anchor" href="#create-a-recipe"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Create a recipe</span>
+<span class="va">diabetes_rec</span> <span class="op">&lt;-</span> 
+  <span class="fu">recipe</span><span class="op">(</span><span class="va">test_result</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train_data</span><span class="op">)</span>
+
+<span class="co"># Look at the recipe summary</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">diabetes_rec</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 4
+##   variable    type    role      source  
+##   &lt;chr&gt;       &lt;chr&gt;   &lt;chr&gt;     &lt;chr&gt;   
+## 1 glucose     numeric predictor original
+## 2 diastolic   numeric predictor original
+## 3 test_result nominal outcome   original</code></pre>
+</div>
+<div id="build-a-model-specification" class="section level3" number="2.7.3">
+<h3>
+<span class="header-section-number">2.7.3</span> Build a model specification<a class="anchor" aria-label="anchor" href="#build-a-model-specification"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_mod</span> <span class="op">&lt;-</span> 
+  <span class="fu">logistic_reg</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">set_engine</span><span class="op">(</span><span class="st">"glm"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="use-recipe-as-we-train-and-test-our-model" class="section level3" number="2.7.4">
+<h3>
+<span class="header-section-number">2.7.4</span> Use recipe as we train and test our model<a class="anchor" aria-label="anchor" href="#use-recipe-as-we-train-and-test-our-model"><i class="fas fa-link"></i></a>
+</h3>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_wflow</span> <span class="op">&lt;-</span> 
+  <span class="fu">workflow</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">add_model</span><span class="op">(</span><span class="va">diabetes_mod</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">add_recipe</span><span class="op">(</span><span class="va">diabetes_rec</span><span class="op">)</span>
+
+<span class="va">diabetes_wflow</span></code></pre></div>
+<pre><code>## ══ Workflow ════════════════════════════════════════════════════════════════════
+## Preprocessor: Recipe
+## Model: logistic_reg()
+## 
+## ── Preprocessor ────────────────────────────────────────────────────────────────
+## 0 Recipe Steps
+## 
+## ── Model ───────────────────────────────────────────────────────────────────────
+## Logistic Regression Model Specification (classification)
+## 
+## Computational engine: glm</code></pre>
+<p>Although it seems a bit of overkill, we now have a single function that can we can use to prepare the recipe and train the model from the resulting predictors:</p>
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_fit</span> <span class="op">&lt;-</span> 
+  <span class="va">diabetes_wflow</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span>data <span class="op">=</span> <span class="va">train_data</span><span class="op">)</span></code></pre></div>
+<p>This creates an object called <code>diabetes_fit</code>, which contains the final recipe and fitted model objects. We can extract the model and recipe objects with several helper functions:</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_fit</span> <span class="op">%&gt;%</span> 
+  <span class="fu">extract_fit_parsnip</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  -6.48     0.758       -8.55 1.21e-17
+## 2 glucose       0.0395   0.00407      9.71 2.64e-22
+## 3 diastolic     0.0127   0.00868      1.46 1.44e- 1</code></pre>
+</div>
+<div id="use-trained-workflow-for-predictions" class="section level3" number="2.7.5">
+<h3>
+<span class="header-section-number">2.7.5</span> Use trained workflow for predictions<a class="anchor" aria-label="anchor" href="#use-trained-workflow-for-predictions"><i class="fas fa-link"></i></a>
+</h3>
+<p>So far, we have done the following:</p>
+<ol style="list-style-type: decimal">
+<li>Built the model (<code>diabetes_mod</code>),</li>
+<li>Created a pre-processing recipe (<code>diabetes_rec</code>),</li>
+<li>Combined the model and recipe into a workflow (<code>diabetes_wflow</code>)</li>
+<li>Trained our workflow using the <code>fit()</code> function (<code>diabetes_fit</code>)</li>
+</ol>
+<p>The results we generated above do not differ much from the values we obtained with the entire data set. However, these are based on 3/4 of the data (our training data set). Because of this, we still have our test data set available to apply this workflow to data the model has not yet seen.</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_aug</span> <span class="op">&lt;-</span> 
+<span class="fu">augment</span><span class="op">(</span><span class="va">diabetes_fit</span>, <span class="va">test_data</span><span class="op">)</span>
+
+<span class="va">diabetes_aug</span></code></pre></div>
+<pre><code>## # A tibble: 183 × 6
+##    glucose diastolic test_result .pred_class .pred_0 .pred_1
+##      &lt;dbl&gt;     &lt;dbl&gt; &lt;fct&gt;       &lt;fct&gt;         &lt;dbl&gt;   &lt;dbl&gt;
+##  1     116        74 0           0             0.724   0.276
+##  2     197        70 1           1             0.101   0.899
+##  3     168        74 1           1             0.251   0.749
+##  4     139        80 0           1             0.494   0.506
+##  5     189        60 1           1             0.149   0.851
+##  6     166        72 1           1             0.271   0.729
+##  7      99        84 0           0             0.819   0.181
+##  8     125        70 1           0             0.659   0.341
+##  9      97        66 0           0             0.860   0.140
+## 10     145        82 0           1             0.429   0.571
+## # … with 173 more rows</code></pre>
+</div>
+<div id="evaluate-the-model" class="section level3" number="2.7.6">
+<h3>
+<span class="header-section-number">2.7.6</span> Evaluate the model<a class="anchor" aria-label="anchor" href="#evaluate-the-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can now evaluate the model. One way of doing this is by using the area under the ROC curve as a metric.</p>
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_aug</span> <span class="op">%&gt;%</span> 
+  <span class="fu">roc_curve</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">test_result</span>, <span class="va">.pred_0</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">autoplot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-23-1.png" width="672"></div>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_aug</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">test_result</span> <span class="op">==</span> <span class="va">.pred_class</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   test_result     n  prop
+##   &lt;fct&gt;       &lt;int&gt; &lt;dbl&gt;
+## 1 0              97 0.724
+## 2 1              37 0.276</code></pre>
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_aug</span> <span class="op">%&gt;%</span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">test_result</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>prop <span class="op">=</span> <span class="va">n</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html">sum</a></span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 3
+##   test_result     n  prop
+##   &lt;fct&gt;       &lt;int&gt; &lt;dbl&gt;
+## 1 0             120 0.656
+## 2 1              63 0.344</code></pre>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">diabetes_aug</span> <span class="op">%&gt;%</span> 
+  <span class="fu">roc_auc</span><span class="op">(</span>truth <span class="op">=</span> <span class="va">test_result</span>, <span class="va">.pred_0</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
+## 1 roc_auc binary         0.777</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="exercise" class="section level2" number="2.8">
+<h2>
+<span class="header-section-number">2.8</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>We can add exercises</p>
+<details><summary>
+Answer
+</summary>
+With answers
+</details>
+</div>
+</div>
+<div id="key-points" class="section level2" number="2.9">
+<h2>
+<span class="header-section-number">2.9</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keypoints">
+<p>Adding key points</p>
+</div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#logistic-models-binary-response"><span class="header-section-number">2</span> Logistic Models – Binary Response</a></li>
+<li><a class="nav-link" href="#objectives"><span class="header-section-number">2.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">2.2</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#datasets"><span class="header-section-number">2.3</span> Datasets</a></li>
+<li><a class="nav-link" href="#visualise-the-data"><span class="header-section-number">2.4</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#construct-the-model"><span class="header-section-number">2.5</span> Construct the model</a></li>
+<li><a class="nav-link" href="#using-the-model-to-make-predictions"><span class="header-section-number">2.6</span> Using the model to make predictions</a></li>
+<li>
+<a class="nav-link" href="#model-evaluation"><span class="header-section-number">2.7</span> Model evaluation</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#split-the-data"><span class="header-section-number">2.7.1</span> Split the data</a></li>
+<li><a class="nav-link" href="#create-a-recipe"><span class="header-section-number">2.7.2</span> Create a recipe</a></li>
+<li><a class="nav-link" href="#build-a-model-specification"><span class="header-section-number">2.7.3</span> Build a model specification</a></li>
+<li><a class="nav-link" href="#use-recipe-as-we-train-and-test-our-model"><span class="header-section-number">2.7.4</span> Use recipe as we train and test our model</a></li>
+<li><a class="nav-link" href="#use-trained-workflow-for-predictions"><span class="header-section-number">2.7.5</span> Use trained workflow for predictions</a></li>
+<li><a class="nav-link" href="#evaluate-the-model"><span class="header-section-number">2.7.6</span> Evaluate the model</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">2.8</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">2.9</span> Key points</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
+
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
+
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

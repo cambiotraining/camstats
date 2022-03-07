@@ -1,10 +1,40 @@
-```{r, echo=FALSE}
-# adjust and load as needed
-source(file = "setup.R")
 
-xaringanExtra::use_panelset()
-xaringanExtra::style_panelset(font_family = "inherit")
 ```
+## Registered S3 method overwritten by 'tune':
+##   method                   from   
+##   required_pkgs.model_spec parsnip
+```
+
+```
+## ── Attaching packages ────────────────────────────────────── tidymodels 0.1.4 ──
+```
+
+```
+## ✓ dials        0.1.0     ✓ rsample      0.1.1
+## ✓ infer        1.0.0     ✓ tune         0.1.6
+## ✓ modeldata    0.1.1     ✓ workflows    0.2.4
+## ✓ parsnip      0.1.7     ✓ workflowsets 0.1.0
+## ✓ recipes      0.2.0     ✓ yardstick    0.0.9
+```
+
+```
+## ── Conflicts ───────────────────────────────────────── tidymodels_conflicts() ──
+## x scales::discard() masks purrr::discard()
+## x dplyr::filter()   masks stats::filter()
+## x recipes::fixed()  masks stringr::fixed()
+## x dplyr::lag()      masks stats::lag()
+## x yardstick::spec() masks readr::spec()
+## x recipes::step()   masks stats::step()
+## • Use tidymodels_prefer() to resolve common conflicts.
+```
+
+```
+## Warning: 'xaringanExtra::style_panelset' is deprecated.
+## Use 'style_panelset_tabs' instead.
+## See help("Deprecated")
+```
+
+`<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
 # Logistic Models – Binary Response
 
@@ -56,7 +86,8 @@ First we load the data, then we visualise it. If needed, load the tidyverse pack
 [tidyverse]{.panel-name}
 First, we load and inspect the data:
 
-```{r, message=FALSE, warning=FALSE}
+
+```r
 diabetes <- read_csv("data/diabetes.csv")
 ```
 
@@ -64,28 +95,35 @@ Looking at the data, we can see that the `test_result` column contains zeros and
 
 This will cause problems later, so we need to tell R to see these values as factors.
 
-```{r}
+
+```r
 diabetes <- diabetes %>% 
   mutate(test_result = as_factor(test_result))
 ```
 
 We can plot the data:
 
-```{r}
+
+```r
 diabetes %>% 
   ggplot(aes(x = test_result, y = glucose)) +
   geom_boxplot()
 ```
 
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672" />
+
 It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.
 
 We can visualise that differently by plotting all the data points as a classic binary response plot:
 
-```{r}
+
+```r
 diabetes %>% 
   ggplot(aes(x = glucose, y = test_result)) +
   geom_point()
 ```
+
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-5-1.png" width="672" />
 :::
 :::::
 
@@ -101,14 +139,16 @@ In tidyverse we have access to a very useful package: `parsnip`, which is part o
 
 First, we need to load `tidymodels` (install it first, if needed):
 
-```{r, eval=FALSE}
+
+```r
 # install.packages("tidymodels")
 library(tidymodels)
 ```
 
 Next, we can create the model:
 
-```{r}
+
+```r
 glm_diabetes <- logistic_reg() %>% 
   set_engine("glm") %>% 
   fit(test_result ~ glucose, data = diabetes)
@@ -116,18 +156,36 @@ glm_diabetes <- logistic_reg() %>%
 
 When we summarise the output of the model, we get the following information:
 
-```{r}
+
+```r
 summary(glm_diabetes)
+```
+
+```
+##         Length Class        Mode     
+## lvl      2     -none-       character
+## spec     6     logistic_reg list     
+## fit     30     glm          list     
+## preproc  1     -none-       list     
+## elapsed  5     proc_time    numeric
 ```
 
 This does not look very informative. What we get is actually a _list_ of objects that contain all kinds of information.
 
 We can get more insight into the model parameters with the following:
 
-```{r}
+
+```r
 glm_diabetes %>%
   extract_fit_engine() %>% 
   glance()
+```
+
+```
+## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           <dbl>   <int>  <dbl> <dbl> <dbl>    <dbl>       <int> <int>
+## 1          937.     727  -376.  756.  765.     752.         726   728
 ```
 :::
 
@@ -137,7 +195,8 @@ In base R we use the `glm()` function, which works in a very similar way as the 
 
 We define the model as follows:
 
-```{r}
+
+```r
 glm_diabetes_r <- glm(test_result ~ glucose,
                       data = diabetes,
                       family = binomial)
@@ -148,8 +207,34 @@ If you forget to include the family argument then the glm function just performs
 
 Next, we can summarise the model with:
 
-```{r}
+
+```r
 summary(glm_diabetes_r)
+```
+
+```
+## 
+## Call:
+## glm(formula = test_result ~ glucose, family = binomial, data = diabetes)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -2.1353  -0.7819  -0.5189   0.8269   2.2832  
+## 
+## Coefficients:
+##              Estimate Std. Error z value Pr(>|z|)    
+## (Intercept) -5.611732   0.442289  -12.69   <2e-16 ***
+## glucose      0.039510   0.003398   11.63   <2e-16 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 936.6  on 727  degrees of freedom
+## Residual deviance: 752.2  on 726  degrees of freedom
+## AIC: 756.2
+## 
+## Number of Fisher Scoring iterations: 4
 ```
 
 There’s a lot to unpack here so take a deep breath (or make sure you have a coffee) before continuing...
@@ -187,7 +272,8 @@ We could use the existing model and feed it the some data:
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-```{r}
+
+```r
 # create a dummy data set using some hypothetical glucose measurements
 diabetes_newdata <- tibble(glucose = c(188, 122, 83, 76, 144))
 
@@ -195,14 +281,37 @@ diabetes_newdata <- tibble(glucose = c(188, 122, 83, 76, 144))
 predict(glm_diabetes, new_data = diabetes_newdata)
 ```
 
+```
+## # A tibble: 5 × 1
+##   .pred_class
+##   <fct>      
+## 1 1          
+## 2 0          
+## 3 0          
+## 4 0          
+## 5 1
+```
+
 Although you are able to get the predicted outcomes, I would like to stress that this is not the point of running the model. It is important to realise that the model (as with all statistical models) creates a predicted outcome based on certain _probabilities_. It is therefore much more informative to look at how probable these predicted outcomes are. We can do that as follows:
 
-```{r}
+
+```r
 diabetes_newdata %>% 
   select(glucose) %>% 
   bind_cols(predict(glm_diabetes, diabetes_newdata)) %>% 
   # add the probabilities for both outcomes
   bind_cols(predict(glm_diabetes, diabetes_newdata, type = "prob")) 
+```
+
+```
+## # A tibble: 5 × 4
+##   glucose .pred_class .pred_0 .pred_1
+##     <dbl> <fct>         <dbl>   <dbl>
+## 1     188 1             0.140  0.860 
+## 2     122 0             0.688  0.312 
+## 3      83 0             0.912  0.0885
+## 4      76 0             0.931  0.0686
+## 5     144 1             0.481  0.519
 ```
 
 So here we see that the predicted outcomes, as encoded in `.pred_class` remain the same, but there are now two new columns present: `.pred_0` and `.pred_1`. These give you the probability that the outcome is `0` or `1`. For the first value this means that there is a 14% chance that the diabetes test will return a negative result and around 86% chance that it will return a positive result.
@@ -229,17 +338,27 @@ When we created the model, we used _all_ of the data. However, a good way of ass
 
 Before we split the data, let's have a closer look at the data set. If we count how many diabetes test results are negative (0) and positive (1), we see that these counts are not evenly split.
 
-```{r}
+
+```r
 diabetes %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
+```
+
+```
+## # A tibble: 2 × 3
+##   test_result     n  prop
+##   <fct>       <int> <dbl>
+## 1 0             478 0.657
+## 2 1             250 0.343
 ```
 
 This can have some consequences if we start splitting our data into a training and test set. By splitting the data into two parts - where most of the data goes into your training set - you have data left afterwards that you can use to test how good the predictions of your model are. However, we need to make sure that the _proportion_ of negative and positive diabetes test outcomes remains roughly the same.
 
 The `rsample` package has a couple of useful functions that allow us to do just that and we can use the `strata` argument to keep these proportions more or less the same.
 
-```{r}
+
+```r
 # Use 75% of the data to create the training data set
 data_split <- initial_split(diabetes, strata = test_result)
 
@@ -250,26 +369,48 @@ test_data  <- testing(data_split)
 
 We can check what the `initial_split()` function as done:
 
-```{r}
+
+```r
 # proportion of data allocated to the training set
 nrow(train_data) / nrow(diabetes)
+```
 
+```
+## [1] 0.7486264
+```
+
+```r
 # proportion of diabetes test results for the training and test data sets
 train_data %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
+```
 
+```
+## # A tibble: 2 × 3
+##   test_result     n  prop
+##   <fct>       <int> <dbl>
+## 1 0             358 0.657
+## 2 1             187 0.343
+```
+
+```r
 test_data %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
 ```
 
-From the output we can see that around 75% of the data set has been used to create a training data set, with the remaining 25% kept as a test set.
-
-Furthermore, the proportions of negative:positive is kept more or less constant.
+```
+## # A tibble: 2 × 3
+##   test_result     n  prop
+##   <fct>       <int> <dbl>
+## 1 0             120 0.656
+## 2 1              63 0.344
+```
 
 ### Create a recipe
-```{r}
+
+```r
 # Create a recipe
 diabetes_rec <- 
   recipe(test_result ~ ., data = train_data)
@@ -278,15 +419,26 @@ diabetes_rec <-
 summary(diabetes_rec)
 ```
 
+```
+## # A tibble: 3 × 4
+##   variable    type    role      source  
+##   <chr>       <chr>   <chr>     <chr>   
+## 1 glucose     numeric predictor original
+## 2 diastolic   numeric predictor original
+## 3 test_result nominal outcome   original
+```
+
 ### Build a model specification
-```{r}
+
+```r
 diabetes_mod <- 
   logistic_reg() %>% 
   set_engine("glm")
 ```
 
 ### Use recipe as we train and test our model
-```{r}
+
+```r
 diabetes_wflow <- 
   workflow() %>% 
   add_model(diabetes_mod) %>% 
@@ -295,9 +447,24 @@ diabetes_wflow <-
 diabetes_wflow
 ```
 
+```
+## ══ Workflow ════════════════════════════════════════════════════════════════════
+## Preprocessor: Recipe
+## Model: logistic_reg()
+## 
+## ── Preprocessor ────────────────────────────────────────────────────────────────
+## 0 Recipe Steps
+## 
+## ── Model ───────────────────────────────────────────────────────────────────────
+## Logistic Regression Model Specification (classification)
+## 
+## Computational engine: glm
+```
+
 Although it seems a bit of overkill, we now have a single function that can we can use to prepare the recipe and train the model from the resulting predictors:
 
-```{r}
+
+```r
 diabetes_fit <- 
   diabetes_wflow %>% 
   fit(data = train_data)
@@ -305,10 +472,20 @@ diabetes_fit <-
 
 This creates an object called `diabetes_fit`, which contains the final recipe and fitted model objects. We can extract the model and recipe objects with several helper functions:
 
-```{r}
+
+```r
 diabetes_fit %>% 
   extract_fit_parsnip() %>% 
   tidy()
+```
+
+```
+## # A tibble: 3 × 5
+##   term        estimate std.error statistic  p.value
+##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)  -6.48     0.758       -8.55 1.21e-17
+## 2 glucose       0.0395   0.00407      9.71 2.64e-22
+## 3 diastolic     0.0127   0.00868      1.46 1.44e- 1
 ```
 
 ### Use trained workflow for predictions
@@ -321,35 +498,83 @@ So far, we have done the following:
 
 The results we generated above do not differ much from the values we obtained with the entire data set. However, these are based on 3/4 of the data (our training data set). Because of this, we still have our test data set available to apply this workflow to data the model has not yet seen.
 
-```{r}
+
+```r
 diabetes_aug <- 
 augment(diabetes_fit, test_data)
 
 diabetes_aug
 ```
 
+```
+## # A tibble: 183 × 6
+##    glucose diastolic test_result .pred_class .pred_0 .pred_1
+##      <dbl>     <dbl> <fct>       <fct>         <dbl>   <dbl>
+##  1     116        74 0           0             0.724   0.276
+##  2     197        70 1           1             0.101   0.899
+##  3     168        74 1           1             0.251   0.749
+##  4     139        80 0           1             0.494   0.506
+##  5     189        60 1           1             0.149   0.851
+##  6     166        72 1           1             0.271   0.729
+##  7      99        84 0           0             0.819   0.181
+##  8     125        70 1           0             0.659   0.341
+##  9      97        66 0           0             0.860   0.140
+## 10     145        82 0           1             0.429   0.571
+## # … with 173 more rows
+```
+
 ### Evaluate the model
 We can now evaluate the model. One way of doing this is by using the area under the ROC curve as a metric.
 
-```{r}
+
+```r
 diabetes_aug %>% 
   roc_curve(truth = test_result, .pred_0) %>% 
   autoplot()
+```
 
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+
+```r
 diabetes_aug %>% 
   filter(test_result == .pred_class) %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
+```
 
+```
+## # A tibble: 2 × 3
+##   test_result     n  prop
+##   <fct>       <int> <dbl>
+## 1 0              97 0.724
+## 2 1              37 0.276
+```
+
+```r
 diabetes_aug %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
-
 ```
 
-```{r}
+```
+## # A tibble: 2 × 3
+##   test_result     n  prop
+##   <fct>       <int> <dbl>
+## 1 0             120 0.656
+## 2 1              63 0.344
+```
+
+
+```r
 diabetes_aug %>% 
   roc_auc(truth = test_result, .pred_0)
+```
+
+```
+## # A tibble: 1 × 3
+##   .metric .estimator .estimate
+##   <chr>   <chr>          <dbl>
+## 1 roc_auc binary         0.777
 ```
 
 

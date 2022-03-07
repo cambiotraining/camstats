@@ -82,7 +82,7 @@ So, let's say we want to explore our `diabetes` data set a bit more.
 ```{r}
 glm_diabetes <- logistic_reg() %>% 
   set_engine("glm") %>% 
-  fit(test ~ glucose, data = diabetes)
+  fit(factor(test) ~ glucose, data = diabetes)
 ```
 
 ```{r}
@@ -96,14 +96,14 @@ What if we got some new glucose level data and we wanted to predict if people mi
 We could use the existing model and feed it the new data:
 
 ```{r}
-# create a dummy data set using the first 5 values of our data
-diabetes_small <- diabetes %>%  slice(1:5)
+# create a dummy data set using some hypothetical glucose measurements
+diabetes_small <- tibble(glucose = c(188, 122, 83, 76, 144))
 
 # predict if the patients have diabetes or not
 predict(glm_diabetes, new_data = diabetes_small)
 ```
 
-We could go even further,
+Although you are able to get the predicted outcomes, I would like to stress that is not the point of running the model. It is important to realise that the model (as with all statistical models) creates a predicted outcome based on certain _probabilities_. It is therefore much more informative to look at how probable these predicted outcomes are. We can do that as follows:
 
 ```{r}
 diabetes_small %>% 
@@ -113,6 +113,7 @@ diabetes_small %>%
   bind_cols(predict(glm_diabetes, diabetes_small, type = "prob")) 
 ```
 
+So here we see that the predicted outcomes, as encoded in `.pred_class` remain the same, but there are now two new columns present: `.pred_0` and `.pred_1`. These give you the probability that the outcome is `0` or `1`. For the first value this means that there is a 14% chance that the glucose test will return negative result and around 86% chance that it will return a positive result.
 
 Example using rstan:
 
