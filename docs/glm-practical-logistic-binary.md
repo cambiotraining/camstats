@@ -13,7 +13,7 @@
 ## ✓ dials        0.1.0     ✓ rsample      0.1.1
 ## ✓ infer        1.0.0     ✓ tune         0.1.6
 ## ✓ modeldata    0.1.1     ✓ workflows    0.2.4
-## ✓ parsnip      0.1.7     ✓ workflowsets 0.1.0
+## ✓ parsnip      0.2.0     ✓ workflowsets 0.1.0
 ## ✓ recipes      0.2.0     ✓ yardstick    0.0.9
 ```
 
@@ -25,7 +25,8 @@
 ## x dplyr::lag()      masks stats::lag()
 ## x yardstick::spec() masks readr::spec()
 ## x recipes::step()   masks stats::step()
-## • Use tidymodels_prefer() to resolve common conflicts.
+## x tune::tune()      masks parsnip::tune()
+## • Dig deeper into tidy modeling with R at https://www.tmwr.org
 ```
 
 ```
@@ -74,7 +75,7 @@ The example in this section uses the following data set:
 
 `data/diabetes.csv`
 
-This is a data set comprising 768 observations of three variables (one dependent and two predictor variables). This records the results of a diabetes test_result as a binary variable (1 is a positive result, 0 is a negative result), along with the result of a glucose test and the diastolic blood pressure for each of 767 women. The variables are called `test_result`, `glucose` and `diastolic`.
+This is a data set comprising 768 observations of three variables (one dependent and two predictor variables). This records the results of a diabetes test result as a binary variable (1 is a positive result, 0 is a negative result), along with the result of a glucose test and the diastolic blood pressure for each of 767 women. The variables are called `test_result`, `glucose` and `diastolic`.
 :::
 :::::
 
@@ -93,12 +94,17 @@ diabetes <- read_csv("data/diabetes.csv")
 
 Looking at the data, we can see that the `test_result` column contains zeros and ones. These are test result outcomes and not actually numeric representations.
 
-This will cause problems later, so we need to tell R to see these values as factors.
+This will cause problems later, so we need to tell R to see these values as factors. For good measure we'll also improve the information in `test_result` by classifying it as 'negative' (0) or 'positive' (1).
 
 
 ```r
-diabetes <- diabetes %>% 
-  mutate(test_result = as_factor(test_result))
+diabetes <- 
+diabetes %>% 
+  # replace 0 with 'negative' and 1 with 'positive'
+  mutate(test_result = case_when(test_result == 0 ~ "negative",
+                                 TRUE ~ "positive")) %>% 
+  # convert character columns to factor
+  mutate_if(is.character, factor)
 ```
 
 We can plot the data:
@@ -112,7 +118,7 @@ diabetes %>%
 
 <img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-4-1.png" width="672" />
 
-It looks as though the variable glucose may have an effect on the results of the diabetes test since the positive test results seem to be slightly higher than the negative test results.
+It looks as though the patients with a positive diabetes test have slightly higher glucose levels than those with a negative diabetes test.
 
 We can visualise that differently by plotting all the data points as a classic binary response plot:
 
@@ -128,14 +134,14 @@ diabetes %>%
 :::::
 
 ## Construct the model
-There are different ways to construct a logistic model in either R or Python.
+There are different ways to construct a logistic model.
 
 ::::: {.panelset}
 
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-In tidyverse we have access to a very useful package: `parsnip`, which is part of the `tidymodels` package. The advantage of using `parsnip` is that the code syntax will stay the same as you do different kind of model comparisons. So, the learning curve might be a bit steeper to start with, but this will pay dividend in the long-term (just like when you started using R!).
+In `tidymodels` we have access to a very useful package: `parsnip`, which provides a common syntax for a whole range of modelling libraries. This means that the syntax will stay the same as you do different kind of model comparisons. So, the learning curve might be a bit steeper to start with, but this will pay dividend in the long-term (just like when you started using R!).
 
 First, we need to load `tidymodels` (install it first, if needed):
 
@@ -145,121 +151,79 @@ First, we need to load `tidymodels` (install it first, if needed):
 library(tidymodels)
 ```
 
-Next, we can create the model:
+The workflow in `parsnip` is a bit different to what we're used to so far. Up until now, we've directly used the relevant model functions to analyse our data, for example using the `lm()` function to create linear models.
+
+Using `parsnip` we approach things in a more systematic manner. At first this might seem unnecessarily verbose, but there are clear advantages to approaching your analysis in a systematic way. For example, it will be straightforward to implement other types of models using the same workflow, which you'll definitely find useful when moving on to more difficult modelling tasks.
+
+Using `tidymodels` we specify a model in three steps:
+
+1. **Specify the type of model based on its mathematical structure** (e.g., linear regression, random forest, K-nearest neighbors, etc).
+2. **When required, declare the mode of the model.** The mode reflects the type of prediction outcome. For numeric outcomes, the mode is regression; for qualitative outcomes, it is classification. If a model can only create one type of model, such as logistic regression, the mode is already set.
+3. **Specify the engine for fitting the model.** This usually is the software package or library that should be used.
+
+So, we can create the model as follows:
 
 
 ```r
-glm_diabetes <- logistic_reg() %>% 
-  set_engine("glm") %>% 
-  fit(test_result ~ glucose, data = diabetes)
+dia_mod <- logistic_reg() %>% 
+  set_mode("classification") %>% 
+  set_engine("glm")
 ```
 
-When we summarise the output of the model, we get the following information:
+Note that we are not actually specifying any of the variables just yet! All we've done is tell R what kind of model we're planning to use. If we want to see how `parsnip` converts this code to the package syntax, we can check this with `translate()`:
 
 
 ```r
-summary(glm_diabetes)
+dia_mod %>% translate()
 ```
 
 ```
-##         Length Class        Mode     
-## lvl      2     -none-       character
-## spec     6     logistic_reg list     
-## fit     30     glm          list     
-## preproc  1     -none-       list     
-## elapsed  5     proc_time    numeric
+## Logistic Regression Model Specification (classification)
+## 
+## Computational engine: glm 
+## 
+## Model fit template:
+## stats::glm(formula = missing_arg(), data = missing_arg(), weights = missing_arg(), 
+##     family = stats::binomial)
 ```
 
-This does not look very informative. What we get is actually a _list_ of objects that contain all kinds of information.
+This shows that we have a logistic regression model, where the outcome is going to be a classification (in our case, that's a positive or negative test result). The model fit template tells us that we'll be using the `glm()` function from the `stats` package, which can take a `formula`, `data`, `weights` and `family` argument. The `family` argument is already set to binomial.
 
-We can get more insight into the model parameters with the following:
+Now we've specified what kind of model we're planning to use, we can fit our data to it, using the `fit()` function:
 
 
 ```r
-glm_diabetes %>%
-  extract_fit_engine() %>% 
-  glance()
+dia_fit <- dia_mod %>% 
+  fit(test_result ~ glucose,
+      data = diabetes)
 ```
 
-```
-## # A tibble: 1 × 8
-##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
-##           <dbl>   <int>  <dbl> <dbl> <dbl>    <dbl>       <int> <int>
-## 1          937.     727  -376.  756.  765.     752.         726   728
-```
-:::
-
-::: {.panel}
-[base R]{.panel-name}
-In base R we use the `glm()` function, which works in a very similar way as the `lm()` function.
-
-We define the model as follows:
+We can look at the output directly, but I prefer to tidy the data up using the `tidy()` function from `broom` package:
 
 
 ```r
-glm_diabetes_r <- glm(test_result ~ glucose,
-                      data = diabetes,
-                      family = binomial)
-```
-:::note
-If you forget to include the family argument then the glm function just performs an ordinary linear model fit (same as the lm function)
-:::
-
-Next, we can summarise the model with:
-
-
-```r
-summary(glm_diabetes_r)
+dia_fit %>% tidy()
 ```
 
 ```
-## 
-## Call:
-## glm(formula = test_result ~ glucose, family = binomial, data = diabetes)
-## 
-## Deviance Residuals: 
-##     Min       1Q   Median       3Q      Max  
-## -2.1353  -0.7819  -0.5189   0.8269   2.2832  
-## 
-## Coefficients:
-##              Estimate Std. Error z value Pr(>|z|)    
-## (Intercept) -5.611732   0.442289  -12.69   <2e-16 ***
-## glucose      0.039510   0.003398   11.63   <2e-16 ***
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 936.6  on 727  degrees of freedom
-## Residual deviance: 752.2  on 726  degrees of freedom
-## AIC: 756.2
-## 
-## Number of Fisher Scoring iterations: 4
+## # A tibble: 2 × 5
+##   term        estimate std.error statistic  p.value
+##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+## 1 (Intercept)  -5.61     0.442       -12.7 6.90e-37
+## 2 glucose       0.0395   0.00340      11.6 2.96e-31
 ```
 
-There’s a lot to unpack here so take a deep breath (or make sure you have a coffee) before continuing...
-
-* The first lines just confirm which model we’ve been fitting (trust me, this can be useful when you’re in the middle of a load of analysis and you’ve lost track of what the hell is going on!)
-
-* The next block is called `Deviance Residuals`. This isn’t particularly useful, but just so you know: for linear models the residuals were calculated for each data point and then squared and added up to get the SS (sum of squares), which is used to fit the model. For generalised linear models we don’t use SS to fit the model and instead we use an entirely different method called maximum likelihood. This fitting procedure generates a different quantity, called Deviance, which is the analogue of SS. A deviance of zero indicates the best model we could hope for and bigger values indicate a model that doesn’t fit quite as well. The deviance residuals are then values associated with each data point, that when squared and summed give the deviance for the model (an exact analogy to normal residuals). You’re unlikely to ever need to know this, but I had some time on my hands and decided to share this little nugget with you 😉.
-
-* The `Coefficients` block is next. The main numbers to extract from the output are the two numbers underneath `Estimate.Std`: we have `(Intercept) -5.611732` and `glucose 0.039510`.These are the coefficients of the logistic model equation and need to be placed in the correct equation if we want to be able to calculate the probability of having a positive diabetes test result for a given glucose level.
+The `estimate` column gives you the coefficients of the logistic model equation. We could use these to calculate the probability of having a positive diabetes test, for any given glucose level, using the following equation:
 
 \begin{equation}
 P(positive \ test_result) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
 \end{equation}
 
-* The p values (`Pr(>|z|`) at the end of each coefficient row merely show whether that particular coefficient is significantly different from zero. This is similar to the p-values obtained in the summary output of a linear model, and as before, for continuous predictors these p-values can be used as a rough guide as to whether that predictor is important (so in this case glucose appears to be significant). However, these p-values aren’t great when we have multiple predictor variables, or when we have categorical predictors with multiple levels (since the output will give us a p-value for each level rather than for the predictor as a whole).
+But of course we're not going to do it that way. We'll let R deal with that in the next section.
 
-* The next line tells us that the dispersion parameter was assumed to be 1 for this binomial model. Dispersion is a property that says whether the data were more or less spread out around the logistic curve than we would expect. A dispersion parameter of 1 says that the data are spread out exactly as we would expect. Greater than 1 is called over-dispersion and less than 1 is called under-dispersion. Here this line is saying that when we fitted this model, we were assuming that the dispersion of the data was exactly 1. For binary data, like we have here, the data cannot be over- or under-dispersed but this is something that we’ll need to check for other sorts of generalised linear models.
+The `std.error` column gives you the error associated with the coefficients and the `statistic` column tells you the statistic value.
 
-* The last three lines relate to quantities called deviance and AIC (Akaike Information Criterion).
-    * As we said just above, the deviance values are the equivalent of Sums of Squares values in linear models (and are a product of the technique used to fit the curve to the data). They can be used as a metric of goodness of fit for the model, with a deviance of 0 indicating a perfect fitting model. The deviance for the null model (i.e. the model without any predictors, basically saying that the probability of getting a positive diabetes score is constant and doesn’t depend on glucose level) is given by the first line and the deviance for the actual model is given by the residual deviance line. We will see how we can use the deviance to do two things.
-      1. to check of whether the model is actually any good (i.e. does it in any way look like it’s close to the data). This is akin to what we were doing with R2 values in linear models.
-      2.	to check if the model we’ve specified is better than the null model.
-    It’s important to realise that these two things can be independent of each other; we can have a model that is significantly better than a null model whilst still being rubbish overall (the null model will have been even more rubbish in comparison), and we can have a model that is brilliant yet still not be better than the null model (in this case the null model was already brilliant).
-* As we found in the previous practical the AIC value is meaningless by itself, but it will allow us to compare this model to another model with different terms (with the model with the smaller AIC value being the better fitting model).
-
+The values in `p.value` merely show whether that particular coefficient is significantly different from zero. This is similar to the p-values obtained in the summary output of a linear model, and as before, for continuous predictors these p-values can be used as a rough guide as to whether that predictor is important (so in this case glucose appears to be significant). However, these p-values aren’t great when we have multiple predictor variables, or when we have categorical predictors with multiple levels (since the output will give us a p-value for each level rather than for the predictor as a whole).
 :::
 :::::
 
@@ -278,48 +242,29 @@ We could use the existing model and feed it the some data:
 diabetes_newdata <- tibble(glucose = c(188, 122, 83, 76, 144))
 
 # predict if the patients have diabetes or not
-predict(glm_diabetes, new_data = diabetes_newdata)
-```
-
-```
-## # A tibble: 5 × 1
-##   .pred_class
-##   <fct>      
-## 1 1          
-## 2 0          
-## 3 0          
-## 4 0          
-## 5 1
-```
-
-Although you are able to get the predicted outcomes, I would like to stress that this is not the point of running the model. It is important to realise that the model (as with all statistical models) creates a predicted outcome based on certain _probabilities_. It is therefore much more informative to look at how probable these predicted outcomes are. We can do that as follows:
-
-
-```r
-diabetes_newdata %>% 
-  select(glucose) %>% 
-  bind_cols(predict(glm_diabetes, diabetes_newdata)) %>% 
-  # add the probabilities for both outcomes
-  bind_cols(predict(glm_diabetes, diabetes_newdata, type = "prob")) 
+augment(dia_fit,
+        new_data = diabetes_newdata)
 ```
 
 ```
 ## # A tibble: 5 × 4
-##   glucose .pred_class .pred_0 .pred_1
-##     <dbl> <fct>         <dbl>   <dbl>
-## 1     188 1             0.140  0.860 
-## 2     122 0             0.688  0.312 
-## 3      83 0             0.912  0.0885
-## 4      76 0             0.931  0.0686
-## 5     144 1             0.481  0.519
+##   glucose .pred_class .pred_negative .pred_positive
+##     <dbl> <fct>                <dbl>          <dbl>
+## 1     188 positive             0.140         0.860 
+## 2     122 negative             0.688         0.312 
+## 3      83 negative             0.912         0.0885
+## 4      76 negative             0.931         0.0686
+## 5     144 positive             0.481         0.519
 ```
 
-So here we see that the predicted outcomes, as encoded in `.pred_class` remain the same, but there are now two new columns present: `.pred_0` and `.pred_1`. These give you the probability that the outcome is `0` or `1`. For the first value this means that there is a 14% chance that the diabetes test will return a negative result and around 86% chance that it will return a positive result.
+Although you are able to get the predicted outcomes (in `.pred_class`), I would like to stress that this is not the point of running the model. It is important to realise that the model (as with all statistical models) creates a predicted outcome based on certain _probabilities_. It is therefore much more informative to look at how probable these predicted outcomes are. They are encoded in `.pred_negative` and `.pred_positive`.
+
+For the first value this means that there is a 14% chance that the diabetes test will return a negative result and around 86% chance that it will return a positive result.
 :::
 :::::
 
 ## Model evaluation
-So far we've constructed the logistic model and fed it some new data to make predictions to the possible outcome of a diabetes test, depending on the glucose level of a given patient. This gave us some diabetes test predictions but, more importantly, the probabilities of whether the test could come back negative (0) or positive (1).
+So far we've constructed the logistic model and fed it some new data to make predictions to the possible outcome of a diabetes test, depending on the glucose level of a given patient. This gave us some diabetes test predictions but, more importantly, the probabilities of whether the test could come back negative or positive.
 
 The question we'd like to ask ourselves at this point: how reliable is the model?
 
@@ -349,8 +294,8 @@ diabetes %>%
 ## # A tibble: 2 × 3
 ##   test_result     n  prop
 ##   <fct>       <int> <dbl>
-## 1 0             478 0.657
-## 2 1             250 0.343
+## 1 negative      478 0.657
+## 2 positive      250 0.343
 ```
 
 This can have some consequences if we start splitting our data into a training and test set. By splitting the data into two parts - where most of the data goes into your training set - you have data left afterwards that you can use to test how good the predictions of your model are. However, we need to make sure that the _proportion_ of negative and positive diabetes test outcomes remains roughly the same.
@@ -367,7 +312,7 @@ train_data <- training(data_split)
 test_data  <- testing(data_split)
 ```
 
-We can check what the `initial_split()` function as done:
+We can check what the `initial_split()` function has done:
 
 
 ```r
@@ -390,8 +335,8 @@ train_data %>%
 ## # A tibble: 2 × 3
 ##   test_result     n  prop
 ##   <fct>       <int> <dbl>
-## 1 0             358 0.657
-## 2 1             187 0.343
+## 1 negative      358 0.657
+## 2 positive      187 0.343
 ```
 
 ```r
@@ -404,19 +349,23 @@ test_data %>%
 ## # A tibble: 2 × 3
 ##   test_result     n  prop
 ##   <fct>       <int> <dbl>
-## 1 0             120 0.656
-## 2 1              63 0.344
+## 1 negative      120 0.656
+## 2 positive       63 0.344
 ```
+
+From the output we can see that around 75% of the data set has been used to create a training data set, with the remaining 25% kept as a test set.
+
+Furthermore, the proportions of negative:positive is kept more or less constant.
 
 ### Create a recipe
 
 ```r
 # Create a recipe
-diabetes_rec <- 
+dia_rec <- 
   recipe(test_result ~ ., data = train_data)
 
 # Look at the recipe summary
-summary(diabetes_rec)
+summary(dia_rec)
 ```
 
 ```
@@ -431,7 +380,7 @@ summary(diabetes_rec)
 ### Build a model specification
 
 ```r
-diabetes_mod <- 
+dia_mod <- 
   logistic_reg() %>% 
   set_engine("glm")
 ```
@@ -439,12 +388,12 @@ diabetes_mod <-
 ### Use recipe as we train and test our model
 
 ```r
-diabetes_wflow <- 
+dia_wflow <- 
   workflow() %>% 
-  add_model(diabetes_mod) %>% 
-  add_recipe(diabetes_rec)
+  add_model(dia_mod) %>% 
+  add_recipe(dia_rec)
 
-diabetes_wflow
+dia_wflow
 ```
 
 ```
@@ -465,16 +414,16 @@ Although it seems a bit of overkill, we now have a single function that can we c
 
 
 ```r
-diabetes_fit <- 
-  diabetes_wflow %>% 
+dia_fit <- 
+  dia_wflow %>% 
   fit(data = train_data)
 ```
 
-This creates an object called `diabetes_fit`, which contains the final recipe and fitted model objects. We can extract the model and recipe objects with several helper functions:
+This creates an object called `dia_fit`, which contains the final recipe and fitted model objects. We can extract the model and recipe objects with several helper functions:
 
 
 ```r
-diabetes_fit %>% 
+dia_fit %>% 
   extract_fit_parsnip() %>% 
   tidy()
 ```
@@ -483,43 +432,43 @@ diabetes_fit %>%
 ## # A tibble: 3 × 5
 ##   term        estimate std.error statistic  p.value
 ##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
-## 1 (Intercept)  -6.48     0.758       -8.55 1.21e-17
-## 2 glucose       0.0395   0.00407      9.71 2.64e-22
-## 3 diastolic     0.0127   0.00868      1.46 1.44e- 1
+## 1 (Intercept)  -7.13     0.782       -9.12 7.61e-20
+## 2 glucose       0.0378   0.00388      9.72 2.41e-22
+## 3 diastolic     0.0240   0.00872      2.75 6.03e- 3
 ```
 
 ### Use trained workflow for predictions
 So far, we have done the following:
 
-1. Built the model (`diabetes_mod`),
-2. Created a pre-processing recipe (`diabetes_rec`),
-3. Combined the model and recipe into a workflow (`diabetes_wflow`)
-4. Trained our workflow using the `fit()` function (`diabetes_fit`)
+1. Built the model (`dia_mod`),
+2. Created a pre-processing recipe (`dia_rec`),
+3. Combined the model and recipe into a workflow (`dia_wflow`)
+4. Trained our workflow using the `fit()` function (`dia_fit`)
 
 The results we generated above do not differ much from the values we obtained with the entire data set. However, these are based on 3/4 of the data (our training data set). Because of this, we still have our test data set available to apply this workflow to data the model has not yet seen.
 
 
 ```r
-diabetes_aug <- 
-augment(diabetes_fit, test_data)
+dia_aug <- 
+augment(dia_fit, test_data)
 
-diabetes_aug
+dia_aug
 ```
 
 ```
 ## # A tibble: 183 × 6
-##    glucose diastolic test_result .pred_class .pred_0 .pred_1
-##      <dbl>     <dbl> <fct>       <fct>         <dbl>   <dbl>
-##  1     116        74 0           0             0.724   0.276
-##  2     197        70 1           1             0.101   0.899
-##  3     168        74 1           1             0.251   0.749
-##  4     139        80 0           1             0.494   0.506
-##  5     189        60 1           1             0.149   0.851
-##  6     166        72 1           1             0.271   0.729
-##  7      99        84 0           0             0.819   0.181
-##  8     125        70 1           0             0.659   0.341
-##  9      97        66 0           0             0.860   0.140
-## 10     145        82 0           1             0.429   0.571
+##    glucose diastolic test_result .pred_class .pred_negative .pred_positive
+##      <dbl>     <dbl> <fct>       <fct>                <dbl>          <dbl>
+##  1     137        40 positive    negative            0.731           0.269
+##  2     197        70 positive    positive            0.121           0.879
+##  3     110        92 negative    negative            0.685           0.315
+##  4     115        70 positive    negative            0.753           0.247
+##  5     196        90 positive    positive            0.0813          0.919
+##  6      97        66 negative    negative            0.869           0.131
+##  7     138        76 negative    negative            0.525           0.475
+##  8     111        72 positive    negative            0.771           0.229
+##  9     103        66 positive    negative            0.841           0.159
+## 10     187        68 positive    positive            0.174           0.826
 ## # … with 173 more rows
 ```
 
@@ -528,15 +477,15 @@ We can now evaluate the model. One way of doing this is by using the area under 
 
 
 ```r
-diabetes_aug %>% 
-  roc_curve(truth = test_result, .pred_0) %>% 
+dia_aug %>% 
+  roc_curve(truth = test_result, .pred_negative) %>% 
   autoplot()
 ```
 
-<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-23-1.png" width="672" />
+<img src="glm-practical-logistic-binary_files/figure-html/unnamed-chunk-21-1.png" width="672" />
 
 ```r
-diabetes_aug %>% 
+dia_aug %>% 
   filter(test_result == .pred_class) %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
@@ -546,12 +495,12 @@ diabetes_aug %>%
 ## # A tibble: 2 × 3
 ##   test_result     n  prop
 ##   <fct>       <int> <dbl>
-## 1 0              97 0.724
-## 2 1              37 0.276
+## 1 negative      102 0.761
+## 2 positive       32 0.239
 ```
 
 ```r
-diabetes_aug %>% 
+dia_aug %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
 ```
@@ -560,24 +509,22 @@ diabetes_aug %>%
 ## # A tibble: 2 × 3
 ##   test_result     n  prop
 ##   <fct>       <int> <dbl>
-## 1 0             120 0.656
-## 2 1              63 0.344
+## 1 negative      120 0.656
+## 2 positive       63 0.344
 ```
 
 
 ```r
-diabetes_aug %>% 
-  roc_auc(truth = test_result, .pred_0)
+dia_aug %>% 
+  roc_auc(truth = test_result, .pred_negative)
 ```
 
 ```
 ## # A tibble: 1 × 3
 ##   .metric .estimator .estimate
 ##   <chr>   <chr>          <dbl>
-## 1 roc_auc binary         0.777
+## 1 roc_auc binary         0.761
 ```
-
-
 :::
 :::::
 

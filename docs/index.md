@@ -1,7 +1,7 @@
 --- 
 title: "CamStats"
 author: "Martin van Rongen and Matt Castle"
-date: "2022-03-07"
+date: "2022-03-16"
 site: bookdown::bookdown_site
 documentclass: book
 #bibliography: [book.bib, packages.bib]
@@ -25,7 +25,7 @@ description: "These are the supporting materials for the CamStats series of the 
 ## ✓ dials        0.1.0     ✓ rsample      0.1.1
 ## ✓ infer        1.0.0     ✓ tune         0.1.6
 ## ✓ modeldata    0.1.1     ✓ workflows    0.2.4
-## ✓ parsnip      0.1.7     ✓ workflowsets 0.1.0
+## ✓ parsnip      0.2.0     ✓ workflowsets 0.1.0
 ## ✓ recipes      0.2.0     ✓ yardstick    0.0.9
 ```
 
@@ -37,7 +37,8 @@ description: "These are the supporting materials for the CamStats series of the 
 ## x dplyr::lag()      masks stats::lag()
 ## x yardstick::spec() masks readr::spec()
 ## x recipes::step()   masks stats::step()
-## • Dig deeper into tidy modeling with R at https://www.tmwr.org
+## x tune::tune()      masks parsnip::tune()
+## • Learn how to get started at https://www.tidymodels.org/start/
 ```
 
 # Overview
