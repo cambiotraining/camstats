@@ -12,11 +12,15 @@ xaringanExtra::style_panelset(font_family = "inherit")
 :::objectives
 **Questions**
 
-- 
+- How do we analyse data with a binary outcome?
+- Can we test if our model is any good?
 
 **Objectives**
 
-- 
+- Be able to perform a logistic regression with a binary outcome
+- Predict outcomes of new data, based on a defined model
+- Evaluate model reliability by using training and test data sets
+
 :::
 
 ## Libraries and functions
@@ -94,7 +98,7 @@ diabetes %>%
 :::
 :::::
 
-## Construct the model
+## Model building
 There are different ways to construct a logistic model.
 
 ::::: {.panelset}
@@ -154,7 +158,7 @@ dia_fit %>% tidy()
 The `estimate` column gives you the coefficients of the logistic model equation. We could use these to calculate the probability of having a positive diabetes test, for any given glucose level, using the following equation:
 
 \begin{equation}
-P(positive \ test_result) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
+P(positive \ test \ result) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}}
 \end{equation}
 
 But of course we're not going to do it that way. We'll let R deal with that in the next section.
@@ -165,7 +169,7 @@ The values in `p.value` merely show whether that particular coefficient is signi
 :::
 :::::
 
-## Using the model to make predictions
+## Model predictions
 What if we got some new glucose level data and we wanted to predict if people might have diabetes or not?
 
 We could use the existing model and feed it the some data:
@@ -189,17 +193,86 @@ For the first value this means that there is a 14% chance that the diabetes test
 :::
 :::::
 
+## Exercise: Penguins
+
+::: exercise
+To practice this a bit more, we'll be using a data set about penguins. The data are from the `palmerpenguins` package, which is included with `tidymodels`. The data set contains information on penguins at the Palmer Station on Antarctica. Chilly.
+
+Have a look at the plot below, where we are comparing the bill length (`bill_length_mm`) of three species of penguins (`species`) against flipper length (`flipper_length_mm`).
+
+We are also colouring the data based on sex (`sex`) and for good measure we're also including information on the body size (`body_mass_g`).
+
+```{r, echo=FALSE}
+penguins %>%
+  filter(!is.na(sex)) %>%
+  ggplot(aes(flipper_length_mm, bill_length_mm,
+             color = sex,
+             size = body_mass_g)) +
+  geom_point(alpha = 0.5) +
+  facet_wrap(facets = vars(species))
+```
+
+It looks like female penguins are smaller with different sized bills and it would be interesting (yes, it would!) to investigate this further.
+
+I would like you to do the following:
+
+1. load the data into an object called `penguins` using `data("penguins")`
+2. create a logistic model and fit the data to it, using `sex` as a classifier
+3. is bill length an important indicator of sex?
+
+<details><summary>Answer</summary>
+
+First, we load the data:
+
+```{r}
+data("penguins")
+```
+
+We already have a reasonably good idea of what we're looking at, but it can never hurt to understand your data better, so:
+```{r}
+head(penguins)
+```
+
+This shows that there are a few other columns in our data set, namely `island`, indicating the island where the penguins are residing and `bill_depth_mm` which records the bill depth.
+
+We also notice that there are some missing values. It would be good to get rid of these, at least for the rows where there sex isn't scored:
+
+```{r}
+penguins <- penguins %>% 
+  filter(!is.na(sex))
+```
+
+Next, we specify the type of model. Notice that it can be useful to use a prefix in the naming of these objects to indicate which data set your model belongs to. Here we're using _pgn_ to denote penguins.
+```{r}
+pgn_mod <- logistic_reg() %>% 
+  set_mode("classification") %>% 
+  set_engine("glm")
+```
+
+Remember, that setting the model _specification_ does not yet define the model itself. We do that as follows:
+```{r}
+pgn_fit <- pgn_mod %>% 
+  fit(sex ~ bill_length_mm,
+      data = penguins)
+```
+
+Once we've fitted the data to the model, we can have a look at the model parameters:
+```{r}
+pgn_fit %>% tidy()
+```
+
+The model parameters tell us that both the intercept and the coefficient for `bill_length_mm` are significantly different from zero. So it seems that bill length is an important predictor of the sex of these penguins. Who knew?!
+
+</details>
+
+:::
+
 ## Model evaluation
-So far we've constructed the logistic model and fed it some new data to make predictions to the possible outcome of a diabetes test, depending on the glucose level of a given patient. This gave us some diabetes test predictions but, more importantly, the probabilities of whether the test could come back negative or positive.
+So far we've constructed the logistic model and fed it some new data to make predictions to the possible outcome of a diabetes test, depending on the glucose level of a given patient. This gave us some diabetes test predictions and, importantly, the probabilities of whether the test could come back negative or positive.
 
 The question we'd like to ask ourselves at this point: how reliable is the model?
 
 To explore this, we need to take a step back.
-
-::::: {.panelset}
-
-::: {.panel}
-[tidyverse]{.panel-name}
 
 ### Split the data
 When we created the model, we used _all_ of the data. However, a good way of assessing a model fit is to actually split the data into two:
@@ -207,7 +280,12 @@ When we created the model, we used _all_ of the data. However, a good way of ass
 1. a **training data set** that you use to fit your model
 2. a **test data set** to validate your model and measure model performance
 
-Before we split the data, let's have a closer look at the data set. If we count how many diabetes test results are negative (0) and positive (1), we see that these counts are not evenly split.
+Before we split the data, let's have a closer look at the data set. If we count how many diabetes test results are negative and positive, we see that these counts are not evenly split.
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
 
 ```{r}
 diabetes %>% 
@@ -217,13 +295,16 @@ diabetes %>%
 
 This can have some consequences if we start splitting our data into a training and test set. By splitting the data into two parts - where most of the data goes into your training set - you have data left afterwards that you can use to test how good the predictions of your model are. However, we need to make sure that the _proportion_ of negative and positive diabetes test outcomes remains roughly the same.
 
-The `rsample` package has a couple of useful functions that allow us to do just that and we can use the `strata` argument to keep these proportions more or less the same.
+The `rsample` package has a couple of useful functions that allow us to do just that and we can use the `strata` argument to keep these proportions more or less constant.
 
 ```{r}
-# Use 75% of the data to create the training data set
+# ensures random data split is reproducible
+set.seed(123)
+
+# split the data, basing the proportions on the diabetes test results
 data_split <- initial_split(diabetes, strata = test_result)
 
-# Create data frames for the two sets:
+# create data frames for the two sets:
 train_data <- training(data_split)
 test_data  <- testing(data_split)
 ```
@@ -234,11 +315,12 @@ We can check what the `initial_split()` function has done:
 # proportion of data allocated to the training set
 nrow(train_data) / nrow(diabetes)
 
-# proportion of diabetes test results for the training and test data sets
+# proportion of diabetes test results for the training data set
 train_data %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
 
+# proportion of diabetes test results for the test data set
 test_data %>% 
   count(test_result) %>% 
   mutate(prop = n/sum(n))
@@ -246,13 +328,13 @@ test_data %>%
 
 From the output we can see that around 75% of the data set has been used to create a training data set, with the remaining 25% kept as a test set.
 
-Furthermore, the proportions of negative:positive is kept more or less constant.
+Furthermore, the proportions of negative:positive are kept more or less constant.
 
 ### Create a recipe
 ```{r}
 # Create a recipe
 dia_rec <- 
-  recipe(test_result ~ ., data = train_data)
+  recipe(test_result ~ glucose, data = train_data)
 
 # Look at the recipe summary
 summary(dia_rec)
@@ -311,39 +393,138 @@ dia_aug
 ### Evaluate the model
 We can now evaluate the model. One way of doing this is by using the area under the ROC curve as a metric.
 
+An [ROC curve](https://en.wikipedia.org/wiki/Receiver_operating_characteristic) (_receiver operating characteristic curve_ - the name being a strange relic of WWII where developed for operators of military radar receivers) plots the true-positive rate (TPR) against the false-positive rate (FPR) at varying thresholds.
+
+The true-positive rate is also known as _sensitivity_, whereas the false-positive rate is _1 - sensitivity_ (which, if you recall from the session of Power Analysis is also known as the _power_.)
+
 ```{r}
 dia_aug %>% 
   roc_curve(truth = test_result, .pred_negative) %>% 
   autoplot()
-
-dia_aug %>% 
-  filter(test_result == .pred_class) %>% 
-  count(test_result) %>% 
-  mutate(prop = n/sum(n))
-
-dia_aug %>% 
-  count(test_result) %>% 
-  mutate(prop = n/sum(n))
 ```
+
+The area under the ROC curve, which is known as the AUC provides an aggregate measure of performance across all possible classification thresholds.
+
+It ranges in value from 0 to 1. A model whose predictions are 100% wrong has an AUC of 0. A model whose predictions are 100% correct has an AUC of 1.0.
 
 ```{r}
 dia_aug %>% 
   roc_auc(truth = test_result, .pred_negative)
 ```
+
+In addition to the ROC curve and AUC we also have a whole range of model parameters associated with the fitted model. We're not going through all of them at this point, but one in particular should be familiar.
+
+We extract these parameters as follows:
+
+```{r}
+dia_fit %>% glance()
+```
+
+Here we see the Akaike Information Criterion (AIC) as an output. Remember, the value of the AIC in itself is meaningless, but it's useful to compare relative to AICs of other models. We covered how to do this in the Power analysis session of the Core statistics course.
+
+Here we see that the AIC for this model that uses the glucose level as a single predictor for the diabetes test result is 558. 
 :::
+
 :::::
 
-## Exercise
+## Exercise: Diabetes predictors
 :::exercise
-We can add exercises
+
+Using the training and test `diabetes` data sets, investigate the relationship between `test_result` and both `glucose` and `diastolic`. Try to answer the following:
+
+* does adding `diastolic` to the model markedly improve the reliability of the predictions?
+* what do the AICs for the two models tell you?
 
 <details><summary>Answer</summary>
-With answers
+
+
+```{r}
+# Update the recipe
+dia_rec <- 
+  recipe(test_result ~ glucose + diastolic,
+         data = train_data)
+
+# Look at the recipe summary
+summary(dia_rec)
+```
+
+Build the model, if needed (we have done this already and it stays the same):
+```{r}
+dia_mod <- 
+  logistic_reg() %>% 
+  set_engine("glm")
+```
+
+Create a workflow...
+```{r}
+dia_wflow <- 
+  workflow() %>% 
+  add_model(dia_mod) %>% 
+  add_recipe(dia_rec)
+```
+
+... and fit the data:
+```{r}
+dia_fit <- 
+  dia_wflow %>% 
+  fit(data = train_data)
+```
+
+Extract the model parameters to have a look:
+```{r}
+dia_fit %>% 
+  extract_fit_parsnip() %>% 
+  tidy()
+```
+
+Apply the fitted model to the test data set:
+```{r}
+dia_aug <- 
+augment(dia_fit, test_data)
+
+dia_aug
+```
+
+Plot the ROC curve:
+```{r}
+dia_aug %>% 
+  roc_curve(truth = test_result, .pred_negative) %>% 
+  autoplot()
+```
+
+And get the area under the ROC curve:
+```{r}
+dia_aug %>% 
+  roc_auc(truth = test_result, .pred_negative)
+```
+
+Another way to assess the model fit is to look at the Akaike Information Criterion (AIC).
+
+```{r}
+dia_fit %>% glance()
+```
+
+We get an AIC of 555, which is lower than the AIC of 558 that we got with just  `glucose` as a predictor variable.
+
+#### Conclusions
+Adding the `diastolic` variable as a predictor to the model does not seem to have much of an effect on the model reliability, since the AUC is 0.761 with the extra parameter, versus 0.766 without.
+
+The AIC on the other hand suggests that the additive model we've analysed here has a better fit than the original model (AIC of 555 vs 558).
+
+#### Food for thought
+Perhaps there is an _interaction_ between `glucose` and `diastolic`, which would be interesting to investigate.
+
 </details>
 :::
 
 ## Key points
 
 :::keypoints
-Adding key points
+
+- We use a logistic regression to model a binary response
+- Model suitability can be checked by splitting the data into a training and test data set. The logistic model is then created based on the training data, and the reliability can be checked against the (known) values in the test data set
+- The ROC curve shows the performance of a classification model at all thresholds, whereas the area under the ROC curve provides an aggregate measure of performance of all possible classifications thresholds
+
+
+
 :::

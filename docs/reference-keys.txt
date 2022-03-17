@@ -1,4 +1,5 @@
 exr:unlabeled-div-1
+exr:unlabeled-div-2
 overview
 core-aims
 core-topics
@@ -8,8 +9,9 @@ objectives
 libraries-and-functions
 datasets
 visualise-the-data
-construct-the-model
-using-the-model-to-make-predictions
+model-building
+model-predictions
+exercise-penguins
 model-evaluation
 split-the-data
 create-a-recipe
@@ -17,5 +19,7 @@ build-a-model-specification
 use-recipe-as-we-train-and-test-our-model
 use-trained-workflow-for-predictions
 evaluate-the-model
-exercise
+exercise-diabetes-predictors
+conclusions
+food-for-thought
 key-points

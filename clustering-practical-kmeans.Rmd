@@ -28,7 +28,7 @@ xaringanExtra::style_panelset(font_family = "inherit")
 |:- |:- |
 |`tidyverse`| A collection of R packages designed for data science |
 |`broom`| Summarises key information about statistical objects in tidy tibbles |
-|`palmerpenguins`| Contains data sets on penguins at the Palmer Station on Antartica.|
+|`palmerpenguins`| Contains data sets on penguins at the Palmer Station on Antarctica.|
 
 :::
 

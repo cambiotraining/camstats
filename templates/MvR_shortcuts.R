@@ -73,16 +73,15 @@ par(mfrow=c(1,2))
 R chunk with name, and fig.cap='caption'
 Figure \@ref(fig:chunk_name)
 
-  ::: exercise
-  Exercise
+::: exercise
+Exercise
 
-  <details><summary>Answer</summary>
+<details><summary>Answer</summary>
 
-    Answer to exercise
+Answer to exercise
 
-  </details>
+</details>
 
-    :::
 
 
     echo=FALSE # don't display code
