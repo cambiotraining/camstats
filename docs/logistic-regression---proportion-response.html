@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Chapter 4 Logistic regression - proportion response | CamStats</title>
+<meta name="author" content="Martin van Rongen and Matt Castle">
+<meta name="description" content="4.1 Objectives  Questions How do I analyse proportion responses? Objectives Be able to create a logistic model to test proportion response variables Be able to plot the data and fitted curve...">
+<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta property="og:title" content="Chapter 4 Logistic regression - proportion response | CamStats">
+<meta property="og:type" content="book">
+<meta property="og:description" content="4.1 Objectives  Questions How do I analyse proportion responses? Objectives Be able to create a logistic model to test proportion response variables Be able to plot the data and fitted curve...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 4 Logistic regression - proportion response | CamStats">
+<meta name="twitter:description" content="4.1 Objectives  Questions How do I analyse proportion responses? Objectives Be able to create a logistic model to test proportion response variables Be able to plot the data and fitted curve...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.12/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+</head>
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
+
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">CamStats
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<!-- <p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">CamStats</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">Generalised linear models</li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
+<li><a class="active" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="logistic-regression---proportion-response" class="section level1" number="4">
+<h1>
+<span class="header-section-number">4</span> Logistic regression - proportion response<a class="anchor" aria-label="anchor" href="#logistic-regression---proportion-response"><i class="fas fa-link"></i></a>
+</h1>
+<div id="objectives-2" class="section level2" number="4.1">
+<h2>
+<span class="header-section-number">4.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="objectives">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How do I analyse proportion responses?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Be able to create a logistic model to test proportion response variables</li>
+<li>Be able to plot the data and fitted curve</li>
+<li>Assess the significance of the fit</li>
+</ul>
+</div>
+</div>
+<div id="libraries-and-functions-1" class="section level2" number="4.2">
+<h2>
+<span class="header-section-number">4.2</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-1"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Library</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>tidyverse</code></td>
+<td align="left">A collection of R packages designed for data science</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tidymodels</code></td>
+<td align="left">A collection of packages for modelling and machine learning using tidyverse principles</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div id="datasets-1" class="section level2" number="4.3">
+<h2>
+<span class="header-section-number">4.3</span> Datasets<a class="anchor" aria-label="anchor" href="#datasets-1"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">Diabetes</span></p>
+<p>The example in this section uses the following data set:</p>
+<p><code>data/challenger.csv</code></p>
+<p>These data, obtained from the <a href="https://www.rdocumentation.org/packages/faraway/versions/1.0.7">faraway package</a>, contain information related to the explosion of the USA Space Shuttle Challenger on 28 January, 1986. An investigation after the disaster traced back to certain joints on one of the two solid booster rockets, each containing two O-rings (primary and secondary) that ensured no exhaust gases could escape from the booster.</p>
+<p>The night before the launch was unusually cold, with temperatures below freezing. The final report suggested that the cold snap during the night made the o-rings stiff, and unable to adjust to changes in pressure. As a result, exhaust gases leaked away from the solid booster rockets, causing one of them to break loose and rupture the main fuel tank, leading to the final explosion.</p>
+<p>The question we’re trying to answer in this session is: based on the data from the previous flights, would it have been possible to predict the failure of most both o-rings on the Challenger flight?</p>
+</div>
+</div>
+</div>
+<div id="visualise-the-data-1" class="section level2" number="4.4">
+<h2>
+<span class="header-section-number">4.4</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>First, we read in the data:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">challenger</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/challenger.csv"</span><span class="op">)</span></code></pre></div>
+<pre><code>## Rows: 23 Columns: 2
+## ── Column specification ────────────────────────────────────────────────────────
+## Delimiter: ","
+## dbl (2): temp, damage
+## 
+## ℹ Use `spec()` to retrieve the full column specification for this data.
+## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">challenger</span></code></pre></div>
+<pre><code>## # A tibble: 23 × 2
+##     temp damage
+##    &lt;dbl&gt;  &lt;dbl&gt;
+##  1    53      5
+##  2    57      1
+##  3    58      1
+##  4    63      1
+##  5    66      0
+##  6    67      0
+##  7    67      0
+##  8    67      0
+##  9    68      0
+## 10    69      0
+## # … with 13 more rows</code></pre>
+</div>
+</div>
+<p>The data set contains several columns:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>temp</code>, the launch temperature in degrees Fahrenheit</li>
+<li>
+<code>damage</code>, the number of o-rings that showed erosion</li>
+</ol>
+<p>Before we have a further look at the data, let’s calculate the proportion of damaged o-rings (<code>prop_damaged</code>) and the total number of o-rings (<code>total</code>) and update our data set.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">challenger</span> <span class="op">&lt;-</span>
+<span class="va">challenger</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span><span class="op">(</span>total <span class="op">=</span> <span class="fl">6</span>,                     <span class="co"># total number of o-rings</span>
+         intact <span class="op">=</span> <span class="fl">6</span> <span class="op">-</span> <span class="va">damage</span>,           <span class="co"># number of undamaged o-rings</span>
+         prop_damaged <span class="op">=</span> <span class="va">damage</span> <span class="op">/</span> <span class="va">total</span><span class="op">)</span> <span class="co"># proportion damaged o-rings</span>
+
+<span class="va">challenger</span></code></pre></div>
+<pre><code>## # A tibble: 23 × 5
+##     temp damage total intact prop_damaged
+##    &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;
+##  1    53      5     6      1        0.833
+##  2    57      1     6      5        0.167
+##  3    58      1     6      5        0.167
+##  4    63      1     6      5        0.167
+##  5    66      0     6      6        0    
+##  6    67      0     6      6        0    
+##  7    67      0     6      6        0    
+##  8    67      0     6      6        0    
+##  9    68      0     6      6        0    
+## 10    69      0     6      6        0    
+## # … with 13 more rows</code></pre>
+</div>
+</div>
+<p>Plotting the proportion of damaged o-rings against the launch temperature shows the following picture:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">challenger</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">temp</span>, y <span class="op">=</span> <span class="va">prop_damaged</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-proportion_files/figure-html/unnamed-chunk-4-1.png" width="672"></div>
+</div>
+</div>
+<p>The point on the left is the data point corresponding to the coldest flight experienced before the disaster, where five damaged o-rings were found. Fortunately, this did not result in a disaster.</p>
+<p>Here we’ll explore if we could have predicted the failure of both o-rings on the Challenger flight, where the launch temperature was 31 degrees Fahrenheit.</p>
+</div>
+<div id="model-building-1" class="section level2" number="4.5">
+<h2>
+<span class="header-section-number">4.5</span> Model building<a class="anchor" aria-label="anchor" href="#model-building-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>There is little point in evaluating the model using a training/test data set, since there are only 23 data points in total. So we’re building a model and testing that on the available data.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+We are using a logistic regression for a proportion response in this case, since we’re interested in the proportion of o-rings that are damaged.</p>
+<p>The <code>logistic_reg()</code> function we used in the binary response section does not work here, because it expects a binary (yes/no; positive/negative; 0/1 etc) response.</p>
+<p>To deal with that, we are using the standard <code>linear_reg()</code> function, still using the <code>glm</code> or generalised linear model engine, with the family or error distribution set to <em>binomial</em> (as before).</p>
+<p>First we set the model specification:</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">chl_mod</span> <span class="op">&lt;-</span> <span class="fu">linear_reg</span><span class="op">(</span>mode <span class="op">=</span> <span class="st">"regression"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">set_engine</span><span class="op">(</span><span class="st">"glm"</span>, family <span class="op">=</span> <span class="st">"binomial"</span><span class="op">)</span></code></pre></div>
+<p>Then we fit the data. Fitting the data for proportion responses is a bit annoying, where you have to give the <code>glm</code> model a two-column matrix to specify the response variable.</p>
+<p>Here, the first column corresponds to the number of damaged o-rings, whereas the second column refers to the number of intact o-rings. We use the <code><a href="https://rdrr.io/r/base/cbind.html">cbind()</a></code> function to bind these two together into a matrix.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">chl_fit</span> <span class="op">&lt;-</span> <span class="va">chl_mod</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">damage</span>, <span class="va">intact</span><span class="op">)</span> <span class="op">~</span> <span class="va">temp</span>,
+      data <span class="op">=</span> <span class="va">challenger</span><span class="op">)</span></code></pre></div>
+<p>Next, we can have a closer look at the results:</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   11.7      3.30        3.54 0.000403 
+## 2 temp          -0.216    0.0532     -4.07 0.0000478</code></pre>
+<p>We can see that the p-values of the <code>intercept</code> and <code>temp</code> are significant. We can also use the intercept and <code>temp</code> coefficients to construct the logistic equation, which we can use to sketch the logistic curve.</p>
+<p><span class="math display">\[\begin{equation}
+P(o-ring \ failure) = \frac{1}{1 + {e}^{-(11.66 -  0.22 \cdot temp)}}
+\end{equation}\]</span></p>
+<p>Let’s see how well our model would have performed if we would have fed it the data from the ill-fated Challenger launch.</p>
+<p>First we generate a table with data for a range of temperatures, from 25 to 85 degrees Fahrenheit, in steps of 1. We can then use these data to generate the logistic curve, based on the fitted model.</p>
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">85</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get the predicted proportions for the curve</span>
+<span class="va">curve</span> <span class="op">&lt;-</span> <span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu">augment</span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
+
+<span class="co"># plot the curve and the original data</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">curve</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">challenger</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">prop_damaged</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co"># add a vertical line at the disaster launch temperature</span>
+  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">31</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-proportion_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
+<p>It seems that there was a high probability of both o-rings failing at that launch temperature. One thing that the graph shows is that there is a lot of uncertainty involved in this model.</p>
+</div>
+</div>
+</div>
+<div id="exercise" class="section level2" number="4.6">
+<h2>
+<span class="header-section-number">4.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-3" class="exercise"><strong>Exercise 4.1  </strong></span>The data point at 53 degrees Fahrenheit is quite influential for the analysis. Remove this data point and repeat the analysis. Is there still a predicted link between launch temperature and o-ring failure?</p>
+<details><summary>
+Answer
+</summary><div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>First, we need to remove the influential data point:</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">challenger_new</span> <span class="op">&lt;-</span> <span class="va">challenger</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">temp</span> <span class="op">!=</span> <span class="fl">53</span><span class="op">)</span></code></pre></div>
+<p>We can reuse the model specification, but we do have to update our fit:</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">chl_new_fit</span> <span class="op">&lt;-</span> <span class="va">chl_mod</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/cbind.html">cbind</a></span><span class="op">(</span><span class="va">damage</span>, <span class="va">intact</span><span class="op">)</span> <span class="op">~</span> <span class="va">temp</span>,
+      data <span class="op">=</span> <span class="va">challenger_new</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get the predicted proportions for the curve</span>
+<span class="va">curve_new</span> <span class="op">&lt;-</span> <span class="va">chl_new_fit</span> <span class="op">%&gt;%</span> <span class="fu">augment</span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
+
+<span class="co"># plot the curve and the original data</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">curve_new</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">challenger_new</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">prop_damaged</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="co"># add a vertical line at the disaster launch temperature</span>
+  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="fl">31</span>, linetype <span class="op">=</span> <span class="st">"dashed"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-logistic-proportion_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+<p>The prediction proportion of damaged o-rings is markedly less in this scenario, with a failure rate of around 80%. The original fitted curve already had quite some uncertainty associated with it, but the uncertainty of this model is much greater.</p>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div id="key-points-1" class="section level2" number="4.7">
+<h2>
+<span class="header-section-number">4.7</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-1"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keypoints">
+<ul>
+<li>We can use a logistic model for proportion response variables</li>
+</ul>
+</div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#logistic-regression---proportion-response"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li><a class="nav-link" href="#objectives-2"><span class="header-section-number">4.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-1"><span class="header-section-number">4.2</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#datasets-1"><span class="header-section-number">4.3</span> Datasets</a></li>
+<li><a class="nav-link" href="#visualise-the-data-1"><span class="header-section-number">4.4</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#model-building-1"><span class="header-section-number">4.5</span> Model building</a></li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">4.6</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points-1"><span class="header-section-number">4.7</span> Key points</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
+
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
+
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

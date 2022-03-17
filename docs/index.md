@@ -38,7 +38,7 @@ description: "These are the supporting materials for the CamStats series of the 
 ## x yardstick::spec() masks readr::spec()
 ## x recipes::step()   masks stats::step()
 ## x tune::tune()      masks parsnip::tune()
-## • Dig deeper into tidy modeling with R at https://www.tmwr.org
+## • Use tidymodels_prefer() to resolve common conflicts.
 ```
 
 # Overview
