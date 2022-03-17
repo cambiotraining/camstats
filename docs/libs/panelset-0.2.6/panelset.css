@@ -29,13 +29,14 @@
   -webkit-box-direction: normal;
           flex-direction: row;
   -webkit-box-pack: start;
-          justify-content: start;
+          justify-content: flex-start;
   -webkit-box-align: center;
-          align-items: center;
+          align-items: baseline;
   overflow-y: visible;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   padding: 0 0 2px 0;
+  margin-bottom: 10px;
   box-shadow: inset 0 -2px 0px var(--panel-tabs-border-bottom);
 }
 
