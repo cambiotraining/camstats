@@ -1,6 +1,7 @@
 exr:unlabeled-div-1
 exr:unlabeled-div-2
 exr:unlabeled-div-3
+exr:unlabeled-div-4
 overview
 core-aims
 core-topics
@@ -35,3 +36,16 @@ visualise-the-data-1
 model-building-1
 exercise
 key-points-1
+resampling-intro
+objectives-3
+background-1
+single-predictor-permutation-tests
+objectives-4
+libraries-and-functions-2
+purpose-and-aim
+data-and-hypotheses
+load-and-visualise-the-data
+permutation-test-theory
+exercise-rats-on-a-wheel
+resampling-based-on-a-linear-regression
+key-points-2

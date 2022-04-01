@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Chapter 6 Single predictor permutation tests | CamStats</title>
+<meta name="author" content="Martin van Rongen and Matt Castle">
+<meta name="description" content="6.1 Objectives  Objectives Understand how resampling techniques work in R Be able to carry out permutation techniques on single predictors Be able to define the statistic to permute Understand the...">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta property="og:title" content="Chapter 6 Single predictor permutation tests | CamStats">
+<meta property="og:type" content="book">
+<meta property="og:description" content="6.1 Objectives  Objectives Understand how resampling techniques work in R Be able to carry out permutation techniques on single predictors Be able to define the statistic to permute Understand the...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 6 Single predictor permutation tests | CamStats">
+<meta name="twitter:description" content="6.1 Objectives  Objectives Understand how resampling techniques work in R Be able to carry out permutation techniques on single predictors Be able to define the statistic to permute Understand the...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+</head>
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
+
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">CamStats
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<!-- <p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">CamStats</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">Generalised linear models</li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
+<li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li class="book-part">Resampling techniques</li>
+<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
+<li><a class="active" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="single-predictor-permutation-tests" class="section level1" number="6">
+<h1>
+<span class="header-section-number">6</span> Single predictor permutation tests<a class="anchor" aria-label="anchor" href="#single-predictor-permutation-tests"><i class="fas fa-link"></i></a>
+</h1>
+<div id="objectives-4" class="section level2" number="6.1">
+<h2>
+<span class="header-section-number">6.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-4"><i class="fas fa-link"></i></a>
+</h2>
+<div class="objectives">
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Understand how resampling techniques work in R</li>
+<li>Be able to carry out permutation techniques on single predictors</li>
+<li>Be able to define the statistic to permute</li>
+<li>Understand the advantages and limitations of permutation techniques</li>
+</ul>
+</div>
+</div>
+<div id="libraries-and-functions-2" class="section level2" number="6.2">
+<h2>
+<span class="header-section-number">6.2</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Library</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>tidyverse</code></td>
+<td align="left">A collection of R packages designed for data science</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tidymodels</code></td>
+<td align="left">A collection of packages for modelling and machine learning using tidyverse principles</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div id="purpose-and-aim" class="section level2" number="6.3">
+<h2>
+<span class="header-section-number">6.3</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim"><i class="fas fa-link"></i></a>
+</h2>
+<p>If we wish to test for a difference between two groups in the case where the assumptions of a two-sample t-test just aren’t met, then a two-sample permutation test procedure is appropriate. It is also appropriate even if the assumptions of a t-test are met, but in that case, it would be easier to just do the t-test.</p>
+<p>One of the additional benefits of permutation test is that we aren’t just restricted to testing hypotheses about the means of the two groups. We can test hypotheses about absolutely anything we want! So, we could see if the ranges of the two groups differed significantly etc.</p>
+</div>
+<div id="data-and-hypotheses" class="section level2" number="6.4">
+<h2>
+<span class="header-section-number">6.4</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
+</h2>
+<p>Let’s consider an experimental data set where we have measured the weights of two groups of 12 female mice (so 24 mice in total). One group of mice was given a perfectly normal diet (control) and the other group of mice was given a high fat diet for several months. We want to test whether there is any difference in the mean weight of the two groups. We still need to specify the hypotheses:</p>
+<p><span class="math inline">\(H_0\)</span>: there is no difference in the means of the two groups</p>
+<p><span class="math inline">\(H_1\)</span>: there is a difference in the means of the two groups</p>
+<div id="load-and-visualise-the-data" class="section level3 panelset" number="6.4.1">
+<h3>
+<span class="header-section-number">6.4.1</span> Load and visualise the data<a class="anchor" aria-label="anchor" href="#load-and-visualise-the-data"><i class="fas fa-link"></i></a>
+</h3>
+<p>First we load the data, then we visualise it.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb77"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># load the data</span>
+<span class="va">mice</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/mice.csv"</span><span class="op">)</span>
+
+<span class="co"># view the data</span>
+<span class="va">mice</span></code></pre></div>
+<pre><code>## # A tibble: 24 × 2
+##    diet    weight
+##    &lt;chr&gt;    &lt;dbl&gt;
+##  1 control   21.5
+##  2 control   28.1
+##  3 control   24.0
+##  4 control   23.4
+##  5 control   23.7
+##  6 control   19.8
+##  7 control   28.4
+##  8 control   21.0
+##  9 control   22.5
+## 10 control   20.1
+## # … with 14 more rows</code></pre>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">mice</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">diet</span>, y <span class="op">=</span> <span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
+<p>It looks as if the mice that are fed on a high fat diet have a greater weight than in the control (hardly surprising!). To look at this a bit more closely we calculate the difference in mean weight between the two groups:</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># determine mean weight per group</span>
+<span class="va">mice</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">diet</span><span class="op">)</span> <span class="op">%&gt;%</span>                         <span class="co"># split data by diet</span>
+  <span class="fu">summarise</span><span class="op">(</span>mean_weight <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">weight</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># calculate mean weight per group</span>
+  <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>                              <span class="co"># remove the grouping</span>
+  <span class="fu">pull</span><span class="op">(</span><span class="va">mean_weight</span><span class="op">)</span> <span class="op">%&gt;%</span>                      <span class="co"># extract group values</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="op">)</span>                                     <span class="co"># calculate the difference</span></code></pre></div>
+<pre><code>## [1] 3.020833</code></pre>
+<p>Let’s store this value in an object called <code>mice_diff</code>.</p>
+</div>
+</div>
+<p>Right, so the difference between the two group means in about 3.02, hoorah! But is that difference a lot? Is it unusual/big/statistically significant?</p>
+<p>Specifically, how likely would it be to get a difference this big if there were no difference between the two groups? Let’s find out!</p>
+</div>
+</div>
+<div id="permutation-test-theory" class="section level2" number="6.5">
+<h2>
+<span class="header-section-number">6.5</span> Permutation Test Theory<a class="anchor" aria-label="anchor" href="#permutation-test-theory"><i class="fas fa-link"></i></a>
+</h2>
+<p>The key idea behind permutation techniques is that if the null hypothesis is true, and there is no difference between the two groups then if I were to switch some of the mice from one group to the next then this wouldn’t change the difference between the groups too much. If on the other hand there actually is a difference between the groups (with one group having much higher weights than the other), then if I were to switch some mice between the groups then this should average out the two groups leading to a smaller difference in group means.</p>
+<p>So, what we do is we shuffle the mice weights around lots and lots of times, calculating the difference between the group means each time. Once we have done this shuffling hundreds or thousands of times, we will have loads of possible values for the difference in the two group means. At this stage we can look at our actual difference (the one we calculated from our original data) and see how this compares to all of the simulated differences.
+We can calculate how many of the simulated differences are bigger than our real difference and this proportion is exactly the p-value that we’re looking for!
+Let look at how to carry this out in practice.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+
+<span class="va">mice_resample</span> <span class="op">&lt;-</span> <span class="va">mice</span> <span class="op">%&gt;%</span> 
+  <span class="fu">specify</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="va">diet</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">hypothesise</span><span class="op">(</span>null <span class="op">=</span> <span class="st">"independence"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">calculate</span><span class="op">(</span><span class="st">"diff in means"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"highfat"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">mice_resample</span> <span class="op">%&gt;%</span> 
+  <span class="fu">visualise</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">shade_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">mice_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
+</div>
+<div class="panel">
+<p><span class="panel-name">base R</span></p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">reps</span><span class="op">&lt;-</span><span class="fl">1000</span>
+<span class="va">sim_diff</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">reps</span><span class="op">)</span>
+<span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">reps</span><span class="op">)</span><span class="op">{</span>
+  <span class="va">new_dat</span><span class="op">&lt;-</span><span class="va">mice</span>
+  <span class="va">new_dat</span><span class="op">$</span><span class="va">diet</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">new_dat</span><span class="op">$</span><span class="va">diet</span><span class="op">)</span>
+  <span class="va">new_means</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/aggregate.html">aggregate</a></span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="va">diet</span> , <span class="va">new_dat</span> , <span class="va">mean</span><span class="op">)</span><span class="op">$</span><span class="va">weight</span>
+  <span class="va">new_diff</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/diff.html">diff</a></span><span class="op">(</span><span class="va">new_means</span><span class="op">)</span>
+  
+  <span class="va">sim_diff</span><span class="op">[</span><span class="va">i</span><span class="op">]</span><span class="op">&lt;-</span><span class="va">new_diff</span>  
+<span class="op">}</span></code></pre></div>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">sim_diff</span> , breaks <span class="op">=</span> <span class="fl">30</span> , col<span class="op">=</span><span class="st">"red"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">mice_diff</span> , col<span class="op">=</span><span class="st">"black"</span> , lwd<span class="op">=</span><span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-8-1.png" width="672"></div>
+</div>
+</div>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>To get a better sense of how reliable this p-value might be, we repeat the whole process many times and obtain the resulting p-values.</p>
+<p>One way of getting the p-value from a single iteration is as follows:</p>
+<div class="sourceCode" id="cb85"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get a two-tailed p-value</span>
+<span class="va">p_value</span> <span class="op">&lt;-</span> <span class="va">mice_resample</span> <span class="op">%&gt;%</span>
+  <span class="fu">get_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">mice_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span>
+
+<span class="va">p_value</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##   p_value
+##     &lt;dbl&gt;
+## 1   0.074</code></pre>
+<p>If we want to repeat the iterations many times we can wrap the whole workflow that we used to obtain the p-value within the <code><a href="https://rdrr.io/r/base/lapply.html">replicate()</a></code> function and tell it how many times we want to repeat it. Here we repeat the whole process 100 times:</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># remove the set.seed()</span>
+<span class="co"># otherwise we get the same result 100 times</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>
+
+<span class="va">resample_replicates</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html">replicate</a></span><span class="op">(</span><span class="fl">100</span>, <span class="va">mice</span> <span class="op">%&gt;%</span> 
+  <span class="fu">specify</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="va">diet</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">hypothesise</span><span class="op">(</span>null <span class="op">=</span> <span class="st">"independence"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">calculate</span><span class="op">(</span><span class="st">"diff in means"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"highfat"</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">get_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">mice_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">pull</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>n_rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>,
+         p_value <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">value</span><span class="op">)</span>
+
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">resample_replicates</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">p_value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_histogram</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-10-1.png" width="672"></div>
+<p>You might get a warning about reporting a p-value of zero. This depends on the number of <code>reps</code> chosen in the <code>generate()</code> function. If it’s too low then, due to the simulation-based nature of the package it could be that the observed statistic is more extreme than the test statistic generated to form the null hypothesis. If that happens, the approximate p-value is zero. Ending in a warning, because a true p-value of zero is impossible.</p>
+</div>
+</div>
+</div>
+<div id="exercise-rats-on-a-wheel" class="section level2" number="6.6">
+<h2>
+<span class="header-section-number">6.6</span> Exercise: Rats on a wheel<a class="anchor" aria-label="anchor" href="#exercise-rats-on-a-wheel"><i class="fas fa-link"></i></a>
+</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-4" class="exercise"><strong>Exercise 6.1  </strong></span>The data set <code>data/rats.csv</code> contains information on the length of time that 24 rats were able to stay balanced on a rotating wheel. 12 of the rats were assigned to the control group and the other 12 were given a dose of a centrally acting muscle relaxant. The animals were placed on a rotating cylinder and the length of time that each rat remained on the cylinder was measured, up to a maximum of 300 seconds. The data set contains two variables time and group.
+Whilst you could explore differences in means between these two groups, in this case an alternative statistic presents itself. When you look at the data you should notice that for the control group that all 12 rats manage to stay on the roller for the maximum 300 seconds, whereas in the treated group 5 out of the 12 fall off earlier.</p>
+<p>For this exercise, instead of calculating the mean length of time for each group, you should calculate the proportion of rats that make it to 300s in each group and find the difference. This will be your statistic.</p>
+<p>Use a permutation test to decide whether the proportion of rats that survive is the same between each group.</p>
+<details><summary>
+Hint
+</summary><div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+Have a look at the <code>stat</code> options in the <code>calculate()</code> function</p>
+</div>
+</div>
+</details><details><summary>
+Answer
+</summary><div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>As always, let’s first load and visualise the data:</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rats</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/rats.csv"</span><span class="op">)</span>
+
+<span class="va">rats</span></code></pre></div>
+<pre><code>## # A tibble: 24 × 2
+##     time group  
+##    &lt;dbl&gt; &lt;chr&gt;  
+##  1   300 control
+##  2   300 control
+##  3   300 control
+##  4   300 control
+##  5   300 control
+##  6   300 control
+##  7   300 control
+##  8   300 control
+##  9   300 control
+## 10   300 control
+## # … with 14 more rows</code></pre>
+<p>Because there is a lot of overlap in some of our values (many rats manage to stay on the wheel for the entire 300s), we need to jitter the data a bit.</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rats</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">group</span>, y <span class="op">=</span> <span class="va">time</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_jitter</span><span class="op">(</span>width <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+<p>We’re interested in the proportion of rats that make it to the full 300s. So, let’s calculate this:</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">rats</span> <span class="op">&lt;-</span> <span class="va">rats</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">group</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>full_time <span class="op">=</span> <span class="va">time</span> <span class="op">==</span> <span class="fl">300</span>,
+         full_time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html">as.character</a></span><span class="op">(</span><span class="va">full_time</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>So, this means that the proportion of rats that make it to full-time is as follows:</p>
+<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">full_time_control</span> <span class="op">=</span> <span class="fl">12</span><span class="op">/</span><span class="fl">12</span>
+<span class="va">full_time_treatment</span> <span class="op">=</span> <span class="fl">7</span><span class="op">/</span><span class="fl">12</span>
+
+<span class="va">rats_diff</span> <span class="op">&lt;-</span> <span class="va">full_time_control</span> <span class="op">-</span> <span class="va">full_time_treatment</span></code></pre></div>
+<p>Now, the question is, is that difference in proportion likely or not? To check that, we resample our data and see how likely the proportional difference we observe is.</p>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">rats_resample</span> <span class="op">&lt;-</span> <span class="va">rats</span> <span class="op">%&gt;%</span> 
+  <span class="fu">specify</span><span class="op">(</span><span class="va">full_time</span> <span class="op">~</span> <span class="va">group</span>, success <span class="op">=</span> <span class="st">"TRUE"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">hypothesise</span><span class="op">(</span>null <span class="op">=</span> <span class="st">"independence"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">calculate</span><span class="op">(</span><span class="st">"diff in props"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"treatment"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">rats_resample</span> <span class="op">%&gt;%</span> 
+  <span class="fu">visualise</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">shade_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">rats_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-15-1.png" width="672"></div>
+<p>The answer is: not very likely. One thing to keep in mind is that we’ve resampled a thousand times here. But that’s not really fair, since there are not a thousand different options possible due to the low sample size. However, it just means that the same responses occur more often. You would be able to calculate it exactly, without using resampling, but this is a bit of a headache. Importantly, you would not really use this technique very much if you have so few samples, but it’s a good illustration to how you can use the technique to analyse different statistics.</p>
+<p>To put a number to it, we can get the p-value like we did before:</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get a two-tailed p-value</span>
+<span class="va">p_value</span> <span class="op">&lt;-</span> <span class="va">rats_resample</span> <span class="op">%&gt;%</span>
+  <span class="fu">get_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">rats_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span>
+
+<span class="va">p_value</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 1
+##   p_value
+##     &lt;dbl&gt;
+## 1   0.038</code></pre>
+</div>
+<div class="panel">
+<p><span class="panel-name">base R</span></p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<span class="va">rats_r</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html">read.csv</a></span><span class="op">(</span><span class="st">"data/rats.csv"</span><span class="op">)</span>
+
+<span class="va">unstRats</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/utils/stack.html">unstack</a></span><span class="op">(</span><span class="va">rats_r</span><span class="op">)</span>
+
+<span class="va">propControl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">unstRats</span><span class="op">$</span><span class="va">control</span><span class="op">==</span><span class="fl">300</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">unstRats</span><span class="op">$</span><span class="va">control</span><span class="op">)</span>
+
+<span class="va">propTreatment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">unstRats</span><span class="op">$</span><span class="va">treatment</span><span class="op">==</span><span class="fl">300</span><span class="op">)</span><span class="op">)</span> <span class="op">/</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">unstRats</span><span class="op">$</span><span class="va">treatment</span><span class="op">)</span>
+
+<span class="va">ratDiff</span> <span class="op">&lt;-</span> <span class="va">propControl</span> <span class="op">-</span> <span class="va">propTreatment</span>
+
+<span class="va">nReps</span> <span class="op">&lt;-</span> <span class="fl">1000</span>
+<span class="va">simRat</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html">numeric</a></span><span class="op">(</span><span class="va">nReps</span><span class="op">)</span>
+
+<span class="kw">for</span><span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nReps</span><span class="op">)</span><span class="op">{</span>
+  
+  <span class="va">newdat</span> <span class="op">&lt;-</span> <span class="va">rats_r</span>
+  <span class="va">newdat</span><span class="op">$</span><span class="va">group</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html">sample</a></span><span class="op">(</span><span class="va">newdat</span><span class="op">$</span><span class="va">group</span><span class="op">)</span>
+  
+  <span class="va">newUnstRats</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/stack.html">unstack</a></span><span class="op">(</span><span class="va">newdat</span><span class="op">)</span>
+  
+  <span class="va">newPropControl</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">newUnstRats</span><span class="op">$</span><span class="va">control</span><span class="op">==</span><span class="fl">300</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">newUnstRats</span><span class="op">$</span><span class="va">control</span><span class="op">)</span>
+  
+  <span class="va">newPropTreatment</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span>
+    <span class="fu"><a href="https://rdrr.io/r/base/which.html">which</a></span><span class="op">(</span><span class="va">newUnstRats</span><span class="op">$</span><span class="va">treatment</span><span class="op">==</span><span class="fl">300</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/length.html">length</a></span><span class="op">(</span><span class="va">newUnstRats</span><span class="op">$</span><span class="va">treatment</span><span class="op">)</span>
+  
+  <span class="va">newDiff</span> <span class="op">&lt;-</span> <span class="va">newPropControl</span> <span class="op">-</span> <span class="va">newPropTreatment</span>
+  
+  <span class="va">simRat</span><span class="op">[</span><span class="va">i</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="va">newDiff</span>
+<span class="op">}</span>
+
+<span class="fu"><a href="https://rdrr.io/r/graphics/hist.html">hist</a></span><span class="op">(</span><span class="va">simRat</span>, breaks <span class="op">=</span> <span class="fl">30</span>, col<span class="op">=</span><span class="st">'red'</span> , main<span class="op">=</span><span class="st">""</span> , xlab<span class="op">=</span><span class="st">"Simulated Differences"</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="va">ratDiff</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/abline.html">abline</a></span><span class="op">(</span>v <span class="op">=</span> <span class="op">-</span><span class="va">ratDiff</span>, col <span class="op">=</span> <span class="st">"black"</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-17-1.png" width="672"></div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div id="resampling-based-on-a-linear-regression" class="section level2" number="6.7">
+<h2>
+<span class="header-section-number">6.7</span> Resampling based on a linear regression<a class="anchor" aria-label="anchor" href="#resampling-based-on-a-linear-regression"><i class="fas fa-link"></i></a>
+</h2>
+<p>So far you’ve seen two examples of how we can use permutation techniques to look at our data: by looking at the difference in means (the mice-on-a-diet example) and by comparing the difference in proportion (rats-on-a-wheel exercise).</p>
+<p>You might have noticed from the code that there is very little difference in the approach, which is good! We’re going to adjust the code slightly, so that we can do a similar resampling exercise using a linear model. To look at this, we’re using a data set about penguins.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>The <code>penguins</code> data set is part of a library called <code>palmerpenguins</code>, which we’ll have to install and load:</p>
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"palmerpenguins"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://allisonhorst.github.io/palmerpenguins/">palmerpenguins</a></span><span class="op">)</span></code></pre></div>
+<p>Let’s attach the data and remove the missing values. We’re also filter out data on one type of penguin, just to make our analysis a bit easier to follow.</p>
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"penguins"</span><span class="op">)</span>
+
+<span class="va">penguins</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">species</span> <span class="op">!=</span> <span class="st">"Adelie"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">penguins</span></code></pre></div>
+<pre><code>## # A tibble: 187 × 7
+##    species island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;           &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Gentoo  Biscoe           46.1          13.2               211        4500
+##  2 Gentoo  Biscoe           50            16.3               230        5700
+##  3 Gentoo  Biscoe           48.7          14.1               210        4450
+##  4 Gentoo  Biscoe           50            15.2               218        5700
+##  5 Gentoo  Biscoe           47.6          14.5               215        5400
+##  6 Gentoo  Biscoe           46.5          13.5               210        4550
+##  7 Gentoo  Biscoe           45.4          14.6               211        4800
+##  8 Gentoo  Biscoe           46.7          15.3               219        5200
+##  9 Gentoo  Biscoe           43.3          13.4               209        4400
+## 10 Gentoo  Biscoe           46.8          15.4               215        5150
+## # … with 177 more rows, and 1 more variable: sex &lt;fct&gt;</code></pre>
+</div>
+</div>
+<p>We can see that there are 8 variables. We’ll come back to some of them in later sessions, but for now we’re focussing on 3:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>species</code> the type of penguin</li>
+<li>
+<code>flipper_length_mm</code> the length of the flipper in mm</li>
+<li>
+<code>bill_length_mm</code> the length of the bill in mm</li>
+</ol>
+<p>To practise, we’ll look at the relationship between flipper length and bill length, comparing the two species we selected.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">penguins</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">flipper_length_mm</span>,
+                     y <span class="op">=</span> <span class="va">bill_length_mm</span>,
+                     colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_smooth</span><span class="op">(</span>method <span class="op">=</span> <span class="st">"lm"</span>, se <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-21-1.png" width="672"></div>
+</div>
+</div>
+<p>Looking at the data, it seems that there is an overall positive relationship between flipper length and bill length. The relationship is species-dependent, but there doesn’t seem to be much of an interaction going on, since the lines of best fit are pretty much parallel.</p>
+<p>Let’s look at these models from a resampling perspective.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>First, we specify the model. We’re creating an additive model, where <code>bill_length_mm</code> depends on <code>flipper_length_mm</code> and <code>species</code>:</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">observed_fit</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span> 
+  <span class="fu">specify</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">species</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="note">
+<p>As an aside, in the Power analysis session of Core statistics we looked at model evaluation. We could do something similar here to see if there is an interaction between <code>flipper_length_mm</code> and <code>species</code>:</p>
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># define the model</span>
+<span class="va">lm_penguins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">*</span> <span class="va">species</span>,
+                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span>
+
+<span class="co"># have a look at the coefficients</span>
+<span class="fu"><a href="https://rdrr.io/r/base/summary.html">summary</a></span><span class="op">(</span><span class="va">lm_penguins</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Call:
+## lm(formula = bill_length_mm ~ flipper_length_mm * species, data = penguins)
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -6.6977 -1.6578 -0.0014  1.4064 12.4394 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                       5.59338    8.65665   0.646   0.5190    
+## flipper_length_mm                 0.22081    0.04418   4.998 1.35e-06 ***
+## speciesGentoo                   -26.08126   11.67592  -2.234   0.0267 *  
+## flipper_length_mm:speciesGentoo   0.09247    0.05702   1.622   0.1066    
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 2.579 on 183 degrees of freedom
+## Multiple R-squared:  0.3774, Adjusted R-squared:  0.3672 
+## F-statistic: 36.97 on 3 and 183 DF,  p-value: &lt; 2.2e-16</code></pre>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># do a backwards stepwise elimination</span>
+<span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/step.html">step</a></span><span class="op">(</span><span class="va">lm_penguins</span><span class="op">)</span></code></pre></div>
+<pre><code>## Start:  AIC=358.28
+## bill_length_mm ~ flipper_length_mm * species
+## 
+##                             Df Sum of Sq    RSS    AIC
+## &lt;none&gt;                                   1217.1 358.28
+## - flipper_length_mm:species  1    17.491 1234.6 358.95</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = bill_length_mm ~ flipper_length_mm * species, data = penguins)
+## 
+## Coefficients:
+##                     (Intercept)                flipper_length_mm  
+##                         5.59338                          0.22081  
+##                   speciesGentoo  flipper_length_mm:speciesGentoo  
+##                       -26.08126                          0.09247</code></pre>
+<p>There we can see that the AIC value gets a tiny bit worse if we drop the interaction term. This means that <code>species</code> is contributing to the model, although only a tiny bit.</p>
+</div>
+<p>Next, we fit models to resamples of our data set:</p>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguins_resample</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span> 
+  <span class="fu">specify</span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">+</span> <span class="va">species</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">hypothesise</span><span class="op">(</span>null <span class="op">=</span> <span class="st">"independence"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">fit</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>Lastly, we can get the p-value, comparing how likely our <code>observed_fit</code> is based on the resampled fits we simulated:</p>
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">get_p_value</span><span class="op">(</span><span class="va">penguins_resample</span>, obs_stat <span class="op">=</span> <span class="va">observed_fit</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
+##   term              p_value
+##   &lt;chr&gt;               &lt;dbl&gt;
+## 1 flipper_length_mm       0
+## 2 intercept               0
+## 3 speciesGentoo           0</code></pre>
+<p>Again, you’re likely to get a warning stating that the result is an approximation based on the number of <code>reps</code> chosen. It’s very unlikely that the true p-value is zero.</p>
+<p>But based on this, it seems very unlikely that we’d get these coefficients of the linear model if the data were described best by a horizontal line (which is pretty obvious by looking at the data!).</p>
+<p>Alternatively, we can view this by plotting the simulated null distributions and placing the coefficient values of our observed linear model on top:</p>
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguins_resample</span> <span class="op">%&gt;%</span> 
+  <span class="fu">visualise</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">shade_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">observed_fit</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
+<p>We can also compare this by looking at the confidence intervals of the simulated coefficients. Here we’re showing the 95% confidence intervals, comparing them with the observed values for the coefficients (i.e. the ones we get by fitting the model to our actual data).</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># generate the 95% confidence intervals</span>
+<span class="fu">get_confidence_interval</span><span class="op">(</span>
+  <span class="va">penguins_resample</span>, 
+  point_estimate <span class="op">=</span> <span class="va">observed_fit</span>, 
+  level <span class="op">=</span> <span class="fl">.95</span>
+<span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 3
+##   term              lower_ci upper_ci
+##   &lt;chr&gt;                &lt;dbl&gt;    &lt;dbl&gt;
+## 1 flipper_length_mm  -0.0703   0.0753
+## 2 intercept          33.1     61.7   
+## 3 speciesGentoo      -1.91     1.78</code></pre>
+<div class="sourceCode" id="cb114"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># display the coefficients of the observed linear model</span>
+<span class="va">observed_fit</span></code></pre></div>
+<pre><code>## # A tibble: 3 × 2
+##   term              estimate
+##   &lt;chr&gt;                &lt;dbl&gt;
+## 1 intercept           -5.28 
+## 2 flipper_length_mm    0.276
+## 3 speciesGentoo       -7.18</code></pre>
+<p>So, how do we interpret these results? Well, the coefficients of the linear model that we fitted to our actual data are miles away from the coefficients that are obtained from the simulated data. Remember, when we simulated the data we permuted (randomly shuffled) the <code>bill_length_mm</code> values, refitted a linear model and calculated the corresponding coefficients.</p>
+<p>This would be fine if there was no relationship between bill length, flipper length and species. Then reshuffling the data would not have any effect. But there clearly is a relationship between these variables, which we can see from the plotted data with the line of best fit.</p>
+<p>Just to satisfy our curiosity (if you’re still here at this point then surely you must be curious!), we can check this with a normal approach, where we fit a linear model and perform an ANOVA:</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># fit the model</span>
+<span class="va">lm_penguins</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html">lm</a></span><span class="op">(</span><span class="va">bill_length_mm</span> <span class="op">~</span> <span class="va">flipper_length_mm</span> <span class="op">*</span> <span class="va">species</span>,
+                  data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span>
+
+<span class="co"># check assumptions (which all look fine)</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://goodekat.github.io/ggResidpanel/">ggResidpanel</a></span><span class="op">)</span>
+<span class="va">lm_penguins</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://goodekat.github.io/ggResidpanel/reference/resid_panel.html">resid_panel</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"resid"</span>, <span class="st">"qq"</span>, <span class="st">"ls"</span>, <span class="st">"cookd"</span><span class="op">)</span>,
+              smoother <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-28-1.png" width="672"></div>
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/anova.html">anova</a></span><span class="op">(</span><span class="va">lm_penguins</span><span class="op">)</span></code></pre></div>
+<pre><code>## Analysis of Variance Table
+## 
+## Response: bill_length_mm
+##                            Df  Sum Sq Mean Sq  F value    Pr(&gt;F)    
+## flipper_length_mm           1   49.33   49.33   7.4174  0.007085 ** 
+## species                     1  670.92  670.92 100.8749 &lt; 2.2e-16 ***
+## flipper_length_mm:species   1   17.49   17.49   2.6298  0.106594    
+## Residuals                 183 1217.14    6.65                       
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+<p>Note that here we’ve included the interaction between flipper length and species (<code>flipper_length_mm:species</code>) and, consistent with the AIC result, there’s not much in the data to suggest that there is an interaction between these two variables.</p>
+<p>Finally, the ANOVA confirms what we’re seeing with the permutation test: that these data are <strong>NOT</strong> described best with a horizontal line, but that the linear model is able to account for a good proportion of the variance in the data (with an adjusted R-squared value of 0.37).</p>
+</div>
+</div>
+</div>
+<div id="key-points-2" class="section level2" number="6.8">
+<h2>
+<span class="header-section-number">6.8</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keypoints">
+<ul>
+<li>Permutation techniques are applicable regardless of the underlying distribution</li>
+<li>They allow you to test for non-standard metrics</li>
+<li>They do require you to have sufficient data</li>
+<li>We can use the workflow from the <code>infer</code> package, which is part of <code>tidymodels</code> to perform permutations on our data</li>
+<li>We <code>specify()</code> a model, use <code>hypothesise()</code> to define the null hypothesis, <code>generate()</code> reshuffled data and <code>calculate()</code> the statistic of interest</li>
+<li>We can reiterate over this workflow to obtain a distribution of p-values</li>
+</ul>
+</div>
+
+</div>
+</div>
+  <div class="chapter-nav">
+<div class="prev"><a href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></div>
+<div class="empty"></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#single-predictor-permutation-tests"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li><a class="nav-link" href="#objectives-4"><span class="header-section-number">6.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-2"><span class="header-section-number">6.2</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#purpose-and-aim"><span class="header-section-number">6.3</span> Purpose and aim</a></li>
+<li>
+<a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">6.4</span> Data and hypotheses</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#load-and-visualise-the-data"><span class="header-section-number">6.4.1</span> Load and visualise the data</a></li></ul>
+</li>
+<li><a class="nav-link" href="#permutation-test-theory"><span class="header-section-number">6.5</span> Permutation Test Theory</a></li>
+<li><a class="nav-link" href="#exercise-rats-on-a-wheel"><span class="header-section-number">6.6</span> Exercise: Rats on a wheel</a></li>
+<li><a class="nav-link" href="#resampling-based-on-a-linear-regression"><span class="header-section-number">6.7</span> Resampling based on a linear regression</a></li>
+<li><a class="nav-link" href="#key-points-2"><span class="header-section-number">6.8</span> Key points</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
+
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
+
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

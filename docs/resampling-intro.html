@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 2 Introduction | CamStats</title>
+<title>Chapter 5 Introduction | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="2.1 Objectives  Aim: To introduce R commands for analysing data with non-continuous response variables. By the end of this practical participants should be able to achieve the following: Construct...">
+<meta name="description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
-<meta property="og:title" content="Chapter 2 Introduction | CamStats">
+<meta property="og:title" content="Chapter 5 Introduction | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="2.1 Objectives  Aim: To introduce R commands for analysing data with non-continuous response variables. By the end of this practical participants should be able to achieve the following: Construct...">
+<meta property="og:description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 2 Introduction | CamStats">
-<meta name="twitter:description" content="2.1 Objectives  Aim: To introduce R commands for analysing data with non-continuous response variables. By the end of this practical participants should be able to achieve the following: Construct...">
+<meta name="twitter:title" content="Chapter 5 Introduction | CamStats">
+<meta name="twitter:description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -120,11 +120,11 @@
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
 <li class="book-part">Generalised linear models</li>
-<li><a class="active" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
 <li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
 <li class="book-part">Resampling techniques</li>
-<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
+<li><a class="active" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
 <li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
 </ul>
 
@@ -133,50 +133,61 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="glm-intro" class="section level1" number="2">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="resampling-intro" class="section level1" number="5">
 <h1>
-<span class="header-section-number">2</span> Introduction<a class="anchor" aria-label="anchor" href="#glm-intro"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5</span> Introduction<a class="anchor" aria-label="anchor" href="#resampling-intro"><i class="fas fa-link"></i></a>
 </h1>
-<div id="objectives" class="section level2" number="2.1">
+<div id="objectives-3" class="section level2" number="5.1">
 <h2>
-<span class="header-section-number">2.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-3"><i class="fas fa-link"></i></a>
 </h2>
 <div class="objectives">
-<p><strong>Aim: To introduce R commands for analysing data with non-continuous response variables.</strong></p>
-<p>By the end of this practical participants should be able to achieve the following:</p>
+<p><strong>Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests.</strong></p>
+<p>By the end of this practical participants should be able to perform</p>
 <ol style="list-style-type: decimal">
-<li>Construct
+<li>Monte Carlo permutation tests for
 <ol style="list-style-type: lower-alpha">
-<li>a logistic model for binary response variables</li>
-<li>a logistic model for proportion response variables</li>
-<li>a Poisson model for count response variables</li>
-<li>a Negative Binomial model for count response variables</li>
+<li>Two-samples of continuous data</li>
+<li>Multiple samples of continuous data</li>
+<li>Simple Linear Regression</li>
+<li>Two-way anova</li>
 </ol>
 </li>
-<li>Plot the data and the fitted curve in each case for both continuous and categorical predictors</li>
-<li>Assess the significance of fit</li>
-<li>Assess assumption of the model</li>
 </ol>
+<p>and understand how to apply these techniques more generally.</p>
 </div>
 </div>
-<div id="background" class="section level2" number="2.2">
+<div id="background-1" class="section level2" number="5.2">
 <h2>
-<span class="header-section-number">2.2</span> Background<a class="anchor" aria-label="anchor" href="#background"><i class="fas fa-link"></i></a>
+<span class="header-section-number">5.2</span> Background<a class="anchor" aria-label="anchor" href="#background-1"><i class="fas fa-link"></i></a>
 </h2>
-<p>This practical is divided into sections that considers each sort of response variable and generalised linear model in turn. Within each section there will be at least one example of the modelling process followed by an example.</p>
+<p>All traditional statistical test make use of various named distributions (normally the normal distribution, lol, for parametric tests like the t-test or ANOVA) in order to work properly, or they require certain assumptions to be made about the parent distribution (such as the shape of the distribution is symmetric for non-parametric tests like Wilcoxon). If these assumptions are met then traditional statistical tests are fine, but what can we do when we can’t assume normality or if the distribution of the data is just weird?</p>
+<p>Resampling techniques are the tools that work here. They can allow us to test hypotheses about our data using only the data itself (without appeal to any assumptions about the shape or form of the parent distribution). They are in some ways a much simpler approach to statistics, but because they rely on the ability to generate thousands and tens of thousands of random numbers very quickly, they simply weren’t considered practical back in the day. Even now, they aren’t widely used because they require the user (you, in case you’d forgotten what’s going on at this time of day) to do more than click a button on a stats package or even know the name of the test. These techniques require a mix of statistical knowledge and programming; a combination of skills that isn’t all that common! There are three broad areas of resampling methods (although they are all quite closely related):</p>
+<ol style="list-style-type: decimal">
+<li>Permutation Methods</li>
+<li>Bootstrapping</li>
+<li>Cross-validation</li>
+</ol>
+<p>Permutation methods are what we will focus on in this practical and they allow us to carry out hypothesis testing.</p>
+<p>Bootstrapping is a technique for estimating confidence intervals for parameter estimates. We effectively treat our dataset as if it was the parent distribution, draw samples from it and calculate the statistic of choice (the mean usually) using these sub-samples. If we repeat this process many times, we will eventually be able to construct a distribution for our sample statistic. This can be used to give us a confidence interval for our statistic.</p>
+<p>Cross-validation is at the heart of modern machine learning approaches but existed long before this technique became sexy/fashionable. You divide your dataset up into two sets: a training set that you use to fit your model and a testing set that you use to evaluate your model. This allows your model accuracy to be empirically measured. There are several variants of this technique (holdout, k-fold cross validation, leave-one-out-cross-validation (LOOCV), leave-p-out-cross-validation (LpOCV) etc.), all of which do essentially the same thing; the main difference between them being a trade-off between the amount of time it takes to perform versus the reliability of the method.</p>
+<p>We won’t cover bootstrapping or cross-validation in this practical but feel free to Google them.</p>
 
+<pre><code>## Warning: 'xaringanExtra::style_panelset' is deprecated.
+## Use 'style_panelset_tabs' instead.
+## See help("Deprecated")</code></pre>
 <p><style>.panelset{--panel-tab-font-family: inherit;}</style></p>
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
-<div class="next"><a href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></div>
+<div class="prev"><a href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></div>
+<div class="next"><a href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#glm-intro"><span class="header-section-number">2</span> Introduction</a></li>
-<li><a class="nav-link" href="#objectives"><span class="header-section-number">2.1</span> Objectives</a></li>
-<li><a class="nav-link" href="#background"><span class="header-section-number">2.2</span> Background</a></li>
+<li><a class="nav-link" href="#resampling-intro"><span class="header-section-number">5</span> Introduction</a></li>
+<li><a class="nav-link" href="#objectives-3"><span class="header-section-number">5.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#background-1"><span class="header-section-number">5.2</span> Background</a></li>
 </ul>
 
       <div class="book-extra">

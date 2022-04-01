@@ -8,8 +8,8 @@ rmd_files: [
   "glm-intro.Rmd",
   "glm-practical-logistic-binary.Rmd",
   "glm-practical-logistic-proportion.Rmd",
-  #"resampling-intro.Rmd",
-  #"resampling-practical-single.Rmd",
+  "resampling-intro.Rmd",
+  "resampling-practical-single.Rmd",
   #"clustering-practical-kmeans.Rmd",
 ]
 
