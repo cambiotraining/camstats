@@ -265,7 +265,7 @@ head(penguins)
 ```
 
 ```
-## # A tibble: 6 × 7
+## # A tibble: 6 × 8
 ##   species island bill_length_mm bill_depth_mm flipper_length_… body_mass_g sex  
 ##   <fct>   <fct>           <dbl>         <dbl>            <int>       <int> <fct>
 ## 1 Adelie  Torge…           39.1          18.7              181        3750 male 
@@ -273,7 +273,8 @@ head(penguins)
 ## 3 Adelie  Torge…           40.3          18                195        3250 fema…
 ## 4 Adelie  Torge…           NA            NA                 NA          NA <NA> 
 ## 5 Adelie  Torge…           36.7          19.3              193        3450 fema…
-## 6 Adelie  Torge…           39.3          20.6              190        3650 male
+## 6 Adelie  Torge…           39.3          20.6              190        3650 male 
+## # … with 1 more variable: year <int>
 ```
 
 This shows that there are a few other columns in our data set, namely `island`, indicating the island where the penguins are residing and `bill_depth_mm` which records the bill depth.

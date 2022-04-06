@@ -208,7 +208,7 @@ penguin_recipe %>%
   filter(terms == "percent variance") %>% 
   ggplot(aes(x = component, y = value)) + 
   geom_col() + 
-  xlim(c(0, 5)) + 
+  xlim(c(0, 5)) +
   ylab("% of total variance")
 ```
 
@@ -221,40 +221,144 @@ By definition, the first principal component (PC1) will always explain the large
 That's pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of our data. The number of variables in our data set is very manageable, so we probably wouldn't do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.
 
 ### Loadings
+Let's think back to our smoothy metaphor. Remember how the smoothy was made up of various fruits - just like our PCs are made up of parts of our original variables.
+
+Let's, for the sake of illustrating this, assume the following for PC1:
+
+| parts| variable|
+|:- |:- |
+| 4 | `flipper_length_mm` |
+| 1 | `body_mass_g` |
+
+Each PC has something called an **eigenvector**, which in simplest terms is a line with a certain direction and length.
+
+If we want to calculate the length of the eigenvector for PC1, we can employ Pythagoras (well, not directly, just his legacy). This gives:
+
+$eigenvector \, PC1 = \sqrt{4^2 + 1^2} = 4.12$
+
+The **loading scores** for PC1 are the "parts" scaled for this length, _i.e._:
+
+| scaled parts| variable|
+|:- |:- |
+| 4 / 4.12 = 0.97 | `flipper_length_mm` |
+| 1 / 4.12 = 0.24 | `body_mass_g` |
+
+What we can do with these values is plot the loadings for each of the original variables. For example, if we plotted PC1 against PC2, and wanted to see how much the original variables contribute to each principal component, we would do the following:
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+The loadings are encoded in the `value` column of the pca object (`penguin_pca`). To plot this, we need the data in a "wide" format:
 
 ```r
 # get pca loadings into wider format
 pca_wider <- penguin_pca %>% 
-  tidyr::pivot_wider(names_from = component, id_cols = terms)
+  pivot_wider(names_from = component, id_cols = terms)
 
+pca_wider
+```
+
+```
+## # A tibble: 4 × 5
+##   terms                PC1      PC2    PC3    PC4
+##   <chr>              <dbl>    <dbl>  <dbl>  <dbl>
+## 1 bill_length_mm     0.455 -0.597   -0.644  0.146
+## 2 bill_depth_mm     -0.400 -0.798    0.418 -0.168
+## 3 flipper_length_mm  0.576 -0.00228  0.232 -0.784
+## 4 body_mass_g        0.548 -0.0844   0.597  0.580
+```
+
+We can see that there are four terms (our original variables) and four PCs. This makes sense, because the maximum number of principal components cannot exceed the number of original variables.
+
+We need to do a bit more data gymnastics, with defining an arrow style (vectors are represented using arrows), plotting the PCs, and plotting the loadings.
+
+Arrow:
+
+```r
 # define arrow style
-arrow_style <- arrow(length = unit(.05, "inches"),
+arrow_style <- arrow(length = unit(2, "mm"),
                      type = "closed")
+```
+
+To plot PC1 vs PC2, we need to extract the relevant data. All of the PCA-related data is stored in the `penguin_recipe` object. Since the people who developed `tidymodels` are quite fond of verbs (I'm really more of an adjective kind-of-guy myself...) they invented the `bake()` function.
+
+The logic is: you follow a `recipe()` and then you `bake()` it. Yes, I know.
+
+Anyways, we use this to get the data from our `penguin_recipe`, telling the function that it shouldn't expect any new data (the function is also used in model testing, where data is split in a training and test data set).
 
 
+```r
+bake(penguin_recipe, new_data = NULL)
+```
+
+```
+## # A tibble: 342 × 8
+##    species island    sex     year    PC1      PC2     PC3     PC4
+##    <fct>   <fct>     <fct>  <int>  <dbl>    <dbl>   <dbl>   <dbl>
+##  1 Adelie  Torgersen male    2007 -1.84  -0.0476   0.232   0.523 
+##  2 Adelie  Torgersen female  2007 -1.30   0.428    0.0295  0.402 
+##  3 Adelie  Torgersen female  2007 -1.37   0.154   -0.198  -0.527 
+##  4 Adelie  Torgersen female  2007 -1.88   0.00205  0.618  -0.478 
+##  5 Adelie  Torgersen male    2007 -1.91  -0.828    0.686  -0.207 
+##  6 Adelie  Torgersen female  2007 -1.76   0.351   -0.0276  0.504 
+##  7 Adelie  Torgersen male    2007 -0.809 -0.522    1.33    0.338 
+##  8 Adelie  Torgersen <NA>    2007 -1.83   0.769    0.689  -0.427 
+##  9 Adelie  Torgersen <NA>    2007 -1.19  -1.02     0.729   0.333 
+## 10 Adelie  Torgersen <NA>    2007 -1.73   0.787   -0.205   0.0205
+## # … with 332 more rows
+```
+
+It spits out the original table, but with the PC values instead of the original variables. We can then use that information to plot the PCs, focussing here on PC1 vs PC2:
+
+
+```r
 pca_plot <-
-  juice(penguin_recipe) %>%
+  bake(penguin_recipe, new_data = NULL) %>%
   ggplot(aes(PC1, PC2)) +
-  geom_point(aes(color = species, shape = species), 
-             alpha = 0.8, 
-             size = 2)
+  geom_point(aes(colour = species, # colour the data
+                 shape = species), # give it a shape
+             alpha = 0.8,          # add transparency
+             size = 2)             # make the data points bigger
+```
 
+Lastly (finally), we take this plot and add the loading data on top of it:
+
+
+```r
 pca_plot +
+  # define the vector
   geom_segment(data = pca_wider,
                aes(xend = PC1, yend = PC2), 
                x = 0, 
                y = 0, 
                arrow = arrow_style) + 
+  # add the text labels
   geom_text(data = pca_wider,
             aes(x = PC1, y = PC2, label = terms), 
             hjust = 0, 
             vjust = 1,
-            size = 5, 
-            color = '#0A537D') 
+            size = 5) 
 ```
 
-<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-6-1.png" width="672" />
+<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-10-1.png" width="672" />
+:::
+:::::
 
+Slightly annoyingly, this can cause some overlap in the labels. Also, if there are many different variables then this because rather hard to interpret because there will be a web of vectors.
+
+But here things look pretty OK still. One thing that is immediately obvious from these data is that the Gentoo penguins PCs are quite distinct from the Adelie and Chinstrap species.
+
+From a PC-perspective, the `flipper_length_mm` and `body_mass_g` variables make up most of PC1, since the vectors are almost horizontal.
+
+In contrast, `bill_length_mm` and `bill_depth_mm` contribute a lot to PC2. They also contribute positively (`bill_length_mm`) and negatively (`bill_depth_mm`) to PC1.
+
+Because the vectors can become a bit messy in terms of visualisation, it can be useful to represent the loadings differently. Note that, at this point, I'm not aware of a method that allows you to do this reasonably straightforward in anything other than R's tidyverse.
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
 
 ```r
 penguin_pca %>%
@@ -271,7 +375,9 @@ penguin_pca %>%
   ) 
 ```
 
-<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-7-1.png" width="672" />
+<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+:::
+:::::
 
 ## Exercise
 

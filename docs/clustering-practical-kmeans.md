@@ -74,7 +74,7 @@ K-means clustering is an iterative process. It follows the following steps:
 6. Repeat steps 4-5 until the clusters do not change
 
 ## Data
-First we need some data! To liven things up a bit, we'll be using data from the `palmerpenguins` package. This package has a whole bunch of data on penguins. What's not to love?
+For the example, we'll be using the penguin data set.
 
 ::::: {.panelset}
 ::: {.panel}
@@ -513,8 +513,8 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   bill_depth_scaled bill_length_scaled  size withinss cluster
 ##               <dbl>              <dbl> <int>    <dbl> <fct>  
-## 1             0.560             -0.943   153     88.0 1      
-## 2             0.799              1.10     64     39.0 2      
+## 1             0.799              1.10     64     39.0 1      
+## 2             0.560             -0.943   153     88.0 2      
 ## 3            -1.09               0.590   125     59.4 3
 ```
 
@@ -549,9 +549,9 @@ kclusts_r$centers  # get centroid coordinates
 
 ```
 ##   penguins.bill_depth_mm penguins.bill_length_mm
-## 1              0.5595723              -0.9431819
-## 2             -1.0937700               0.5903143
-## 3              0.7985421               1.1018368
+## 1              0.7985421               1.1018368
+## 2              0.5595723              -0.9431819
+## 3             -1.0937700               0.5903143
 ```
 
 :::note

@@ -437,7 +437,7 @@ penguins
 ```
 
 ```
-## # A tibble: 187 × 7
+## # A tibble: 187 × 8
 ##    species island bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
 ##    <fct>   <fct>           <dbl>         <dbl>             <int>       <int>
 ##  1 Gentoo  Biscoe           46.1          13.2               211        4500
@@ -450,7 +450,7 @@ penguins
 ##  8 Gentoo  Biscoe           46.7          15.3               219        5200
 ##  9 Gentoo  Biscoe           43.3          13.4               209        4400
 ## 10 Gentoo  Biscoe           46.8          15.4               215        5150
-## # … with 177 more rows, and 1 more variable: sex <fct>
+## # … with 177 more rows, and 2 more variables: sex <fct>, year <int>
 ```
 :::
 :::::
