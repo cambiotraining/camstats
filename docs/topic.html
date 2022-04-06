@@ -5,21 +5,21 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>Chapter 2 Topic | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim   2.3 Section commands New commands used in this section: Function Description function_name()...">
-<meta name="generator" content="bookdown 0.24 with bs4_book()">
+<meta name="description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
 <meta property="og:title" content="Chapter 2 Topic | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim   2.3 Section commands New commands used in this section: Function Description function_name()...">
+<meta property="og:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Chapter 2 Topic | CamStats">
-<meta name="twitter:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim   2.3 Section commands New commands used in this section: Function Description function_name()...">
+<meta name="twitter:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
 <link rel="stylesheet" type="text/css" href="stylesheets/style.css">
-<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/header-attrs-2.12/header-attrs.js"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
 <script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
 <script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
@@ -120,6 +120,7 @@
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
 <li><a class="active" href="topic.html"><span class="header-section-number">2</span> Topic</a></li>
+<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">3</span> Hierarchical clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -152,57 +153,211 @@
 <h2>
 <span class="header-section-number">2.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim"><i class="fas fa-link"></i></a>
 </h2>
+<p>This is a statistical technique for reducing the dimensionality of a data set. The technique aims to find a new set of variables for describing the data. These new variables are made from a weighted sum of the old variables. The weighting is chosen so that the new variables can be ranked in terms of importance in that the first new variable is chosen to account for as much variation in the data as possible. Then the second new variable is chosen to account for as much of the remaining variation in the data as possible, and so on until there are as many new variables as old variables.</p>
 </div>
-<div id="section-commands" class="section level2" number="2.3">
+<div id="libraries-and-functions" class="section level2" number="2.3">
 <h2>
-<span class="header-section-number">2.3</span> Section commands<a class="anchor" aria-label="anchor" href="#section-commands"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
 </h2>
-<p>New commands used in this section:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
 <div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
 <thead><tr class="header">
-<th align="left">Function</th>
+<th align="left">Library</th>
 <th align="left">Description</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left"><code>function_name()</code></td>
-<td align="left">Description</td>
+<td align="left"><code>tidyverse</code></td>
+<td align="left">A collection of R packages designed for data science</td>
 </tr>
 <tr class="even">
-<td align="left"><code>function_name()</code></td>
-<td align="left">Description</td>
+<td align="left"><code>tidymodels</code></td>
+<td align="left">A collection of packages for modelling and machine learning using tidyverse principles</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>broom</code></td>
+<td align="left">Summarises key information about statistical objects in tidy tibbles</td>
+</tr>
+<tr class="even">
+<td align="left"><code>corrr</code></td>
+<td align="left">A package for exploring correlations in R</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>tidytext</code></td>
+<td align="left">Makes text tidying easy</td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<div id="data-and-hypotheses" class="section level2" number="2.4">
-<h2>
-<span class="header-section-number">2.4</span> Data and hypotheses<a class="anchor" aria-label="anchor" href="#data-and-hypotheses"><i class="fas fa-link"></i></a>
-</h2>
 </div>
-<div id="summarise-and-visualise" class="section level2" number="2.5">
-<h2>
-<span class="header-section-number">2.5</span> Summarise and visualise<a class="anchor" aria-label="anchor" href="#summarise-and-visualise"><i class="fas fa-link"></i></a>
-</h2>
 </div>
-<div id="assumptions" class="section level2" number="2.6">
+<div id="data" class="section level2" number="2.4">
 <h2>
-<span class="header-section-number">2.6</span> Assumptions<a class="anchor" aria-label="anchor" href="#assumptions"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.4</span> Data<a class="anchor" aria-label="anchor" href="#data"><i class="fas fa-link"></i></a>
 </h2>
+<p>First we need some data! To liven things up a bit, we’ll be using data from the <code>palmerpenguins</code> package. This package has a whole bunch of data on penguins. What’s not to love?</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">Penguins</span>
+The <code>penguins</code> data set comes from <code>palmerpenguins</code> package (for more information, see <a href="https://github.com/allisonhorst/palmerpenguins">the GitHub page</a>).</p>
 </div>
-<div id="implemention" class="section level2" number="2.7">
+</div>
+</div>
+<div id="visualise-the-data" class="section level2" number="2.5">
 <h2>
-<span class="header-section-number">2.7</span> Implemention<a class="anchor" aria-label="anchor" href="#implemention"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data"><i class="fas fa-link"></i></a>
 </h2>
+<p>First of all, let’s have a look at the data. It is always a good idea to get a sense of how your data.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+First, we load and inspect the data:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># attach the data</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">'palmerpenguins'</span><span class="op">)</span>
+
+<span class="co"># inspect the data</span>
+<span class="va">penguins</span></code></pre></div>
+<pre><code>## # A tibble: 344 × 8
+##    species island    bill_length_mm bill_depth_mm flipper_length_mm body_mass_g
+##    &lt;fct&gt;   &lt;fct&gt;              &lt;dbl&gt;         &lt;dbl&gt;             &lt;int&gt;       &lt;int&gt;
+##  1 Adelie  Torgersen           39.1          18.7               181        3750
+##  2 Adelie  Torgersen           39.5          17.4               186        3800
+##  3 Adelie  Torgersen           40.3          18                 195        3250
+##  4 Adelie  Torgersen           NA            NA                  NA          NA
+##  5 Adelie  Torgersen           36.7          19.3               193        3450
+##  6 Adelie  Torgersen           39.3          20.6               190        3650
+##  7 Adelie  Torgersen           38.9          17.8               181        3625
+##  8 Adelie  Torgersen           39.2          19.6               195        4675
+##  9 Adelie  Torgersen           34.1          18.1               193        3475
+## 10 Adelie  Torgersen           42            20.2               190        4250
+## # … with 334 more rows, and 2 more variables: sex &lt;fct&gt;, year &lt;int&gt;</code></pre>
 </div>
-<div id="interpret-output-and-present-results" class="section level2" number="2.8">
-<h2>
-<span class="header-section-number">2.8</span> Interpret output and present results<a class="anchor" aria-label="anchor" href="#interpret-output-and-present-results"><i class="fas fa-link"></i></a>
-</h2>
 </div>
-<div id="exercise" class="section level2" number="2.9">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/corrr">corrr</a></span><span class="op">)</span>
+
+<span class="va">penguins_corr</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span>
+  <span class="fu">select</span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://corrr.tidymodels.org/reference/correlate.html">correlate</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu"><a href="https://corrr.tidymodels.org/reference/rearrange.html">rearrange</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Correlation method: 'pearson'
+## Missing treated using: 'pairwise.complete.obs'</code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguins_corr</span></code></pre></div>
+<pre><code>## # A tibble: 5 × 6
+##   term         flipper_length_… body_mass_g bill_length_mm    year bill_depth_mm
+##   &lt;chr&gt;                   &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;
+## 1 flipper_len…           NA          0.871          0.656   0.170        -0.584 
+## 2 body_mass_g             0.871     NA              0.595   0.0422       -0.472 
+## 3 bill_length…            0.656      0.595         NA       0.0545       -0.235 
+## 4 year                    0.170      0.0422         0.0545 NA            -0.0604
+## 5 bill_depth_…           -0.584     -0.472         -0.235  -0.0604       NA</code></pre>
+<p>Before we perform the PCA, we’ll use a few <code>recipe()</code> pre-processing steps:</p>
+<ol style="list-style-type: decimal">
+<li>remove any NA values</li>
+<li>centre all predictors</li>
+<li>scale all predictors</li>
+</ol>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguin_recipe</span> <span class="op">&lt;-</span>
+  <span class="fu">recipe</span><span class="op">(</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">update_role</span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, new_role <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">step_naomit</span><span class="op">(</span><span class="fu">all_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">step_normalize</span><span class="op">(</span><span class="fu">all_predictors</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">step_pca</span><span class="op">(</span><span class="fu">all_predictors</span><span class="op">(</span><span class="op">)</span>, id <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">prep</span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">penguin_pca</span> <span class="op">&lt;-</span> 
+  <span class="va">penguin_recipe</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tidy</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span> 
+
+<span class="va">penguin_pca</span></code></pre></div>
+<pre><code>## # A tibble: 16 × 4
+##    terms                value component id   
+##    &lt;chr&gt;                &lt;dbl&gt; &lt;chr&gt;     &lt;chr&gt;
+##  1 bill_length_mm     0.455   PC1       pca  
+##  2 bill_depth_mm     -0.400   PC1       pca  
+##  3 flipper_length_mm  0.576   PC1       pca  
+##  4 body_mass_g        0.548   PC1       pca  
+##  5 bill_length_mm    -0.597   PC2       pca  
+##  6 bill_depth_mm     -0.798   PC2       pca  
+##  7 flipper_length_mm -0.00228 PC2       pca  
+##  8 body_mass_g       -0.0844  PC2       pca  
+##  9 bill_length_mm    -0.644   PC3       pca  
+## 10 bill_depth_mm      0.418   PC3       pca  
+## 11 flipper_length_mm  0.232   PC3       pca  
+## 12 body_mass_g        0.597   PC3       pca  
+## 13 bill_length_mm     0.146   PC4       pca  
+## 14 bill_depth_mm     -0.168   PC4       pca  
+## 15 flipper_length_mm -0.784   PC4       pca  
+## 16 body_mass_g        0.580   PC4       pca</code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguin_recipe</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tidy</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span>, type <span class="op">=</span> <span class="st">"variance"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span><span class="op">(</span><span class="va">terms</span> <span class="op">==</span> <span class="st">"percent variance"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">component</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu"><a href="https://rdrr.io/r/graphics/plot.window.html">xlim</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">ylab</span><span class="op">(</span><span class="st">"% of total variance"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-5-1.png" width="672"></div>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># get pca loadings into wider format</span>
+<span class="va">pca_wider</span> <span class="op">&lt;-</span> <span class="va">penguin_pca</span> <span class="op">%&gt;%</span> 
+  <span class="fu">tidyr</span><span class="fu">::</span><span class="fu"><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">pivot_wider</a></span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">component</span>, id_cols <span class="op">=</span> <span class="va">terms</span><span class="op">)</span>
+
+<span class="co"># define arrow style</span>
+<span class="va">arrow_style</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">.05</span>, <span class="st">"inches"</span><span class="op">)</span>,
+                     type <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span>
+
+
+<span class="va">pca_plot</span> <span class="op">&lt;-</span>
+  <span class="fu">juice</span><span class="op">(</span><span class="va">penguin_recipe</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">PC1</span>, <span class="va">PC2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>color <span class="op">=</span> <span class="va">species</span>, shape <span class="op">=</span> <span class="va">species</span><span class="op">)</span>, 
+             alpha <span class="op">=</span> <span class="fl">0.8</span>, 
+             size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_colour_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"darkorange"</span>,<span class="st">"purple"</span>,<span class="st">"cyan4"</span><span class="op">)</span><span class="op">)</span> 
+
+<span class="va">pca_plot</span> <span class="op">+</span>
+  <span class="fu">geom_segment</span><span class="op">(</span>data <span class="op">=</span> <span class="va">pca_wider</span>,
+               <span class="fu">aes</span><span class="op">(</span>xend <span class="op">=</span> <span class="va">PC1</span>, yend <span class="op">=</span> <span class="va">PC2</span><span class="op">)</span>, 
+               x <span class="op">=</span> <span class="fl">0</span>, 
+               y <span class="op">=</span> <span class="fl">0</span>, 
+               arrow <span class="op">=</span> <span class="va">arrow_style</span><span class="op">)</span> <span class="op">+</span> 
+  <span class="fu">geom_text</span><span class="op">(</span>data <span class="op">=</span> <span class="va">pca_wider</span>,
+            <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">PC1</span>, y <span class="op">=</span> <span class="va">PC2</span>, label <span class="op">=</span> <span class="va">terms</span><span class="op">)</span>, 
+            hjust <span class="op">=</span> <span class="fl">0</span>, 
+            vjust <span class="op">=</span> <span class="fl">1</span>,
+            size <span class="op">=</span> <span class="fl">5</span>, 
+            color <span class="op">=</span> <span class="st">'#0A537D'</span><span class="op">)</span> </code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-6-1.png" width="672"></div>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguin_pca</span> <span class="op">%&gt;%</span>
+  <span class="fu">mutate</span><span class="op">(</span>terms <span class="op">=</span> <span class="fu">reorder_within</span><span class="op">(</span><span class="va">terms</span>, 
+                                <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, 
+                                <span class="va">component</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="va">terms</span>, fill <span class="op">=</span> <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">component</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">tidytext</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/reorder_within.html">scale_y_reordered</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">scale_fill_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"#b6dfe2"</span>, <span class="st">"#0A537D"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">labs</span><span class="op">(</span>
+    x <span class="op">=</span> <span class="st">"Absolute value of contribution"</span>,
+    y <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="st">"Positive?"</span>
+  <span class="op">)</span> </code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-7-1.png" width="672"></div>
+</div>
+<div id="exercise" class="section level2" number="2.6">
 <h2>
-<span class="header-section-number">2.9</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
 <p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>Exercise</p>
@@ -223,9 +378,9 @@ Answer
 </details>
 </div>
 </div>
-<div id="key-points" class="section level2" number="2.10">
+<div id="key-points" class="section level2" number="2.7">
 <h2>
-<span class="header-section-number">2.10</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.7</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <ul>
@@ -235,25 +390,26 @@ Answer
 </ul>
 </div>
 
+<pre><code>## Warning: 'xaringanExtra::style_panelset' is deprecated.
+## Use 'style_panelset_tabs' instead.
+## See help("Deprecated")</code></pre>
+<p><style>.panelset{--panel-tab-font-family: inherit;}</style></p>
 </div>
 </div>
   <div class="chapter-nav">
 <div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
-<div class="empty"></div>
+<div class="next"><a href="hierarchical-clustering.html"><span class="header-section-number">3</span> Hierarchical clustering</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
 <li><a class="nav-link" href="#topic"><span class="header-section-number">2</span> Topic</a></li>
 <li><a class="nav-link" href="#objectives"><span class="header-section-number">2.1</span> Objectives</a></li>
 <li><a class="nav-link" href="#purpose-and-aim"><span class="header-section-number">2.2</span> Purpose and aim</a></li>
-<li><a class="nav-link" href="#section-commands"><span class="header-section-number">2.3</span> Section commands</a></li>
-<li><a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">2.4</span> Data and hypotheses</a></li>
-<li><a class="nav-link" href="#summarise-and-visualise"><span class="header-section-number">2.5</span> Summarise and visualise</a></li>
-<li><a class="nav-link" href="#assumptions"><span class="header-section-number">2.6</span> Assumptions</a></li>
-<li><a class="nav-link" href="#implemention"><span class="header-section-number">2.7</span> Implemention</a></li>
-<li><a class="nav-link" href="#interpret-output-and-present-results"><span class="header-section-number">2.8</span> Interpret output and present results</a></li>
-<li><a class="nav-link" href="#exercise"><span class="header-section-number">2.9</span> Exercise</a></li>
-<li><a class="nav-link" href="#key-points"><span class="header-section-number">2.10</span> Key points</a></li>
+<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">2.3</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data"><span class="header-section-number">2.4</span> Data</a></li>
+<li><a class="nav-link" href="#visualise-the-data"><span class="header-section-number">2.5</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">2.6</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">2.7</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">

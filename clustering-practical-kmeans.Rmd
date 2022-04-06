@@ -3,7 +3,7 @@
 source(file = "setup.R")
 
 xaringanExtra::use_panelset()
-xaringanExtra::style_panelset(font_family = "inherit")
+xaringanExtra::style_panelset_tabs(font_family = "inherit")
 ```
 
 # K-means clustering {#kmeans}
@@ -75,8 +75,8 @@ K-means clustering is an iterative process. It follows the following steps:
 5. Calculate the centroid of each new cluster
 6. Repeat steps 4-5 until the clusters do not change
 
-## Datasets
-First we need some data! To liven things up a bit, we'll be using data from the `palmerpenguins` package. This package has a whole bunch of data on penguins. What's not to love?
+## Data
+For the example, we'll be using the penguin data set.
 
 ::::: {.panelset}
 ::: {.panel}

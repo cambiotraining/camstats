@@ -1,0 +1,248 @@
+```{r, echo=FALSE}
+# adjust and load as needed
+source(file = "setup.R")
+
+xaringanExtra::use_panelset()
+xaringanExtra::style_panelset_tabs(font_family = "inherit")
+```
+
+
+# Principal component analysis (PCA)
+
+## Objectives
+:::objectives
+**Questions**
+
+- How do I...
+- What do I...
+
+**Objectives**
+
+- Be able to...
+- Use...
+:::
+
+## Purpose and aim
+This is a statistical technique for reducing the dimensionality of a data set. The technique aims to find a new set of variables for describing the data. These new variables are made from a weighted sum of the old variables. The weighting is chosen so that the new variables can be ranked in terms of importance in that the first new variable is chosen to account for as much variation in the data as possible. Then the second new variable is chosen to account for as much of the remaining variation in the data as possible, and so on until there are as many new variables as old variables.
+
+## Libraries and functions
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+
+| Library| Description|
+|:- |:- |
+|`tidyverse`| A collection of R packages designed for data science |
+|`tidymodels`| A collection of packages for modelling and machine learning using tidyverse principles |
+|`palmerpenguins`| Contains data sets on penguins at the Palmer Station on Antartica.|
+|`broom`| Summarises key information about statistical objects in tidy tibbles |
+|`corrr`| A package for exploring correlations in R |
+|`tidytext`| Makes text tidying easy
+
+:::
+:::::
+
+## Data
+First we need some data! To liven things up a bit, we'll be using data from the `palmerpenguins` package. This package has a whole bunch of data on penguins. What's not to love?
+
+::::: {.panelset}
+::: {.panel}
+[Penguins]{.panel-name}
+The `penguins` data set comes from `palmerpenguins` package (for more information, see [the GitHub page](https://github.com/allisonhorst/palmerpenguins)).
+:::
+:::::
+
+## Visualise the data
+First of all, let's have a look at the data. It is always a good idea to get a sense of how your data.
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+First, we load and inspect the data:
+```{r}
+# attach the data
+data(package = 'palmerpenguins')
+
+# inspect the data
+penguins
+```
+:::
+:::::
+
+We can see that there are different kinds of variables, both factors and numerical. Also, there appear to be some missing data in the data set, so we probably have to deal with that.
+
+Lastly, we should be careful with the `year` column: it is recognised as a numerical column (because it contains numbers), but we should view it as a factor, since the years have a categorical meaning.
+
+To get a better sense of our data we could plot all the numerical variables against each other, to see if there is any possible correlation between them. However, there are quite a few of them, so it might be easier to just create a correlation matrix.
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+First, we load the `corrr` package, which allows us to plot a correlation matrix using the `tidyverse` syntax:
+
+```{r}
+library(corrr)
+
+penguins_corr <- penguins %>%
+  select(where(is.numeric)) %>%  # select the numerical columns
+  correlate() %>%                # calculate the correlations
+  rearrange()                    # rearrange highly correlated
+                                 # variables close together
+
+penguins_corr
+```
+
+We get a message (not an error) that the correlation method used is `pearson`, which is the default. We also get a message about how the missing values are treated, with only complete pairwise comparisons made.
+:::
+:::::
+
+We can see that there is, for example, a strong positive correlation between `flipper_length_mm` and `body_mass_g`. Other variable combinations seem reasonably well-correlated, such as `flipper_length_mm` and `bill_length_mm` (positive) or `flipper_length_mm` and `bill_depth_mm` (negative).
+
+When there are so many different variables that appear to be correlated or, if you just have lots of variables in your data and you don't know where to look, then it can be useful to reduce the number of variables. We can do this with dimension reduction methods, of which Principal Component Analysis (PCA) is one.
+
+Basically, a PCA replaces your original variables with new ones: the principal components. These principal components consist of parts of your original variables.
+
+You could compare this with a smoothy consisting of, let's say, 80% orange, 10% strawberry and 10% banana (no kale).
+
+Similarly, our new principal component could consist of 80% `flipper_length_mm`, 10% `body_mass_g` and 10% `bill_depth_mm` (still no kale).
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+Before we perform the PCA, we'll use a few `recipe()` pre-processing steps:
+
+1. remove any NA values
+2. centre all predictors
+3. scale all predictors
+
+```{r}
+penguin_recipe <-
+  recipe(~., data = penguins) %>% 
+  update_role(species, island, sex, year, new_role = "id") %>% 
+  step_naomit(all_predictors()) %>% 
+  step_normalize(all_predictors()) %>%
+  step_pca(all_predictors(), id = "pca") %>% 
+  prep()
+
+penguin_pca <- 
+  penguin_recipe %>% 
+  tidy(id = "pca") 
+
+penguin_pca
+```
+:::
+:::::
+
+### Visualising PCs
+Now that we've performed our PCA, we can have a bit of a closer look. A useful way of looking at how much your PCs (principal components) are contributing to the amount of variance that is being explained is to create a _screeplot_. Basically, this plots the percentage of explained variance for each PC.
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+We can extract the relevant data directly from the `penguin_recipe` object:
+```{r}
+penguin_recipe %>% 
+  tidy(id = "pca", type = "variance") %>% 
+  filter(terms == "percent variance") %>% 
+  ggplot(aes(x = component, y = value)) + 
+  geom_col() + 
+  xlim(c(0, 5)) + 
+  ylab("% of total variance")
+```
+:::
+:::::
+
+By definition, the first principal component (PC1) will always explain the largest amount of variation. In this case, PC1 explains almost 70% of our variance!
+
+That's pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of our data. The number of variables in our data set is very manageable, so we probably wouldn't do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.
+
+### Loadings
+```{r}
+# get pca loadings into wider format
+pca_wider <- penguin_pca %>% 
+  tidyr::pivot_wider(names_from = component, id_cols = terms)
+
+# define arrow style
+arrow_style <- arrow(length = unit(.05, "inches"),
+                     type = "closed")
+
+
+pca_plot <-
+  juice(penguin_recipe) %>%
+  ggplot(aes(PC1, PC2)) +
+  geom_point(aes(color = species, shape = species), 
+             alpha = 0.8, 
+             size = 2)
+
+pca_plot +
+  geom_segment(data = pca_wider,
+               aes(xend = PC1, yend = PC2), 
+               x = 0, 
+               y = 0, 
+               arrow = arrow_style) + 
+  geom_text(data = pca_wider,
+            aes(x = PC1, y = PC2, label = terms), 
+            hjust = 0, 
+            vjust = 1,
+            size = 5, 
+            color = '#0A537D') 
+```
+
+```{r}
+penguin_pca %>%
+  mutate(terms = reorder_within(terms, 
+                                abs(value), 
+                                component)) %>%
+  ggplot(aes(abs(value), terms, fill = value > 0)) +
+  geom_col() +
+  facet_wrap(~component, scales = "free_y") +
+  tidytext::scale_y_reordered() +
+  labs(
+    x = "Absolute value of contribution",
+    y = NULL, fill = "Positive?"
+  ) 
+```
+
+## Exercise
+
+:::exercise ::::::
+
+Exercise
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+
+question
+
+:::
+:::::
+
+<details><summary>Answer</summary>
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+
+answer
+
+:::
+:::::
+
+</details>
+
+::::::::::::::::::
+
+## Key points
+
+:::keypoints
+- Point 1
+- Point 2
+- Point 3
+:::
