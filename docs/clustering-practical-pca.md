@@ -1,5 +1,6 @@
 `<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
+# (PART) Unsupervised learning {.unnumbered}
 
 # Principal component analysis (PCA)
 
@@ -142,6 +143,8 @@ You could compare this with a smoothy consisting of, let's say, 80% orange, 10% 
 
 Similarly, our new principal component could consist of 80% `flipper_length_mm`, 10% `body_mass_g` and 10% `bill_depth_mm` (still no kale).
 
+## Performing the PCA
+
 ::::: {.panelset}
 
 ::: {.panel}
@@ -193,7 +196,7 @@ penguin_pca
 :::
 :::::
 
-### Visualising PCs
+## Visualising PCs
 Now that we've performed our PCA, we can have a bit of a closer look. A useful way of looking at how much your PCs (principal components) are contributing to the amount of variance that is being explained is to create a _screeplot_. Basically, this plots the percentage of explained variance for each PC.
 
 ::::: {.panelset}
@@ -218,9 +221,9 @@ penguin_recipe %>%
 
 By definition, the first principal component (PC1) will always explain the largest amount of variation. In this case, PC1 explains almost 70% of our variance!
 
-That's pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of our data. The number of variables in our data set is very manageable, so we probably wouldn't do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.
+That's pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of the variance in our data. The number of variables in our data set is very manageable, so we probably wouldn't do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.
 
-### Loadings
+## Loadings
 Let's think back to our smoothy metaphor. Remember how the smoothy was made up of various fruits - just like our PCs are made up of parts of our original variables.
 
 Let's, for the sake of illustrating this, assume the following for PC1:
@@ -316,11 +319,14 @@ It spits out the original table, but with the PC values instead of the original 
 pca_plot <-
   bake(penguin_recipe, new_data = NULL) %>%
   ggplot(aes(PC1, PC2)) +
-  geom_point(aes(colour = species, # colour the data
-                 shape = species), # give it a shape
-             alpha = 0.8,          # add transparency
-             size = 2)             # make the data points bigger
+  geom_point(aes(colour = species), # colour the data
+             alpha = 0.8,           # add transparency
+             size = 2)              # make the data points bigger
+
+pca_plot
 ```
+
+<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-9-1.png" width="672" />
 
 Lastly (finally), we take this plot and add the loading data on top of it:
 
@@ -345,20 +351,27 @@ pca_plot +
 :::
 :::::
 
-Slightly annoyingly, this can cause some overlap in the labels. Also, if there are many different variables then this because rather hard to interpret because there will be a web of vectors.
+Slightly annoyingly, this can cause some overlap in the labels. Also, if there are many different variables than this, it'll become rather tricky to interpret because there will be a web of vectors.
 
-But here things look pretty OK still. One thing that is immediately obvious from these data is that the Gentoo penguins PCs are quite distinct from the Adelie and Chinstrap species.
+But here things look pretty OK still. One thing that is immediately obvious from these data is that the Gentoo penguins PCs are quite distinct from the Adelie and Chinstrap penguins.
 
 From a PC-perspective, the `flipper_length_mm` and `body_mass_g` variables make up most of PC1, since the vectors are almost horizontal.
 
 In contrast, `bill_length_mm` and `bill_depth_mm` contribute a lot to PC2. They also contribute positively (`bill_length_mm`) and negatively (`bill_depth_mm`) to PC1.
 
-Because the vectors can become a bit messy in terms of visualisation, it can be useful to represent the loadings differently. Note that, at this point, I'm not aware of a method that allows you to do this reasonably straightforward in anything other than R's tidyverse.
+As mentioned, the vectors can become a bit messy in terms of visualisation. So it can be useful to represent the loadings differently. Note that, at this point, I'm not aware of a method that allows you to do this reasonably straightforward in anything other than R's tidyverse.
 
 ::::: {.panelset}
 
 ::: {.panel}
 [tidyverse]{.panel-name}
+For the following to work, we need to load the `tidytext` libary. You can do this as follows:
+
+
+```r
+library(tidytext)
+```
+
 
 ```r
 penguin_pca %>%
@@ -367,7 +380,7 @@ penguin_pca %>%
                                 component)) %>%
   ggplot(aes(abs(value), terms, fill = value > 0)) +
   geom_col() +
-  facet_wrap(~component, scales = "free_y") +
+  facet_wrap(~ component, scales = "free_y") +
   tidytext::scale_y_reordered() +
   labs(
     x = "Absolute value of contribution",
@@ -375,7 +388,14 @@ penguin_pca %>%
   ) 
 ```
 
-<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-11-1.png" width="672" />
+<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+
+This gives us the loadings for each variable, facetted by principal component. The reason that we're plotting the _absolute_ values, is so that we can compare positive and negative contributions. For each PC the absolute loadings are sorted in descending order. To distinguish between positive and negative loadings we use colours.
+
+:::note
+It is important to keep the amount of variance explained by each PC in mind. For example, PC3 only explains around 9% of the variance. So although bill length and body mass contribute substantially to PC3, the contribution of PC3 itself remains small.
+:::
+
 :::
 :::::
 

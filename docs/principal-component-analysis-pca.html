@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 7 Principal component analysis (PCA) | CamStats</title>
+<title>Chapter 2 Principal component analysis (PCA) | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="7.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   7.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
+<meta name="description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
-<meta property="og:title" content="Chapter 7 Principal component analysis (PCA) | CamStats">
+<meta property="og:title" content="Chapter 2 Principal component analysis (PCA) | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="7.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   7.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
+<meta property="og:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 7 Principal component analysis (PCA) | CamStats">
-<meta name="twitter:description" content="7.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   7.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
+<meta name="twitter:title" content="Chapter 2 Principal component analysis (PCA) | CamStats">
+<meta name="twitter:description" content="2.1 Objectives  Questions How do I… What do I… Objectives Be able to… Use…   2.2 Purpose and aim This is a statistical technique for reducing the dimensionality of a data set. The technique aims...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -119,16 +119,8 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li class="book-part">Generalised linear models</li>
-<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
-<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
-<li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
-<li class="book-part">Resampling techniques</li>
-<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
-<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
-<li><a class="active" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
-<li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
-<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
+<li class="book-part">Unsupervised learning</li>
+<li><a class="active" href="principal-component-analysis-pca.html"><span class="header-section-number">2</span> Principal component analysis (PCA)</a></li>
 </ul>
 
         <div class="book-extra">
@@ -136,13 +128,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="principal-component-analysis-pca" class="section level1" number="7">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="principal-component-analysis-pca" class="section level1" number="2">
 <h1>
-<span class="header-section-number">7</span> Principal component analysis (PCA)<a class="anchor" aria-label="anchor" href="#principal-component-analysis-pca"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2</span> Principal component analysis (PCA)<a class="anchor" aria-label="anchor" href="#principal-component-analysis-pca"><i class="fas fa-link"></i></a>
 </h1>
-<div id="objectives-5" class="section level2" number="7.1">
+<div id="objectives" class="section level2" number="2.1">
 <h2>
-<span class="header-section-number">7.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-5"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives"><i class="fas fa-link"></i></a>
 </h2>
 <div class="objectives">
 <p><strong>Questions</strong></p>
@@ -157,15 +149,15 @@
 </ul>
 </div>
 </div>
-<div id="purpose-and-aim-1" class="section level2" number="7.2">
+<div id="purpose-and-aim" class="section level2" number="2.2">
 <h2>
-<span class="header-section-number">7.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim"><i class="fas fa-link"></i></a>
 </h2>
 <p>This is a statistical technique for reducing the dimensionality of a data set. The technique aims to find a new set of variables for describing the data. These new variables are made from a weighted sum of the old variables. The weighting is chosen so that the new variables can be ranked in terms of importance in that the first new variable is chosen to account for as much variation in the data as possible. Then the second new variable is chosen to account for as much of the remaining variation in the data as possible, and so on until there are as many new variables as old variables.</p>
 </div>
-<div id="libraries-and-functions-3" class="section level2" number="7.3">
+<div id="libraries-and-functions" class="section level2" number="2.3">
 <h2>
-<span class="header-section-number">7.3</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.3</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions"><i class="fas fa-link"></i></a>
 </h2>
 <div class="panelset">
 <div class="panel">
@@ -209,9 +201,9 @@
 </div>
 </div>
 </div>
-<div id="data" class="section level2" number="7.4">
+<div id="data" class="section level2" number="2.4">
 <h2>
-<span class="header-section-number">7.4</span> Data<a class="anchor" aria-label="anchor" href="#data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.4</span> Data<a class="anchor" aria-label="anchor" href="#data"><i class="fas fa-link"></i></a>
 </h2>
 <p>First we need some data! To liven things up a bit, we’ll be using data from the <code>palmerpenguins</code> package. This package has a whole bunch of data on penguins. What’s not to love?</p>
 <div class="panelset">
@@ -221,16 +213,16 @@ The <code>penguins</code> data set comes from <code>palmerpenguins</code> packag
 </div>
 </div>
 </div>
-<div id="visualise-the-data-2" class="section level2" number="7.5">
+<div id="visualise-the-data" class="section level2" number="2.5">
 <h2>
-<span class="header-section-number">7.5</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.5</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data"><i class="fas fa-link"></i></a>
 </h2>
 <p>First of all, let’s have a look at the data. It is always a good idea to get a sense of how your data.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 First, we load and inspect the data:</p>
-<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># attach the data</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span>package <span class="op">=</span> <span class="st">'palmerpenguins'</span><span class="op">)</span>
 
@@ -259,7 +251,7 @@ First, we load and inspect the data:</p>
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 First, we load the <code>corrr</code> package, which allows us to plot a correlation matrix using the <code>tidyverse</code> syntax:</p>
-<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/corrr">corrr</a></span><span class="op">)</span>
 
 <span class="va">penguins_corr</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span>
@@ -269,7 +261,7 @@ First, we load the <code>corrr</code> package, which allows us to plot a correla
 <pre><code>## 
 ## Correlation method: 'pearson'
 ## Missing treated using: 'pairwise.complete.obs'</code></pre>
-<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R">                                 <span class="co"># variables close together</span>
 
 <span class="va">penguins_corr</span></code></pre></div>
@@ -289,6 +281,11 @@ First, we load the <code>corrr</code> package, which allows us to plot a correla
 <p>Basically, a PCA replaces your original variables with new ones: the principal components. These principal components consist of parts of your original variables.</p>
 <p>You could compare this with a smoothy consisting of, let’s say, 80% orange, 10% strawberry and 10% banana (no kale).</p>
 <p>Similarly, our new principal component could consist of 80% <code>flipper_length_mm</code>, 10% <code>body_mass_g</code> and 10% <code>bill_depth_mm</code> (still no kale).</p>
+</div>
+<div id="performing-the-pca" class="section level2" number="2.6">
+<h2>
+<span class="header-section-number">2.6</span> Performing the PCA<a class="anchor" aria-label="anchor" href="#performing-the-pca"><i class="fas fa-link"></i></a>
+</h2>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
@@ -298,7 +295,7 @@ Before we perform the PCA, we’ll use a few <code>recipe()</code> pre-processin
 <li>centre all predictors</li>
 <li>scale all predictors</li>
 </ol>
-<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguin_recipe</span> <span class="op">&lt;-</span>
   <span class="fu">recipe</span><span class="op">(</span><span class="op">~</span><span class="va">.</span>, data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">update_role</span><span class="op">(</span><span class="va">species</span>, <span class="va">island</span>, <span class="va">sex</span>, <span class="va">year</span>, new_role <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
@@ -309,7 +306,7 @@ Before we perform the PCA, we’ll use a few <code>recipe()</code> pre-processin
 
 <span class="va">penguin_pca</span> <span class="op">&lt;-</span> 
   <span class="va">penguin_recipe</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tidy</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span><span class="op">)</span> 
 
 <span class="va">penguin_pca</span></code></pre></div>
 <pre><code>## # A tibble: 16 × 4
@@ -333,18 +330,19 @@ Before we perform the PCA, we’ll use a few <code>recipe()</code> pre-processin
 ## 16 body_mass_g        0.580   PC4       pca</code></pre>
 </div>
 </div>
-<div id="visualising-pcs" class="section level3" number="7.5.1">
-<h3>
-<span class="header-section-number">7.5.1</span> Visualising PCs<a class="anchor" aria-label="anchor" href="#visualising-pcs"><i class="fas fa-link"></i></a>
-</h3>
+</div>
+<div id="visualising-pcs" class="section level2" number="2.7">
+<h2>
+<span class="header-section-number">2.7</span> Visualising PCs<a class="anchor" aria-label="anchor" href="#visualising-pcs"><i class="fas fa-link"></i></a>
+</h2>
 <p>Now that we’ve performed our PCA, we can have a bit of a closer look. A useful way of looking at how much your PCs (principal components) are contributing to the amount of variance that is being explained is to create a <em>screeplot</em>. Basically, this plots the percentage of explained variance for each PC.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 We can extract the relevant data directly from the <code>penguin_recipe</code> object:</p>
-<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguin_recipe</span> <span class="op">%&gt;%</span> 
-  <span class="fu">tidy</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span>, type <span class="op">=</span> <span class="st">"variance"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>id <span class="op">=</span> <span class="st">"pca"</span>, type <span class="op">=</span> <span class="st">"variance"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/filter.html">filter</a></span><span class="op">(</span><span class="va">terms</span> <span class="op">==</span> <span class="st">"percent variance"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">component</span>, y <span class="op">=</span> <span class="va">value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span> 
   <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> 
@@ -354,12 +352,12 @@ We can extract the relevant data directly from the <code>penguin_recipe</code> o
 </div>
 </div>
 <p>By definition, the first principal component (PC1) will always explain the largest amount of variation. In this case, PC1 explains almost 70% of our variance!</p>
-<p>That’s pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of our data. The number of variables in our data set is very manageable, so we probably wouldn’t do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.</p>
+<p>That’s pretty good going, since it means that instead of having to look at four variables, we could look at just one but still capture 70% of the variance in our data. The number of variables in our data set is very manageable, so we probably wouldn’t do this. However, if you have a data set with hundreds of variables, then seeing if they can be described well by using PCs is a very useful thing to do.</p>
 </div>
-<div id="loadings" class="section level3" number="7.5.2">
-<h3>
-<span class="header-section-number">7.5.2</span> Loadings<a class="anchor" aria-label="anchor" href="#loadings"><i class="fas fa-link"></i></a>
-</h3>
+<div id="loadings" class="section level2" number="2.8">
+<h2>
+<span class="header-section-number">2.8</span> Loadings<a class="anchor" aria-label="anchor" href="#loadings"><i class="fas fa-link"></i></a>
+</h2>
 <p>Let’s think back to our smoothy metaphor. Remember how the smoothy was made up of various fruits - just like our PCs are made up of parts of our original variables.</p>
 <p>Let’s, for the sake of illustrating this, assume the following for PC1:</p>
 <div class="inline-table"><table class="table table-sm">
@@ -403,7 +401,7 @@ We can extract the relevant data directly from the <code>penguin_recipe</code> o
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 The loadings are encoded in the <code>value</code> column of the pca object (<code>penguin_pca</code>). To plot this, we need the data in a “wide” format:</p>
-<div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get pca loadings into wider format</span>
 <span class="va">pca_wider</span> <span class="op">&lt;-</span> <span class="va">penguin_pca</span> <span class="op">%&gt;%</span> 
   <span class="fu">pivot_wider</span><span class="op">(</span>names_from <span class="op">=</span> <span class="va">component</span>, id_cols <span class="op">=</span> <span class="va">terms</span><span class="op">)</span>
@@ -419,14 +417,14 @@ The loadings are encoded in the <code>value</code> column of the pca object (<co
 <p>We can see that there are four terms (our original variables) and four PCs. This makes sense, because the maximum number of principal components cannot exceed the number of original variables.</p>
 <p>We need to do a bit more data gymnastics, with defining an arrow style (vectors are represented using arrows), plotting the PCs, and plotting the loadings.</p>
 <p>Arrow:</p>
-<div class="sourceCode" id="cb130"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># define arrow style</span>
 <span class="va">arrow_style</span> <span class="op">&lt;-</span> <span class="fu">arrow</span><span class="op">(</span>length <span class="op">=</span> <span class="fu">unit</span><span class="op">(</span><span class="fl">2</span>, <span class="st">"mm"</span><span class="op">)</span>,
                      type <span class="op">=</span> <span class="st">"closed"</span><span class="op">)</span></code></pre></div>
 <p>To plot PC1 vs PC2, we need to extract the relevant data. All of the PCA-related data is stored in the <code>penguin_recipe</code> object. Since the people who developed <code>tidymodels</code> are quite fond of verbs (I’m really more of an adjective kind-of-guy myself…) they invented the <code>bake()</code> function.</p>
 <p>The logic is: you follow a <code>recipe()</code> and then you <code>bake()</code> it. Yes, I know.</p>
 <p>Anyways, we use this to get the data from our <code>penguin_recipe</code>, telling the function that it shouldn’t expect any new data (the function is also used in model testing, where data is split in a training and test data set).</p>
-<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">bake</span><span class="op">(</span><span class="va">penguin_recipe</span>, new_data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 342 × 8
 ##    species island    sex     year    PC1      PC2     PC3     PC4
@@ -443,16 +441,18 @@ The loadings are encoded in the <code>value</code> column of the pca object (<co
 ## 10 Adelie  Torgersen &lt;NA&gt;    2007 -1.73   0.787   -0.205   0.0205
 ## # … with 332 more rows</code></pre>
 <p>It spits out the original table, but with the PC values instead of the original variables. We can then use that information to plot the PCs, focussing here on PC1 vs PC2:</p>
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pca_plot</span> <span class="op">&lt;-</span>
   <span class="fu">bake</span><span class="op">(</span><span class="va">penguin_recipe</span>, new_data <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">PC1</span>, <span class="va">PC2</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">species</span>, <span class="co"># colour the data</span>
-                 shape <span class="op">=</span> <span class="va">species</span><span class="op">)</span>, <span class="co"># give it a shape</span>
-             alpha <span class="op">=</span> <span class="fl">0.8</span>,          <span class="co"># add transparency</span>
-             size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>             <span class="co"># make the data points bigger</span></code></pre></div>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>colour <span class="op">=</span> <span class="va">species</span><span class="op">)</span>, <span class="co"># colour the data</span>
+             alpha <span class="op">=</span> <span class="fl">0.8</span>,           <span class="co"># add transparency</span>
+             size <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>              <span class="co"># make the data points bigger</span>
+
+<span class="va">pca_plot</span></code></pre></div>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-9-1.png" width="672"></div>
 <p>Lastly (finally), we take this plot and add the loading data on top of it:</p>
-<div class="sourceCode" id="cb134"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">pca_plot</span> <span class="op">+</span>
   <span class="co"># define the vector</span>
   <span class="fu">geom_segment</span><span class="op">(</span>data <span class="op">=</span> <span class="va">pca_wider</span>,
@@ -469,38 +469,44 @@ The loadings are encoded in the <code>value</code> column of the pca object (<co
 <div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-10-1.png" width="672"></div>
 </div>
 </div>
-<p>Slightly annoyingly, this can cause some overlap in the labels. Also, if there are many different variables then this because rather hard to interpret because there will be a web of vectors.</p>
-<p>But here things look pretty OK still. One thing that is immediately obvious from these data is that the Gentoo penguins PCs are quite distinct from the Adelie and Chinstrap species.</p>
+<p>Slightly annoyingly, this can cause some overlap in the labels. Also, if there are many different variables than this, it’ll become rather tricky to interpret because there will be a web of vectors.</p>
+<p>But here things look pretty OK still. One thing that is immediately obvious from these data is that the Gentoo penguins PCs are quite distinct from the Adelie and Chinstrap penguins.</p>
 <p>From a PC-perspective, the <code>flipper_length_mm</code> and <code>body_mass_g</code> variables make up most of PC1, since the vectors are almost horizontal.</p>
 <p>In contrast, <code>bill_length_mm</code> and <code>bill_depth_mm</code> contribute a lot to PC2. They also contribute positively (<code>bill_length_mm</code>) and negatively (<code>bill_depth_mm</code>) to PC1.</p>
-<p>Because the vectors can become a bit messy in terms of visualisation, it can be useful to represent the loadings differently. Note that, at this point, I’m not aware of a method that allows you to do this reasonably straightforward in anything other than R’s tidyverse.</p>
+<p>As mentioned, the vectors can become a bit messy in terms of visualisation. So it can be useful to represent the loadings differently. Note that, at this point, I’m not aware of a method that allows you to do this reasonably straightforward in anything other than R’s tidyverse.</p>
 <div class="panelset">
 <div class="panel">
-<p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb135"><pre class="downlit sourceCode r">
+<p><span class="panel-name">tidyverse</span>
+For the following to work, we need to load the <code>tidytext</code> libary. You can do this as follows:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/juliasilge/tidytext">tidytext</a></span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">penguin_pca</span> <span class="op">%&gt;%</span>
-  <span class="fu">mutate</span><span class="op">(</span>terms <span class="op">=</span> <span class="fu">reorder_within</span><span class="op">(</span><span class="va">terms</span>, 
+  <span class="fu">mutate</span><span class="op">(</span>terms <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/reorder_within.html">reorder_within</a></span><span class="op">(</span><span class="va">terms</span>, 
                                 <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, 
                                 <span class="va">component</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span>
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html">abs</a></span><span class="op">(</span><span class="va">value</span><span class="op">)</span>, <span class="va">terms</span>, fill <span class="op">=</span> <span class="va">value</span> <span class="op">&gt;</span> <span class="fl">0</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_col</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
-  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span><span class="va">component</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">facet_wrap</span><span class="op">(</span><span class="op">~</span> <span class="va">component</span>, scales <span class="op">=</span> <span class="st">"free_y"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">tidytext</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/tidytext/man/reorder_within.html">scale_y_reordered</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>
     x <span class="op">=</span> <span class="st">"Absolute value of contribution"</span>,
     y <span class="op">=</span> <span class="cn">NULL</span>, fill <span class="op">=</span> <span class="st">"Positive?"</span>
   <span class="op">)</span> </code></pre></div>
-<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-11-1.png" width="672"></div>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+<p>This gives us the loadings for each variable, facetted by principal component. The reason that we’re plotting the <em>absolute</em> values, is so that we can compare positive and negative contributions. For each PC the absolute loadings are sorted in descending order. To distinguish between positive and negative loadings we use colours.</p>
+<div class="note">
+<p>It is important to keep the amount of variance explained by each PC in mind. For example, PC3 only explains around 9% of the variance. So although bill length and body mass contribute substantially to PC3, the contribution of PC3 itself remains small.</p>
 </div>
 </div>
 </div>
 </div>
-<div id="exercise-1" class="section level2" number="7.6">
+<div id="exercise" class="section level2" number="2.9">
 <h2>
-<span class="header-section-number">7.6</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.9</span> Exercise<a class="anchor" aria-label="anchor" href="#exercise"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-5" class="exercise"><strong>Exercise 7.1  </strong></span>Exercise</p>
+<p><span id="exr:unlabeled-div-1" class="exercise"><strong>Exercise 2.1  </strong></span>Exercise</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
@@ -518,9 +524,9 @@ Answer
 </details>
 </div>
 </div>
-<div id="key-points-3" class="section level2" number="7.7">
+<div id="key-points" class="section level2" number="2.10">
 <h2>
-<span class="header-section-number">7.7</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">2.10</span> Key points<a class="anchor" aria-label="anchor" href="#key-points"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <ul>
@@ -530,28 +536,25 @@ Answer
 </ul>
 </div>
 
-<p><style>.panelset{--panel-tab-font-family: inherit;}</style></p>
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></div>
-<div class="next"><a href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></div>
+<div class="prev"><a href="index.html"><span class="header-section-number">1</span> Overview</a></div>
+<div class="empty"></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#principal-component-analysis-pca"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
-<li><a class="nav-link" href="#objectives-5"><span class="header-section-number">7.1</span> Objectives</a></li>
-<li><a class="nav-link" href="#purpose-and-aim-1"><span class="header-section-number">7.2</span> Purpose and aim</a></li>
-<li><a class="nav-link" href="#libraries-and-functions-3"><span class="header-section-number">7.3</span> Libraries and functions</a></li>
-<li><a class="nav-link" href="#data"><span class="header-section-number">7.4</span> Data</a></li>
-<li>
-<a class="nav-link" href="#visualise-the-data-2"><span class="header-section-number">7.5</span> Visualise the data</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#visualising-pcs"><span class="header-section-number">7.5.1</span> Visualising PCs</a></li>
-<li><a class="nav-link" href="#loadings"><span class="header-section-number">7.5.2</span> Loadings</a></li>
-</ul>
-</li>
-<li><a class="nav-link" href="#exercise-1"><span class="header-section-number">7.6</span> Exercise</a></li>
-<li><a class="nav-link" href="#key-points-3"><span class="header-section-number">7.7</span> Key points</a></li>
+<li><a class="nav-link" href="#principal-component-analysis-pca"><span class="header-section-number">2</span> Principal component analysis (PCA)</a></li>
+<li><a class="nav-link" href="#objectives"><span class="header-section-number">2.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#purpose-and-aim"><span class="header-section-number">2.2</span> Purpose and aim</a></li>
+<li><a class="nav-link" href="#libraries-and-functions"><span class="header-section-number">2.3</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data"><span class="header-section-number">2.4</span> Data</a></li>
+<li><a class="nav-link" href="#visualise-the-data"><span class="header-section-number">2.5</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#performing-the-pca"><span class="header-section-number">2.6</span> Performing the PCA</a></li>
+<li><a class="nav-link" href="#visualising-pcs"><span class="header-section-number">2.7</span> Visualising PCs</a></li>
+<li><a class="nav-link" href="#loadings"><span class="header-section-number">2.8</span> Loadings</a></li>
+<li><a class="nav-link" href="#exercise"><span class="header-section-number">2.9</span> Exercise</a></li>
+<li><a class="nav-link" href="#key-points"><span class="header-section-number">2.10</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">
