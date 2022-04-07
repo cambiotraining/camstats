@@ -12,5 +12,11 @@ visualise-the-data
 performing-the-pca
 visualising-pcs
 loadings
-exercise
+exercise-heptathlon
+load-the-data
+correlations
+pca
+screeplot
+loadings-1
+conclusion
 key-points

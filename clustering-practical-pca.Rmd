@@ -12,15 +12,11 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 
 ## Objectives
 :::objectives
-**Questions**
 
-- How do I...
-- What do I...
-
-**Objectives**
-
-- Be able to...
-- Use...
+- Understand when PCAs can be useful
+- Be able to perform a PCA
+- Learn how to plot and interpret a screeplot
+- Plot and interpret the loadings for each PCA
 :::
 
 ## Purpose and aim
@@ -90,8 +86,7 @@ library(corrr)
 penguins_corr <- penguins %>%
   select(where(is.numeric)) %>%  # select the numerical columns
   correlate() %>%                # calculate the correlations
-  rearrange()                    # rearrange highly correlated
-                                 # variables close together
+  rearrange()                    # arrange highly correlated variables together
 
 penguins_corr
 ```
@@ -124,11 +119,17 @@ Before we perform the PCA, we'll use a few `recipe()` pre-processing steps:
 
 ```{r}
 penguin_recipe <-
-  recipe(~., data = penguins) %>% 
+  # take all variables
+  recipe(~ ., data = penguins) %>% 
+  # specify the ID columns (non-numerical)
   update_role(species, island, sex, year, new_role = "id") %>% 
+  # remove missing values
   step_naomit(all_predictors()) %>% 
+  # scale the data
   step_normalize(all_predictors()) %>%
+  # perform the PCA
   step_pca(all_predictors(), id = "pca") %>% 
+  # prepares the recipe by estimating the required parameters
   prep()
 
 penguin_pca <- 
@@ -300,20 +301,19 @@ It is important to keep the amount of variance explained by each PC in mind. For
 :::
 :::::
 
-## Exercise
+## Exercise: Heptathlon
 
 :::exercise ::::::
 
-Exercise
+First of all, heptathlon is an actual word. Seven sports events in one go! This is an old data set that keeps track of the scores/times of 25 athletes in a heptathlon event. I can't remember when the data were collected, but the main reason that I've kept it is to show how fleeting the concept of 'country' is. A good proportion of the countries no longer exist...
 
-::::: {.panelset}
-::: {.panel}
-[tidyverse]{.panel-name}
+Let's not get too philosophical but see what we can do with this data set. I would like you to do the following:
 
-question
-
-:::
-:::::
+1. load the data
+2. create a correlation matrix and visualise the most highly correlated pair
+3. perform a PCA
+4. create a screeplot and see how many PCs would be best
+5. calculate the loadings for PC1 and PC2 and visualise them
 
 <details><summary>Answer</summary>
 
@@ -322,11 +322,142 @@ question
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-answer
+### Load the data
+1. load the data
+```{r, message=FALSE}
+hept <- read_csv("data/heptathlon.csv")
 
+hept
+```
+
+Note how many country codes have changed (URS, GDR, FRG!). Also, humbug, HOL or 'Holland' is not a country, The Netherlands is!. Have a search and see how the world is constantly changing...
+
+### Correlations
+2. create a correlation matrix and visualise the most highly correlated pair
+```{r}
+hept_corr <- hept %>%
+  select(where(is.numeric)) %>%  # select the numerical columns
+  correlate() %>%                # calculate the correlations
+  rearrange()                    # arrange highly correlated variables together
+
+hept_corr
+```
+
+Looking at the correlation matrix, the most highly correlated pair is `longjump` and `hurdles` (-0.91). We could (and should) do this programmatically, but it's a small matrix and life is short.
+
+```{r}
+ggplot(data = hept,
+       aes(x = longjump,
+           y = hurdles)) +
+  geom_point() +
+  labs(title = "longjump vs hurdles")
+```
+
+So it seems that the better you are at the long jump, the faster (and thus better) you are at the hurdles. I guess that makes sense and it would be interesting to have some data on leg length to see if there is some correlation there...
+
+### PCA
+3. perform a PCA
+```{r}
+hept_recipe <-
+  # take all variables
+  recipe(~ ., data = hept) %>% 
+  # specify the ID columns (non-numerical)
+  update_role(athlete, new_role = "id") %>% 
+  # remove missing values
+  step_naomit(all_predictors()) %>% 
+  # scale the data
+  step_normalize(all_predictors()) %>%
+  # perform the PCA
+  step_pca(all_predictors(), id = "pca") %>% 
+  # prepares the recipe by estimating the required parameters
+  prep()
+
+hept_pca <- 
+  hept_recipe %>% 
+  tidy(id = "pca") 
+
+hept_pca
+```
+
+### Screeplot
+4. create a screeplot and see how many PCs would be best
+```{r}
+hept_recipe %>% 
+  tidy(id = "pca", type = "variance") %>% 
+  filter(terms == "percent variance") %>% 
+  ggplot(aes(x = component, y = value)) + 
+  geom_col() + 
+  ylab("% of total variance")
+```
+
+It's clear that PC1 explains a heck of a lot of the variance in our data (around 65%). PC2 then explains a bit more, just under 20%. So these two PCs combined explain about 85% of the variance in our data, which is pretty good.
+
+Things get a bit less clear as we go "up" in the PCs: PC3 and PC4 explain roughly the same amount of variance, so if we'd include PC3 then we should also include PC4. However, since they only explain around 8% of the variance they do not contribute much, so we leave it at PC1 and PC2.
+
+### Loadings
+5. calculate the loadings for PC1 and PC2 and visualise them
+
+With 7 original variables, plotting PC1 and PC2 with their loadings would be a bit unclear. So in this case we'll just create a bar chart for each PC and the absolute contributions of each original variable.
+
+```{r}
+hept_pca %>%
+  filter(component %in% c("PC1", "PC2")) %>% 
+  mutate(terms = reorder_within(terms, 
+                                abs(value), 
+                                component)) %>%
+  ggplot(aes(abs(value), terms, fill = value > 0)) +
+  geom_col() +
+  facet_wrap(~ component, scales = "free_y") +
+  tidytext::scale_y_reordered() +
+  labs(
+    x = "Absolute value of contribution",
+    y = NULL, fill = "Positive?"
+  ) 
+```
+
+Just to illustrate that this is much more informative than drawing vectors:
+
+```{r}
+# get pca loadings into wider format
+pca_wider <- hept_pca %>% 
+  pivot_wider(names_from = component, id_cols = terms)
+
+pca_plot <-
+  bake(hept_recipe, new_data = NULL) %>%
+  ggplot(aes(PC1, PC2)) +
+  geom_point(alpha = 0.8, # add transparency
+             size = 2)    # make the data points bigger
+
+# define arrow style
+arrow_style <- arrow(length = unit(2, "mm"),
+                     type = "closed")
+
+pca_plot +
+  # define the vector
+  geom_segment(data = pca_wider,
+               aes(xend = PC1, yend = PC2), 
+               x = 0, 
+               y = 0, 
+               arrow = arrow_style,
+               colour = "red") + 
+  # add the text labels
+  geom_text(data = pca_wider,
+            aes(x = PC1, y = PC2, label = terms), 
+            hjust = 0, 
+            vjust = 1,
+            size = 5) 
+```
+
+Told ya.
 :::
 :::::
 
+### Conclusion
+Well, what can we conclude here? First of all, it's worth noting that there are only 25 observations and 7 variables, so that limits our analysis a bit.
+
+We can see that PC1 (particularly when combined with PC2) is able to explain quite a big chunk of the variance in our data. However, we should keep in mind that each observation is an individual athlete. So ideally we would want to plot the names of the athletes on the PC1 vs PC2 plot and see how their individual performances in the 7 events compare.
+
+That, is for another day.
 </details>
 
 ::::::::::::::::::
@@ -334,7 +465,9 @@ answer
 ## Key points
 
 :::keypoints
-- Point 1
-- Point 2
-- Point 3
+
+- PCA allows you to reduce a large number of variables into fewer principal components 
+- Each PC is made up of a combination of the original variables and captures as much of the variance within the data as possible
+- The loadings tell you how much each original variable contributes to each PC
+- A screeplot is a graphical representation of the amount of variance explained by each PC
 :::
