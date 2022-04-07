@@ -119,7 +119,17 @@
       <nav aria-label="Table of contents"><h2>Table of contents</h2>
         <ul class="book-toc list-unstyled">
 <li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
-<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">2</span> Hierarchical clustering</a></li>
+<li class="book-part">Generalised linear models</li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
+<li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li class="book-part">Resampling techniques</li>
+<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
+<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li class="book-part">Unsupervised learning</li>
+<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
+<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -214,6 +224,34 @@ the table of contents to find the page you are looking for.</p>
 </div>
 <![endif]-->
 
-	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script>
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
 </body>
 </html>

@@ -126,6 +126,7 @@
 <li class="book-part">Resampling techniques</li>
 <li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
 <li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li class="book-part">Unsupervised learning</li>
 <li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
 <li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
 <li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
@@ -308,7 +309,7 @@ We are using a logistic regression for a proportion response in this case, since
       data <span class="op">=</span> <span class="va">challenger</span><span class="op">)</span></code></pre></div>
 <p>Next, we can have a closer look at the results:</p>
 <div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   term        estimate std.error statistic   p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
@@ -324,7 +325,7 @@ P(o-ring \ failure) = \frac{1}{1 + {e}^{-(11.66 -  0.22 \cdot temp)}}
 <code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>temp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">25</span>, <span class="fl">85</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get the predicted proportions for the curve</span>
-<span class="va">curve</span> <span class="op">&lt;-</span> <span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu">augment</span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
+<span class="va">curve</span> <span class="op">&lt;-</span> <span class="va">chl_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
 
 <span class="co"># plot the curve and the original data</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">curve</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
@@ -358,7 +359,7 @@ Answer
       data <span class="op">=</span> <span class="va">challenger_new</span><span class="op">)</span></code></pre></div>
 <div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get the predicted proportions for the curve</span>
-<span class="va">curve_new</span> <span class="op">&lt;-</span> <span class="va">chl_new_fit</span> <span class="op">%&gt;%</span> <span class="fu">augment</span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
+<span class="va">curve_new</span> <span class="op">&lt;-</span> <span class="va">chl_new_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
 
 <span class="co"># plot the curve and the original data</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">curve_new</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">temp</span>, <span class="va">.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
