@@ -537,11 +537,7 @@ We create these clusters by cutting the dendrogram using the <code><a href="http
 Are all the mean values are made up from three biological repeats?</p>
 <details><summary>
 Answer
-</summary><div class="panelset">
-<div class="panel">
-<p><span class="panel-name">tidyverse</span></p>
-</div>
-<p>There are many ways we can skin this proverbial cat, and this is one of them:</p>
+</summary><p>There are many ways we can skin this proverbial cat, and this is one of them:</p>
 <div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">%&gt;%</span> 
   <span class="fu">count</span><span class="op">(</span><span class="va">n_rep</span><span class="op">)</span></code></pre></div>
@@ -550,7 +546,6 @@ Answer
 ##   &lt;int&gt; &lt;int&gt;
 ## 1     3   528</code></pre>
 <p>So yes, all the mean counts values are made up of three biological repeats. This is good to know, so that we realise the averages are comparable.</p>
-</div>
 </details>
 </div>
 <p>Now that we have all the data, we can finally plot the gene expression trends, separating the genes of interest by cluster.</p>
@@ -596,12 +591,6 @@ Answer
 <li>repeat the process but now using the Manhattan distance</li>
 <li>see if the hierarchical structure is similar (eye-balling it)</li>
 </ol>
-<div class="panelset">
-<div class="panel">
-<p><span class="panel-name">tidyverse</span></p>
-<p>question</p>
-</div>
-</div>
 <details><summary>
 Answer
 </summary><div class="panelset">

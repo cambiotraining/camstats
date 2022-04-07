@@ -422,10 +422,7 @@ We can see that we now have all the data we need: for each gene there is informa
 Are all the mean values are made up from three biological repeats?
 
 <details><summary>Answer</summary>
-::::: {.panelset}
-::: {.panel}
-[tidyverse]{.panel-name}
-:::
+
 There are many ways we can skin this proverbial cat, and this is one of them:
 
 ```r
@@ -441,9 +438,8 @@ trans_cts_cluster %>%
 ```
 
 So yes, all the mean counts values are made up of three biological repeats. This is good to know, so that we realise the averages are comparable.
-:::::
-</details>
 
+</details>
 ::::::::::::::::::
 
 Now that we have all the data, we can finally plot the gene expression trends, separating the genes of interest by cluster.
@@ -498,15 +494,6 @@ I would like you to do the following:
 6. plot the dendrogram
 7. repeat the process but now using the Manhattan distance
 8. see if the hierarchical structure is similar (eye-balling it)
-
-::::: {.panelset}
-::: {.panel}
-[tidyverse]{.panel-name}
-
-question
-
-:::
-:::::
 
 <details><summary>Answer</summary>
 

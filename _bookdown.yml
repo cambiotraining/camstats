@@ -5,13 +5,13 @@ delete_merged_file: true
 rmd_files: [
   "index.Rmd",
 
-  #"glm-intro.Rmd",
-  #"glm-practical-logistic-binary.Rmd",
-  #"glm-practical-logistic-proportion.Rmd",
-  #"resampling-intro.Rmd",
-  #"resampling-practical-single.Rmd",
-  #"clustering-practical-pca.Rmd",
-  #"clustering-practical-kmeans.Rmd",
+  "glm-intro.Rmd",
+  "glm-practical-logistic-binary.Rmd",
+  "glm-practical-logistic-proportion.Rmd",
+  "resampling-intro.Rmd",
+  "resampling-practical-single.Rmd",
+  "clustering-practical-pca.Rmd",
+  "clustering-practical-kmeans.Rmd",
   "clustering-practical-hierarchical.Rmd",
 ]
 
