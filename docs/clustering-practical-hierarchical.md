@@ -5,15 +5,13 @@
 
 ## Objectives
 :::objectives
-**Questions**
 
-- How do I...
-- What do I...
-
-**Objectives**
-
-- Be able to...
-- Use...
+- Understand what hierarchical clustering can be used for
+- Be able to calculate distance matrices
+- Know about different methods to calculate distance matrices
+- Perform hierarchical clustering
+- Draw dendrograms
+- Cut dendrograms in clusters and use the clustering information to visualise your data
 :::
 
 ## Purpose and aim
@@ -29,6 +27,7 @@ Hierarchical clustering is a form of cluster analysis, with the aim to create a 
 | Library| Description|
 |:- |:- |
 |`tidyverse`| A collection of R packages designed for data science |
+|`tidymodels`| A collection of packages for modelling and machine learning using tidyverse principles |
 |`broom`| Summarises key information about statistical objects in tidy tibbles |
 |`palmerpenguins`| Contains data sets on penguins at the Palmer Station on Antarctica.|
 |`ggdendro`| Designed for simple visualisation of hierarchical clusters |
@@ -205,6 +204,9 @@ What we're looking for specifically is whether there are groups of genes that ar
 
 To make things a bit more manageable for this example, we'll only look at a subset of the 6,011 genes. We'll select the 50 most highly differentially expressed genes to work with and store the gene names in a data frame:
 
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
 
 ```r
 # set of candidate genes for clustering
@@ -262,7 +264,7 @@ gene_hclust <- trans_cts %>%
 **Scaling** is technically not necessary here, because the differential expression analysis has already done this for us. However, I've included the step here anyway to make you aware of it. Trying to calculate distances between values that are on different scales will result in non-sensical results!
 :::
 
-We can look at one `hclust()` has produced for us:
+We can look at what `hclust()` has produced for us:
 
 ```r
 gene_hclust
@@ -301,16 +303,36 @@ ggdendrogram(gene_hclust, rotate = FALSE) +
 ```
 
 <img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-12-1.png" width="672" />
+:::
+:::::
 
-Cutting the tree:
+From the dendrogram we can see that there is quite a bit of structure to the data. The question is, where do we start to delve a bit deeper into this? One way of doing that is by cutting the dendrogram into different groups.
 
+Visually, you could see this as slicing across the various clusters. This is represented here with a horizontal line, where we slice the dendrogram into four groups:
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
 
 ```r
-ggdendrogram(gene_hclust, rotate = FALSE, size = 3) +
-  geom_hline(yintercept = 22, colour = "red")
+ggdendrogram(gene_hclust, rotate = FALSE) +
+  geom_hline(yintercept = 8.2, colour = "red") +
+  labs(title = "Top 50 DEG dendrogram",
+       subtitle = "cutting into 4 cluster")
 ```
 
 <img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-13-1.png" width="672" />
+:::
+:::::
+
+We can do this kind of slicing programmatically as well. What happens then is comparable to the k-means clustering, where we divide the data into groups (clusters) and each gene gets assigned to a specific cluster.
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+We create these clusters by cutting the dendrogram using the `cutree()` function. We then do a little bit of data wrangling (creating a tibble from the resulting vector, and renaming the column names) to get the following output:
 
 
 ```r
@@ -335,9 +357,23 @@ head(gene_cluster)
 ## 6 SPAC26F1.07         3
 ```
 
+We can see that each gene in our list is now assigned a certain cluster number. We can use this information to look at our data in a bit more detail.
+
+For example, we could see if there are any gene expression trends visible across these different clusters. It would be useful to visually follow gene expression for our candidate genes over time, by cluster and by strain.
+
+This requires a bit of logical thinking, so let's go through it step-by-step. 
+
+1. we have three biological repeats per time point per strain, so we need to average those
+2. we need to make sure the data are scaled
+3. we need to create these scaled averages for each gene, by strain and time point
+
+To do this, we take our transformed counts (`trans_cts`) data and first rejig it so that it is in a long format and we can do some grouping on it. We then merge it with the `sample_info` data, so we get all the relevant information regarding strain, time point and repeat. Then we filter for only our candidate genes, scale our counts, group the data and calculate the average counts.
+
+Sounds doable, right? Hoorah for pipes, where we can go through this step-by-step:
+
 
 ```r
-# Summarise counts 
+# summarise counts 
 trans_cts_mean <- trans_cts %>% 
   # convert to long format
   pivot_longer(cols = wt_0_r1:mut_180_r3, names_to = "sample", values_to = "cts")  %>% 
@@ -348,19 +384,16 @@ trans_cts_mean <- trans_cts %>%
   # for each gene
   group_by(gene) %>% 
   # scale the cts column
-  mutate(cts_scaled = (cts - mean(cts))/sd(cts)) %>% 
+  mutate(cts_scaled = scale(cts)) %>% 
   # for each gene, strain and minute
   group_by(gene, strain, minute) %>%
   # calculate the mean (scaled) cts
   summarise(mean_cts_scaled = mean(cts_scaled),
-            nrep = n()) %>% 
+            n_rep = n()) %>% 
   ungroup()
 ```
 
-```
-## `summarise()` has grouped output by 'gene', 'strain'. You can override using
-## the `.groups` argument.
-```
+When that's done, we can merge the information with `gene_cluster`, which contains the cluster classification for each gene:
 
 
 ```r
@@ -372,7 +405,7 @@ head(trans_cts_cluster)
 
 ```
 ## # A tibble: 6 × 6
-##   gene        strain minute mean_cts_scaled  nrep cluster
+##   gene        strain minute mean_cts_scaled n_rep cluster
 ##   <chr>       <chr>   <dbl>           <dbl> <int>   <int>
 ## 1 SPAC11E3.14 mut         0          -1.06      3       1
 ## 2 SPAC11E3.14 mut        15           0.615     3       1
@@ -382,7 +415,40 @@ head(trans_cts_cluster)
 ## 6 SPAC11E3.14 mut       180          -0.635     3       1
 ```
 
-Plot gene expression trends, separating the genes of interest by cluster:
+We can see that we now have all the data we need: for each gene there is information on the type of strain, the time point, the scaled mean counts and the cluster that gene has been assigned to. We also have a bonus column containing the number of repeats that make up the mean values.
+
+:::exercise ::::::
+**Bonus exercise**
+Are all the mean values are made up from three biological repeats?
+
+<details><summary>Answer</summary>
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+:::
+There are many ways we can skin this proverbial cat, and this is one of them:
+
+```r
+trans_cts_cluster %>% 
+  count(n_rep)
+```
+
+```
+## # A tibble: 1 × 2
+##   n_rep     n
+##   <int> <int>
+## 1     3   528
+```
+
+So yes, all the mean counts values are made up of three biological repeats. This is good to know, so that we realise the averages are comparable.
+:::::
+</details>
+
+::::::::::::::::::
+
+Now that we have all the data, we can finally plot the gene expression trends, separating the genes of interest by cluster.
+
+We do this by facetting:
 
 ```r
 trans_cts_cluster %>% 
@@ -391,22 +457,116 @@ trans_cts_cluster %>%
   facet_grid(rows = vars(strain), cols = vars(cluster))
 ```
 
-<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-17-1.png" width="672" />
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-18-1.png" width="672" />
 
-We can update this, by adding a median line to each facet, showing the median expression for each cluster:
+We can see that the overall trend is comparable between most of the clusters. Something different seems to be going on in cluster 4, but that is actually based on what seems like a single observation. The reason for that is our (well, my) choice to only look at the top 50 differentially expressed genes.
+
+To get a more generalised view we can also add a median line to each facet, showing the median expression for each cluster:
+
 
 ```r
 trans_cts_cluster %>% 
   ggplot(aes(minute, mean_cts_scaled)) +
-  geom_line(aes(group = gene), alpha = 0.3) +
-  geom_line(stat = "summary", fun = "median", colour = "red", size = 0.5, 
-            aes(group = 1)) +
-  facet_grid(rows = vars(strain), cols = vars(cluster))
+  geom_line(aes(group = gene),
+            alpha = 0.3) +
+  geom_line(stat = "summary",      # create a summary stat
+            fun = "median",        # and use the median
+            colour = "red",
+            size = 0.5, 
+            aes(group = 1)) +      # idiosyncratic necessity to group the line
+  facet_grid(rows = vars(strain),  # plot strains in rows
+             cols = vars(cluster)) # and clusters in columns
 ```
 
-<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-18-1.png" width="672" />
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-19-1.png" width="672" />
+:::
+:::::
 
-## Advanced: Colouring clusters
+## Exercise: Penguins
+
+:::exercise ::::::
+
+If you're still with us at this point, well done! For this exercise we're going to practice creating a dendrogram using the `penguins` data set.
+
+I would like you to do the following:
+
+1. load the `penguins` data set, if needed
+2. remove the missing values and add an ID column (as factor)
+3. scale the data (if needed)
+4. calculate the distance matrix using Euclidian distance
+5. perform the hierarchical clustering with complete linkage
+6. plot the dendrogram
+7. repeat the process but now using the Manhattan distance
+8. see if the hierarchical structure is similar (eye-balling it)
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+
+question
+
+:::
+:::::
+
+<details><summary>Answer</summary>
+
+::::: {.panelset}
+
+::: {.panel}
+[tidyverse]{.panel-name}
+
+First we update the penguins data set, removing the missing values and creating an ID column. We simply do this by creating a row number, which gives a unique ID to each observation. Because the number has no real numerical meaning, we set it as a factor.
+
+
+```r
+penguins <- penguins %>% 
+  # remove missing values
+  drop_na() %>% 
+  # create ID column
+  mutate(id = 1:n(),
+         id = as_factor(id))
+```
+
+To do the clustering, we first have to remove all the non-numerical data from our data set. We still want to retain information on our data, so we use the `id` column as row names.
+
+We need to `scale()` the data, because the original variables are on different scales (e.g. flipper length is in milimeters, whereas body mass is in grams).
+
+Here I show how to calculate the distance matrix using the Euclidian distance, and to do this for the Manhattan method, we simply change it to `method = "manhattan"`. If only everything in life was that easy...
+
+
+```r
+penguins_hclust <- penguins %>% 
+  select(-species, -island, -sex, -year) %>% 
+  column_to_rownames(var = "id") %>% 
+  scale() %>% 
+  dist(method = "euclidian") %>% 
+  hclust(method = "complete")
+```
+
+And that, dear viewers, allows us to create a wonderful dendrogram. Because there are so many observations, we can omit the labels using `labels = FALSE`.
+
+
+```r
+ggdendrogram(penguins_hclust, rotate = FALSE, labels = FALSE) +
+  labs(title = "Penguins dendrogram")
+```
+
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-22-1.png" width="672" />
+
+Lastly, comparing the effect of the Euclidian and Manhattan distance matrices on the final dendrogram shows some slight differences between the two methods:
+
+
+
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-24-1.png" width="672" />
+
+:::
+:::::
+
+</details>
+
+::::::::::::::::::
+
+## Optional: Colouring clusters
 
 Adding colour to dendrograms can be a bit tricky. There are different ways of doing so, but the simplest method I've found (so far) that does not require the installation of various, extensive packages is a bunch of functions written by Atrebas. See the [blogpost](https://atrebas.github.io/post/2019-06-08-lightweight-dendrograms/).
 
@@ -430,7 +590,8 @@ plot_ggdendro(hcdata,
               branch.size = 0.5)
 ```
 
-<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-20-1.png" width="672" />
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-26-1.png" width="672" />
+
 We can also plot this as a circular dendrogram:
 
 ```r
@@ -442,45 +603,15 @@ plot_ggdendro(hcdata,
   theme_void()
 ```
 
-<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-21-1.png" width="672" />
+<img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-27-1.png" width="672" />
 
-
-
-## Exercise
-
-:::exercise ::::::
-
-Exercise
-
-::::: {.panelset}
-::: {.panel}
-[tidyverse]{.panel-name}
-
-question
-
-:::
-:::::
-
-<details><summary>Answer</summary>
-
-::::: {.panelset}
-
-::: {.panel}
-[tidyverse]{.panel-name}
-
-answer
-
-:::
-:::::
-
-</details>
-
-::::::::::::::::::
 
 ## Key points
 
 :::keypoints
-- Point 1
-- Point 2
-- Point 3
+
+- Hierarchical clustering can be used to determine and visualise hierarchy in data
+- Distance matrices can be calculated with, for example, the Euclidian distance or Manhattan distance
+- Calculating dissimilarity between clusters can be done in different ways, for example using complete linkage (largest distance), single linkage (minimum distance) or average linkage
+- Drawing dendrograms can visualise hierarchy and cutting the dendrograms can help to further investigate potential clusters in the data
 :::

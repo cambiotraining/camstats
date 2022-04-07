@@ -1,4 +1,5 @@
 exr:unlabeled-div-1
+exr:unlabeled-div-2
 overview
 core-aims
 core-topics
@@ -13,6 +14,6 @@ transformed-counts
 sample-info
 test-results
 clustering
-advanced-colouring-clusters
-exercise
+exercise-penguins
+optional-colouring-clusters
 key-points
