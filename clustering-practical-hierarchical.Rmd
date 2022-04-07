@@ -23,7 +23,7 @@ xaringanExtra::style_panelset_tabs(font_family = "inherit")
 :::
 
 ## Purpose and aim
-Hierarchical clustering is a form of cluster analysis, with the aim to create a hierarchy of clusters. The results are commonly displayed in a dendogram which displays the clusters found in the analysis.
+Hierarchical clustering is a form of cluster analysis, with the aim to create a hierarchy of clusters. The results are commonly displayed in a dendrogram, which displays the clusters found in the analysis.
 
 ## Libraries and functions
 
@@ -42,18 +42,176 @@ Hierarchical clustering is a form of cluster analysis, with the aim to create a 
 :::
 :::::
 
+## Data
+For the example in this session we'll be using the yeast RNAseq data set.
+
+::::: {.panelset}
+::: {.panel}
+[Yeast RNAseq]{.panel-name}
+
+These data are from an experiment included in the [fission R/Bioconductor](https://bioconductor.org/packages/release/data/experiment/html/fission.html) package. Very briefly, we have transcriptome data for:
+
+- Two yeast strains: wild type (`wt`) and _atf21del_ mutant (`mut`)
+- Each has 6 time points of osmotic stress time (0, 15, 30, 60, 120 and 180 mins)
+- Three replicates for each strain at each time point
+
+Let’s say that you did this experiment yourself, and that a bioinformatician analysed it and provided you with four files of data:
+
+1. `sample_info.csv` - information about each sample.
+2. `counts_raw.csv` - raw or unprocessed read counts for all genes, which gives a measure of the genes’ expression. (these are simply scaled to the size of each library to account for the fact that different samples have more or less total number of reads).
+3. `counts_transformed.csv` - normalised read counts for all genes, on a log scale and transformed to correct for a dependency between the mean and the variance. This is typical of count data.
+4. `test_result.csv` - results from a statistical test that assessed the probability of observed expression differences between the first and each of the other time points in WT cells, assuming a null hypothesis of no difference.
+:::
+:::::
+
+## Get to know your data
+
+Let's load the data we need for this session (we don't need the raw data):
+
 ```{r, message=FALSE}
 trans_cts <- read_csv("data/transcriptome/counts_transformed.csv")
 sample_info <- read_csv("data/transcriptome/sample_info.csv")
 test_result <- read_csv("data/transcriptome/test_result.csv")
+```
+### Transformed counts
+Let's look at the transformed count data:
+```{r}
+trans_cts
+```
+Here we have a list of genes, with 37 columns. The columns encode information about the strain (wt/mut), time point (0, 15, etc) and repeat (r1, r2, r3). This is something we need to be aware of, because it's often not helpful to have that kind of information encoded in the column name.
 
+A quick check also tells us that there are 6,011 genes in this data set, with each gene only occurring once:
+```{r}
+trans_cts %>% 
+  count(gene) %>%  # count the number of genes
+  arrange(desc(n)) # arrange in descending order
+```
+
+### Sample info
+Let's have a look to see what is in the sample info:
+```{r}
+sample_info
+```
+
+This data set contains all the information of the various samples, but with the data also split by column. That'll come in handy later on.
+
+### Test results
+```{r}
+test_result
+```
+
+The test results give us the results of a statistical test between the first time point in the WT cells, comparing it to all the other time points. The null hypothesis is that there is no difference. The column that we're mostly interested in is the `padj`, which gives us the adjusted p-values.
+
+```{r}
+test_result %>% 
+  select(gene, padj)
+```
+
+## Clustering
+There is a lot of data here (over 6,000 data points!). We might be interested in how these data group/cluster together. We could do this using k-means clustering but here we're going to use hierarchical clustering.
+
+What we're looking for specifically is whether there are groups of genes that are more similar to one another. We approach this by creating an hierarchy: the genes that are _most_ similar to each other cluster together, followed by the next groups of genes that are most similar to each other after that, and so forth.
+
+To make things a bit more manageable for this example, we'll only look at a subset of the 6,011 genes. We'll select the 50 most highly differentially expressed genes to work with and store the gene names in a data frame:
+
+```{r, message=FALSE}
 # set of candidate genes for clustering
 # we select the 50 genes with the lowest padj value
 candidate_genes <- test_result %>% 
   slice_min(padj, n = 50) %>%  
   select(gene) %>% 
   distinct()
+```
+:::
+:::::
 
+Now that we've got a list of genes that we're interested in, we can use these to cluster the data.
+
+The way that his works is that the first gene is compared to all the other genes. These two genes then form a cluster. After that the second gene is compared to the cluster and the other remaining genes. It too forms a cluster with the most similar gene or cluster.
+
+This process continues until there are no comparisons left.
+
+The way this is quantified is by calculating a matrix of dissimilarities. This happens using distance measures - something we already learned about with the k-means clustering. Two useful distance measures are the _Euclidian_ and _Manhattan_ distance.
+
+There are different ways methods to calculating these distances, with the most commonly types used:
+
+| Name| Method| Usage|
+|:- |:- |:- |
+|complete linkage| maximum distance between two clusters | tends to create compact clusters |
+|single linkage | minimum distance between two clusters | tends to produce loose clusters |
+|average linkage | average distance between two clusters | |
+|centroid linkage | distance between cluster centroids | |
+|Ward's minimum variance | minimises total within-cluster variance | |
+
+::::: {.panelset}
+::: {.panel}
+[tidyverse]{.panel-name}
+The function we use to calculate the clusters is `hclust()`. But before we can do that, we need to calculate the dissimilarities between the clusters. We do that using the `dist()` function. The default method that is used is `"euclidian"`, but there are other options. Run `?dist` to have a look.
+
+The default method used by `hclust()` is `"complete"`, but just to be different I'll be using the `"average"` linkage here. It's always useful to see how which method helps you to look at your data best.
+
+```{r, message=FALSE}
+gene_hclust <- trans_cts %>%
+  # filter our data for the candidate genes
+  semi_join(candidate_genes, by = "gene") %>%
+  # convert the gene column to row names
+  # because dist() takes a matrix
+  column_to_rownames(var = "gene") %>% 
+  # scale the data
+  scale() %>% 
+  # calculate the Euclidian distance
+  dist(method = "euclidian") %>% 
+  # perform the clustering
+  hclust(method = "average")
+```
+
+:::note
+**Scaling** is technically not necessary here, because the differential expression analysis has already done this for us. However, I've included the step here anyway to make you aware of it. Trying to calculate distances between values that are on different scales will result in non-sensical results!
+:::
+
+We can look at one `hclust()` has produced for us:
+```{r}
+gene_hclust
+```
+
+The answer is a list that contains a whole bunch of data. We can see that the distance and clustering methods are as we specified them (hoorah!). Also, there appear to be 44 objects.
+
+This in itself does not help us much, so let's go ahead and plot it. To make this a bit more manageable we're using the library `ggdendro`, which allows us to plot dendrograms using ggplot-style syntax.
+
+If you haven't installed/loaded it, now is a good time. You can do this as follows:
+```{r, eval=FALSE}
+# install if needed
+install.packages("ggdendro")
+
+# and load the library
+library(ggdendro)
+```
+
+Next, we can plot the dendrogram using the `ggdendrogram()` function. We give it the `gene_clust` object, tell it not to rotate the dendrogram (try setting it to `TRUE` and see what happens!), and give it a title.
+
+```{r}
+ggdendrogram(gene_hclust, rotate = FALSE) +
+  labs(title = "Top 50 DEG dendrogram")
+```
+
+Cutting the tree:
+
+```{r}
+ggdendrogram(gene_hclust, rotate = FALSE, size = 3) +
+  geom_hline(yintercept = 22, colour = "red")
+```
+
+```{r}
+gene_cluster <- cutree(gene_hclust, k = 4) %>% 
+  # turn the named vector into a tibble
+  enframe() %>% 
+  # rename some of the columns
+  rename(gene = name, cluster = value)
+
+head(gene_cluster)
+```
+
+```{r}
 # Summarise counts 
 trans_cts_mean <- trans_cts %>% 
   # convert to long format
@@ -72,35 +230,6 @@ trans_cts_mean <- trans_cts %>%
   summarise(mean_cts_scaled = mean(cts_scaled),
             nrep = n()) %>% 
   ungroup()
-
-gene_hclust <- trans_cts %>%
-  semi_join(candidate_genes, by = "gene") %>%
-  column_to_rownames(var = "gene") %>% 
-  dist(method = "euclidian") %>% 
-  hclust()
-```
-
-Plot the dendrogram using `ggdendrogram()`.
-
-```{r}
-ggdendrogram(gene_hclust, rotate = FALSE, size = 3)
-```
-
-Cutting the tree:
-
-```{r}
-ggdendrogram(gene_hclust, rotate = FALSE, size = 3) +
-  geom_hline(yintercept = 22, colour = "red")
-```
-
-```{r}
-gene_cluster <- cutree(gene_hclust, k = 4) %>% 
-  # turn the named vector into a tibble
-  enframe() %>% 
-  # rename some of the columns
-  rename(gene = name, cluster = value)
-
-head(gene_cluster)
 ```
 
 ```{r}
@@ -130,7 +259,7 @@ trans_cts_cluster %>%
 
 ## Advanced: Colouring clusters
 
-Adding colour to dendograms can be a bit tricky. There are different ways of doing so, but the simplest method I've found (so far) that does not require the installation of various, extensive packages is a bunch of functions written by Atrebas. See the [blogpost](https://atrebas.github.io/post/2019-06-08-lightweight-dendrograms/).
+Adding colour to dendrograms can be a bit tricky. There are different ways of doing so, but the simplest method I've found (so far) that does not require the installation of various, extensive packages is a bunch of functions written by Atrebas. See the [blogpost](https://atrebas.github.io/post/2019-06-08-lightweight-dendrograms/).
 
 Basically, all you need to do is load the script I provided and off you go!
 
@@ -149,7 +278,7 @@ plot_ggdendro(hcdata,
               expand.y    = 0.2,
               branch.size = 0.5)
 ```
-We can also plot this as a circular dendogram:
+We can also plot this as a circular dendrogram:
 ```{r}
 plot_ggdendro(hcdata,
               fan         = TRUE,

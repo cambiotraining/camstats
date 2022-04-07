@@ -10,9 +10,9 @@ rmd_files: [
   #"glm-practical-logistic-proportion.Rmd",
   #"resampling-intro.Rmd",
   #"resampling-practical-single.Rmd",
-  "clustering-practical-pca.Rmd",
+  #"clustering-practical-pca.Rmd",
   #"clustering-practical-kmeans.Rmd",
-  #"clustering-practical-hierarchical.Rmd",
+  "clustering-practical-hierarchical.Rmd",
 ]
 
 language:
