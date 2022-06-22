@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 9 Hierarchical clustering | CamStats</title>
+<title>Chapter 10 Hierarchical clustering | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="9.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
+<meta name="description" content="10.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
-<meta property="og:title" content="Chapter 9 Hierarchical clustering | CamStats">
+<meta property="og:title" content="Chapter 10 Hierarchical clustering | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="9.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
+<meta property="og:description" content="10.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 9 Hierarchical clustering | CamStats">
-<meta name="twitter:description" content="9.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
+<meta name="twitter:title" content="Chapter 10 Hierarchical clustering | CamStats">
+<meta name="twitter:description" content="10.1 Objectives  Understand what hierarchical clustering can be used for Be able to calculate distance matrices Know about different methods to calculate distance matrices Perform hierarchical...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -123,13 +123,14 @@
 <li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
 <li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li><a class="" href="poisson-regression-count-response.html"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></li>
 <li class="book-part">Resampling techniques</li>
-<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
-<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
+<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
 <li class="book-part">Unsupervised learning</li>
-<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
-<li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
-<li><a class="active" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
+<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
+<li><a class="active" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -137,13 +138,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="hierarchical-clustering" class="section level1" number="9">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="hierarchical-clustering" class="section level1" number="10">
 <h1>
-<span class="header-section-number">9</span> Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10</span> Hierarchical clustering<a class="anchor" aria-label="anchor" href="#hierarchical-clustering"><i class="fas fa-link"></i></a>
 </h1>
-<div id="objectives-7" class="section level2" number="9.1">
+<div id="objectives-8" class="section level2" number="10.1">
 <h2>
-<span class="header-section-number">9.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-7"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-8"><i class="fas fa-link"></i></a>
 </h2>
 <div class="objectives">
 <ul>
@@ -156,15 +157,15 @@
 </ul>
 </div>
 </div>
-<div id="purpose-and-aim-2" class="section level2" number="9.2">
+<div id="purpose-and-aim-2" class="section level2" number="10.2">
 <h2>
-<span class="header-section-number">9.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.2</span> Purpose and aim<a class="anchor" aria-label="anchor" href="#purpose-and-aim-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>Hierarchical clustering is a form of cluster analysis, with the aim to create a hierarchy of clusters. The results are commonly displayed in a dendrogram, which displays the clusters found in the analysis.</p>
 </div>
-<div id="libraries-and-functions-5" class="section level2" number="9.3">
+<div id="libraries-and-functions-6" class="section level2" number="10.3">
 <h2>
-<span class="header-section-number">9.3</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-5"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.3</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-6"><i class="fas fa-link"></i></a>
 </h2>
 <div class="panelset">
 <div class="panel">
@@ -204,9 +205,9 @@
 </div>
 </div>
 </div>
-<div id="data-2" class="section level2" number="9.4">
+<div id="data-2" class="section level2" number="10.4">
 <h2>
-<span class="header-section-number">9.4</span> Data<a class="anchor" aria-label="anchor" href="#data-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.4</span> Data<a class="anchor" aria-label="anchor" href="#data-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>For the example in this session we’ll be using the yeast RNAseq data set.</p>
 <div class="panelset">
@@ -232,21 +233,21 @@
 </div>
 </div>
 </div>
-<div id="get-to-know-your-data" class="section level2" number="9.5">
+<div id="get-to-know-your-data" class="section level2" number="10.5">
 <h2>
-<span class="header-section-number">9.5</span> Get to know your data<a class="anchor" aria-label="anchor" href="#get-to-know-your-data"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.5</span> Get to know your data<a class="anchor" aria-label="anchor" href="#get-to-know-your-data"><i class="fas fa-link"></i></a>
 </h2>
 <p>Let’s load the data we need for this session (we don’t need the raw data):</p>
-<div class="sourceCode" id="cb201"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb247"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trans_cts</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/transcriptome/counts_transformed.csv"</span><span class="op">)</span>
 <span class="va">sample_info</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/transcriptome/sample_info.csv"</span><span class="op">)</span>
 <span class="va">test_result</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/transcriptome/test_result.csv"</span><span class="op">)</span></code></pre></div>
-<div id="transformed-counts" class="section level3" number="9.5.1">
+<div id="transformed-counts" class="section level3" number="10.5.1">
 <h3>
-<span class="header-section-number">9.5.1</span> Transformed counts<a class="anchor" aria-label="anchor" href="#transformed-counts"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.5.1</span> Transformed counts<a class="anchor" aria-label="anchor" href="#transformed-counts"><i class="fas fa-link"></i></a>
 </h3>
 <p>Let’s look at the transformed count data:</p>
-<div class="sourceCode" id="cb202"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb248"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">trans_cts</span></code></pre></div>
 <pre><code>## # A tibble: 6,011 × 37
 ##    gene     wt_0_r1 wt_0_r2 wt_0_r3 wt_15_r1 wt_15_r2 wt_15_r3 wt_30_r1 wt_30_r2
@@ -270,9 +271,9 @@
 ## #   mut_60_r3 &lt;dbl&gt;, mut_120_r1 &lt;dbl&gt;, mut_120_r2 &lt;dbl&gt;, mut_120_r3 &lt;dbl&gt;, …</code></pre>
 <p>Here we have a list of genes, with 37 columns. The columns encode information about the strain (wt/mut), time point (0, 15, etc) and repeat (r1, r2, r3). This is something we need to be aware of, because it’s often not helpful to have that kind of information encoded in the column name.</p>
 <p>A quick check also tells us that there are 6,011 genes in this data set, with each gene only occurring once:</p>
-<div class="sourceCode" id="cb204"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trans_cts</span> <span class="op">%&gt;%</span> 
-  <span class="fu">count</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span>  <span class="co"># count the number of genes</span>
+<div class="sourceCode" id="cb250"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">trans_cts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">count</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>  <span class="co"># count the number of genes</span>
   <span class="fu">arrange</span><span class="op">(</span><span class="fu">desc</span><span class="op">(</span><span class="va">n</span><span class="op">)</span><span class="op">)</span> <span class="co"># arrange in descending order</span></code></pre></div>
 <pre><code>## # A tibble: 6,011 × 2
 ##    gene             n
@@ -289,12 +290,12 @@
 ## 10 SPAC1002.11      1
 ## # … with 6,001 more rows</code></pre>
 </div>
-<div id="sample-info" class="section level3" number="9.5.2">
+<div id="sample-info" class="section level3" number="10.5.2">
 <h3>
-<span class="header-section-number">9.5.2</span> Sample info<a class="anchor" aria-label="anchor" href="#sample-info"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.5.2</span> Sample info<a class="anchor" aria-label="anchor" href="#sample-info"><i class="fas fa-link"></i></a>
 </h3>
 <p>Let’s have a look to see what is in the sample info:</p>
-<div class="sourceCode" id="cb206"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb252"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">sample_info</span></code></pre></div>
 <pre><code>## # A tibble: 36 × 4
 ##    sample   strain minute replicate
@@ -312,11 +313,11 @@
 ## # … with 26 more rows</code></pre>
 <p>This data set contains all the information of the various samples, but with the data also split by column. That’ll come in handy later on.</p>
 </div>
-<div id="test-results" class="section level3" number="9.5.3">
+<div id="test-results" class="section level3" number="10.5.3">
 <h3>
-<span class="header-section-number">9.5.3</span> Test results<a class="anchor" aria-label="anchor" href="#test-results"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.5.3</span> Test results<a class="anchor" aria-label="anchor" href="#test-results"><i class="fas fa-link"></i></a>
 </h3>
-<div class="sourceCode" id="cb208"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb254"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">test_result</span></code></pre></div>
 <pre><code>## # A tibble: 30,055 × 8
 ##    gene        baseMean log2FoldChange lfcSE   stat pvalue  padj comparison
@@ -333,8 +334,8 @@
 ## 10 SPAC1F8.06     74.2         -1.58   0.298 -1.94  0.0520     1         15
 ## # … with 30,045 more rows</code></pre>
 <p>The test results give us the results of a statistical test between the first time point in the WT cells, comparing it to all the other time points. The null hypothesis is that there is no difference. The column that we’re mostly interested in is the <code>padj</code>, which gives us the adjusted p-values.</p>
-<div class="sourceCode" id="cb210"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">test_result</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb256"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">test_result</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">select</span><span class="op">(</span><span class="va">gene</span>, <span class="va">padj</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 30,055 × 2
 ##    gene         padj
@@ -352,9 +353,9 @@
 ## # … with 30,045 more rows</code></pre>
 </div>
 </div>
-<div id="clustering-2" class="section level2" number="9.6">
+<div id="clustering-2" class="section level2" number="10.6">
 <h2>
-<span class="header-section-number">9.6</span> Clustering<a class="anchor" aria-label="anchor" href="#clustering-2"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.6</span> Clustering<a class="anchor" aria-label="anchor" href="#clustering-2"><i class="fas fa-link"></i></a>
 </h2>
 <p>There is a lot of data here (over 6,000 data points!). We might be interested in how these data group/cluster together. We could do this using k-means clustering but here we’re going to use hierarchical clustering.</p>
 <p>What we’re looking for specifically is whether there are groups of genes that are more similar to one another. We approach this by creating an hierarchy: the genes that are <em>most</em> similar to each other cluster together, followed by the next groups of genes that are most similar to each other after that, and so forth.</p>
@@ -362,12 +363,12 @@
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb212"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb258"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># set of candidate genes for clustering</span>
 <span class="co"># we select the 50 genes with the lowest padj value</span>
-<span class="va">candidate_genes</span> <span class="op">&lt;-</span> <span class="va">test_result</span> <span class="op">%&gt;%</span> 
-  <span class="fu">slice_min</span><span class="op">(</span><span class="va">padj</span>, n <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op">%&gt;%</span>  
-  <span class="fu">select</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<span class="va">candidate_genes</span> <span class="op">&lt;-</span> <span class="va">test_result</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">slice_min</span><span class="op">(</span><span class="va">padj</span>, n <span class="op">=</span> <span class="fl">50</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>  
+  <span class="fu">select</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">distinct</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
@@ -420,24 +421,24 @@
 <p><span class="panel-name">tidyverse</span>
 The function we use to calculate the clusters is <code><a href="https://rdrr.io/r/stats/hclust.html">hclust()</a></code>. But before we can do that, we need to calculate the dissimilarities between the clusters. We do that using the <code><a href="https://rdrr.io/r/stats/dist.html">dist()</a></code> function. The default method that is used is <code>"euclidian"</code>, but there are other options. Run <code><a href="https://rdrr.io/r/stats/dist.html">?dist</a></code> to have a look.</p>
 <p>The default method used by <code><a href="https://rdrr.io/r/stats/hclust.html">hclust()</a></code> is <code>"complete"</code>, but just to be different I’ll be using the <code>"average"</code> linkage here. It’s always useful to see how which method helps you to look at your data best.</p>
-<div class="sourceCode" id="cb213"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gene_hclust</span> <span class="op">&lt;-</span> <span class="va">trans_cts</span> <span class="op">%&gt;%</span>
+<div class="sourceCode" id="cb259"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gene_hclust</span> <span class="op">&lt;-</span> <span class="va">trans_cts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
   <span class="co"># filter our data for the candidate genes</span>
-  <span class="fu">semi_join</span><span class="op">(</span><span class="va">candidate_genes</span>, by <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">semi_join</span><span class="op">(</span><span class="va">candidate_genes</span>, by <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
   <span class="co"># convert the gene column to row names</span>
   <span class="co"># because dist() takes a matrix</span>
-  <span class="fu">column_to_rownames</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">column_to_rownames</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># scale the data</span>
-  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># calculate the Euclidian distance</span>
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidian"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidian"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># perform the clustering</span>
   <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"average"</span><span class="op">)</span></code></pre></div>
 <div class="note">
 <p><strong>Scaling</strong> is technically not necessary here, because the differential expression analysis has already done this for us. However, I’ve included the step here anyway to make you aware of it. Trying to calculate distances between values that are on different scales will result in non-sensical results!</p>
 </div>
 <p>We can look at what <code><a href="https://rdrr.io/r/stats/hclust.html">hclust()</a></code> has produced for us:</p>
-<div class="sourceCode" id="cb214"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb260"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">gene_hclust</span></code></pre></div>
 <pre><code>## 
 ## Call:
@@ -449,14 +450,14 @@ The function we use to calculate the clusters is <code><a href="https://rdrr.io/
 <p>The answer is a list that contains a whole bunch of data. We can see that the distance and clustering methods are as we specified them (hoorah!). Also, there appear to be 44 objects.</p>
 <p>This in itself does not help us much, so let’s go ahead and plot it. To make this a bit more manageable we’re using the library <code>ggdendro</code>, which allows us to plot dendrograms using ggplot-style syntax.</p>
 <p>If you haven’t installed/loaded it, now is a good time. You can do this as follows:</p>
-<div class="sourceCode" id="cb216"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb262"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install if needed</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"ggdendro"</span><span class="op">)</span>
 
 <span class="co"># and load the library</span>
 <span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/andrie/ggdendro">ggdendro</a></span><span class="op">)</span></code></pre></div>
 <p>Next, we can plot the dendrogram using the <code><a href="https://rdrr.io/pkg/ggdendro/man/ggdendrogram.html">ggdendrogram()</a></code> function. We give it the <code>gene_clust</code> object, tell it not to rotate the dendrogram (try setting it to <code>TRUE</code> and see what happens!), and give it a title.</p>
-<div class="sourceCode" id="cb217"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb263"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ggdendro/man/ggdendrogram.html">ggdendrogram</a></span><span class="op">(</span><span class="va">gene_hclust</span>, rotate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Top 50 DEG dendrogram"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
@@ -467,7 +468,7 @@ The function we use to calculate the clusters is <code><a href="https://rdrr.io/
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<div class="sourceCode" id="cb218"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb264"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ggdendro/man/ggdendrogram.html">ggdendrogram</a></span><span class="op">(</span><span class="va">gene_hclust</span>, rotate <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_hline</span><span class="op">(</span>yintercept <span class="op">=</span> <span class="fl">8.2</span>, colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Top 50 DEG dendrogram"</span>,
@@ -480,10 +481,10 @@ The function we use to calculate the clusters is <code><a href="https://rdrr.io/
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
 We create these clusters by cutting the dendrogram using the <code><a href="https://rdrr.io/r/stats/cutree.html">cutree()</a></code> function. We then do a little bit of data wrangling (creating a tibble from the resulting vector, and renaming the column names) to get the following output:</p>
-<div class="sourceCode" id="cb219"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">gene_cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html">cutree</a></span><span class="op">(</span><span class="va">gene_hclust</span>, k <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb265"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">gene_cluster</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/cutree.html">cutree</a></span><span class="op">(</span><span class="va">gene_hclust</span>, k <span class="op">=</span> <span class="fl">4</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># turn the named vector into a tibble</span>
-  <span class="fu">enframe</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">enframe</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># rename some of the columns</span>
   <span class="fu">rename</span><span class="op">(</span>gene <span class="op">=</span> <span class="va">name</span>, cluster <span class="op">=</span> <span class="va">value</span><span class="op">)</span>
 
@@ -507,28 +508,28 @@ We create these clusters by cutting the dendrogram using the <code><a href="http
 </ol>
 <p>To do this, we take our transformed counts (<code>trans_cts</code>) data and first rejig it so that it is in a long format and we can do some grouping on it. We then merge it with the <code>sample_info</code> data, so we get all the relevant information regarding strain, time point and repeat. Then we filter for only our candidate genes, scale our counts, group the data and calculate the average counts.</p>
 <p>Sounds doable, right? Hoorah for pipes, where we can go through this step-by-step:</p>
-<div class="sourceCode" id="cb221"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb267"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># summarise counts </span>
-<span class="va">trans_cts_mean</span> <span class="op">&lt;-</span> <span class="va">trans_cts</span> <span class="op">%&gt;%</span> 
+<span class="va">trans_cts_mean</span> <span class="op">&lt;-</span> <span class="va">trans_cts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># convert to long format</span>
-  <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="va">wt_0_r1</span><span class="op">:</span><span class="va">mut_180_r3</span>, names_to <span class="op">=</span> <span class="st">"sample"</span>, values_to <span class="op">=</span> <span class="st">"cts"</span><span class="op">)</span>  <span class="op">%&gt;%</span> 
+  <span class="fu">pivot_longer</span><span class="op">(</span>cols <span class="op">=</span> <span class="va">wt_0_r1</span><span class="op">:</span><span class="va">mut_180_r3</span>, names_to <span class="op">=</span> <span class="st">"sample"</span>, values_to <span class="op">=</span> <span class="st">"cts"</span><span class="op">)</span>  <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># join with sample info table</span>
-  <span class="fu">full_join</span><span class="op">(</span><span class="va">sample_info</span>, by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">full_join</span><span class="op">(</span><span class="va">sample_info</span>, by <span class="op">=</span> <span class="st">"sample"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># filter to retain only genes of interest</span>
-  <span class="fu">semi_join</span><span class="op">(</span><span class="va">candidate_genes</span>, by <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">semi_join</span><span class="op">(</span><span class="va">candidate_genes</span>, by <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
   <span class="co"># for each gene</span>
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">gene</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># scale the cts column</span>
-  <span class="fu">mutate</span><span class="op">(</span>cts_scaled <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">cts</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">mutate</span><span class="op">(</span>cts_scaled <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="va">cts</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># for each gene, strain and minute</span>
-  <span class="fu">group_by</span><span class="op">(</span><span class="va">gene</span>, <span class="va">strain</span>, <span class="va">minute</span><span class="op">)</span> <span class="op">%&gt;%</span>
+  <span class="fu">group_by</span><span class="op">(</span><span class="va">gene</span>, <span class="va">strain</span>, <span class="va">minute</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
   <span class="co"># calculate the mean (scaled) cts</span>
   <span class="fu">summarise</span><span class="op">(</span>mean_cts_scaled <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html">mean</a></span><span class="op">(</span><span class="va">cts_scaled</span><span class="op">)</span>,
-            n_rep <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+            n_rep <span class="op">=</span> <span class="fu">n</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">ungroup</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <p>When that’s done, we can merge the information with <code>gene_cluster</code>, which contains the cluster classification for each gene:</p>
-<div class="sourceCode" id="cb222"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">&lt;-</span> <span class="va">trans_cts_mean</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb268"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">&lt;-</span> <span class="va">trans_cts_mean</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">inner_join</span><span class="op">(</span><span class="va">gene_cluster</span>, by <span class="op">=</span> <span class="st">"gene"</span><span class="op">)</span>
 
 <span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">trans_cts_cluster</span><span class="op">)</span></code></pre></div>
@@ -543,13 +544,13 @@ We create these clusters by cutting the dendrogram using the <code><a href="http
 ## 6 SPAC11E3.14 mut       180          -0.635     3       1</code></pre>
 <p>We can see that we now have all the data we need: for each gene there is information on the type of strain, the time point, the scaled mean counts and the cluster that gene has been assigned to. We also have a bonus column containing the number of repeats that make up the mean values.</p>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-8" class="exercise"><strong>Exercise 9.1  </strong></span><strong>Bonus exercise</strong>
+<p><span id="exr:unlabeled-div-9" class="exercise"><strong>Exercise 10.1  </strong></span><strong>Bonus exercise</strong>
 Are all the mean values are made up from three biological repeats?</p>
 <details><summary>
 Answer
 </summary><p>There are many ways we can skin this proverbial cat, and this is one of them:</p>
-<div class="sourceCode" id="cb224"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb270"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">count</span><span class="op">(</span><span class="va">n_rep</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 2
 ##   n_rep     n
@@ -560,16 +561,16 @@ Answer
 </div>
 <p>Now that we have all the data, we can finally plot the gene expression trends, separating the genes of interest by cluster.</p>
 <p>We do this by facetting:</p>
-<div class="sourceCode" id="cb226"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb272"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">minute</span>, <span class="va">mean_cts_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>group <span class="op">=</span> <span class="va">gene</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">facet_grid</span><span class="op">(</span>rows <span class="op">=</span> <span class="fu">vars</span><span class="op">(</span><span class="va">strain</span><span class="op">)</span>, cols <span class="op">=</span> <span class="fu">vars</span><span class="op">(</span><span class="va">cluster</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-18-1.png" width="672"></div>
 <p>We can see that the overall trend is comparable between most of the clusters. Something different seems to be going on in cluster 4, but that is actually based on what seems like a single observation. The reason for that is our (well, my) choice to only look at the top 50 differentially expressed genes.</p>
 <p>To get a more generalised view we can also add a median line to each facet, showing the median expression for each cluster:</p>
-<div class="sourceCode" id="cb227"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb273"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">trans_cts_cluster</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">minute</span>, <span class="va">mean_cts_scaled</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>group <span class="op">=</span> <span class="va">gene</span><span class="op">)</span>,
             alpha <span class="op">=</span> <span class="fl">0.3</span><span class="op">)</span> <span class="op">+</span>
@@ -584,12 +585,12 @@ Answer
 </div>
 </div>
 </div>
-<div id="exercise-penguins-1" class="section level2" number="9.7">
+<div id="exercise-penguins-1" class="section level2" number="10.7">
 <h2>
-<span class="header-section-number">9.7</span> Exercise: Penguins<a class="anchor" aria-label="anchor" href="#exercise-penguins-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.7</span> Exercise: Penguins<a class="anchor" aria-label="anchor" href="#exercise-penguins-1"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
-<p><span id="exr:unlabeled-div-9" class="exercise"><strong>Exercise 9.2  </strong></span>If you’re still with us at this point, well done! For this exercise we’re going to practice creating a dendrogram using the <code>penguins</code> data set.</p>
+<p><span id="exr:unlabeled-div-10" class="exercise"><strong>Exercise 10.2  </strong></span>If you’re still with us at this point, well done! For this exercise we’re going to practice creating a dendrogram using the <code>penguins</code> data set.</p>
 <p>I would like you to do the following:</p>
 <ol style="list-style-type: decimal">
 <li>load the <code>penguins</code> data set, if needed</li>
@@ -607,25 +608,25 @@ Answer
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
 <p>First we update the penguins data set, removing the missing values and creating an ID column. We simply do this by creating a row number, which gives a unique ID to each observation. Because the number has no real numerical meaning, we set it as a factor.</p>
-<div class="sourceCode" id="cb228"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb274"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguins</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># remove missing values</span>
-  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+  <span class="fu">drop_na</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="co"># create ID column</span>
   <span class="fu">mutate</span><span class="op">(</span>id <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>,
          id <span class="op">=</span> <span class="fu">as_factor</span><span class="op">(</span><span class="va">id</span><span class="op">)</span><span class="op">)</span></code></pre></div>
 <p>To do the clustering, we first have to remove all the non-numerical data from our data set. We still want to retain information on our data, so we use the <code>id</code> column as row names.</p>
 <p>We need to <code><a href="https://rdrr.io/r/base/scale.html">scale()</a></code> the data, because the original variables are on different scales (e.g. flipper length is in milimeters, whereas body mass is in grams).</p>
 <p>Here I show how to calculate the distance matrix using the Euclidian distance, and to do this for the Manhattan method, we simply change it to <code>method = "manhattan"</code>. If only everything in life was that easy…</p>
-<div class="sourceCode" id="cb229"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">penguins_hclust</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op">%&gt;%</span> 
-  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">species</span>, <span class="op">-</span><span class="va">island</span>, <span class="op">-</span><span class="va">sex</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu">column_to_rownames</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidian"</span><span class="op">)</span> <span class="op">%&gt;%</span> 
+<div class="sourceCode" id="cb275"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">penguins_hclust</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">species</span>, <span class="op">-</span><span class="va">island</span>, <span class="op">-</span><span class="va">sex</span>, <span class="op">-</span><span class="va">year</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">column_to_rownames</span><span class="op">(</span>var <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/base/scale.html">scale</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/r/stats/dist.html">dist</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"euclidian"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu"><a href="https://rdrr.io/r/stats/hclust.html">hclust</a></span><span class="op">(</span>method <span class="op">=</span> <span class="st">"complete"</span><span class="op">)</span></code></pre></div>
 <p>And that, dear viewers, allows us to create a wonderful dendrogram. Because there are so many observations, we can omit the labels using <code>labels = FALSE</code>.</p>
-<div class="sourceCode" id="cb230"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb276"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/pkg/ggdendro/man/ggdendrogram.html">ggdendrogram</a></span><span class="op">(</span><span class="va">penguins_hclust</span>, rotate <span class="op">=</span> <span class="cn">FALSE</span>, labels <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Penguins dendrogram"</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-22-1.png" width="672"></div>
@@ -636,15 +637,15 @@ Answer
 </details>
 </div>
 </div>
-<div id="optional-colouring-clusters" class="section level2" number="9.8">
+<div id="optional-colouring-clusters" class="section level2" number="10.8">
 <h2>
-<span class="header-section-number">9.8</span> Optional: Colouring clusters<a class="anchor" aria-label="anchor" href="#optional-colouring-clusters"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.8</span> Optional: Colouring clusters<a class="anchor" aria-label="anchor" href="#optional-colouring-clusters"><i class="fas fa-link"></i></a>
 </h2>
 <p>Adding colour to dendrograms can be a bit tricky. There are different ways of doing so, but the simplest method I’ve found (so far) that does not require the installation of various, extensive packages is a bunch of functions written by Atrebas. See the <a href="https://atrebas.github.io/post/2019-06-08-lightweight-dendrograms/">blogpost</a>.</p>
 <p>Basically, all you need to do is load the script I provided and off you go!</p>
-<div class="sourceCode" id="cb231"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb277"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/source.html">source</a></span><span class="op">(</span>file <span class="op">=</span> <span class="st">"scripts/ggdendro_extended.R"</span><span class="op">)</span></code></pre></div>
-<div class="sourceCode" id="cb232"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb278"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># cut the dendrogram, specify the number of clusters</span>
 <span class="va">hcdata</span> <span class="op">&lt;-</span> <span class="fu">dendro_data_k</span><span class="op">(</span><span class="va">gene_hclust</span>, <span class="fl">4</span><span class="op">)</span>
 
@@ -655,7 +656,7 @@ Answer
               branch.size <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-26-1.png" width="672"></div>
 <p>We can also plot this as a circular dendrogram:</p>
-<div class="sourceCode" id="cb233"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb279"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">plot_ggdendro</span><span class="op">(</span><span class="va">hcdata</span>,
               fan         <span class="op">=</span> <span class="cn">TRUE</span>,
               label.size  <span class="op">=</span> <span class="fl">3</span>,
@@ -664,9 +665,9 @@ Answer
   <span class="fu">theme_void</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="clustering-practical-hierarchical_files/figure-html/unnamed-chunk-27-1.png" width="672"></div>
 </div>
-<div id="key-points-5" class="section level2" number="9.9">
+<div id="key-points-6" class="section level2" number="10.9">
 <h2>
-<span class="header-section-number">9.9</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-5"><i class="fas fa-link"></i></a>
+<span class="header-section-number">10.9</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-6"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <ul>
@@ -680,27 +681,27 @@ Answer
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></div>
+<div class="prev"><a href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></div>
 <div class="empty"></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#hierarchical-clustering"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
-<li><a class="nav-link" href="#objectives-7"><span class="header-section-number">9.1</span> Objectives</a></li>
-<li><a class="nav-link" href="#purpose-and-aim-2"><span class="header-section-number">9.2</span> Purpose and aim</a></li>
-<li><a class="nav-link" href="#libraries-and-functions-5"><span class="header-section-number">9.3</span> Libraries and functions</a></li>
-<li><a class="nav-link" href="#data-2"><span class="header-section-number">9.4</span> Data</a></li>
+<li><a class="nav-link" href="#hierarchical-clustering"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
+<li><a class="nav-link" href="#objectives-8"><span class="header-section-number">10.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#purpose-and-aim-2"><span class="header-section-number">10.2</span> Purpose and aim</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-6"><span class="header-section-number">10.3</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#data-2"><span class="header-section-number">10.4</span> Data</a></li>
 <li>
-<a class="nav-link" href="#get-to-know-your-data"><span class="header-section-number">9.5</span> Get to know your data</a><ul class="nav navbar-nav">
-<li><a class="nav-link" href="#transformed-counts"><span class="header-section-number">9.5.1</span> Transformed counts</a></li>
-<li><a class="nav-link" href="#sample-info"><span class="header-section-number">9.5.2</span> Sample info</a></li>
-<li><a class="nav-link" href="#test-results"><span class="header-section-number">9.5.3</span> Test results</a></li>
+<a class="nav-link" href="#get-to-know-your-data"><span class="header-section-number">10.5</span> Get to know your data</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#transformed-counts"><span class="header-section-number">10.5.1</span> Transformed counts</a></li>
+<li><a class="nav-link" href="#sample-info"><span class="header-section-number">10.5.2</span> Sample info</a></li>
+<li><a class="nav-link" href="#test-results"><span class="header-section-number">10.5.3</span> Test results</a></li>
 </ul>
 </li>
-<li><a class="nav-link" href="#clustering-2"><span class="header-section-number">9.6</span> Clustering</a></li>
-<li><a class="nav-link" href="#exercise-penguins-1"><span class="header-section-number">9.7</span> Exercise: Penguins</a></li>
-<li><a class="nav-link" href="#optional-colouring-clusters"><span class="header-section-number">9.8</span> Optional: Colouring clusters</a></li>
-<li><a class="nav-link" href="#key-points-5"><span class="header-section-number">9.9</span> Key points</a></li>
+<li><a class="nav-link" href="#clustering-2"><span class="header-section-number">10.6</span> Clustering</a></li>
+<li><a class="nav-link" href="#exercise-penguins-1"><span class="header-section-number">10.7</span> Exercise: Penguins</a></li>
+<li><a class="nav-link" href="#optional-colouring-clusters"><span class="header-section-number">10.8</span> Optional: Colouring clusters</a></li>
+<li><a class="nav-link" href="#key-points-6"><span class="header-section-number">10.9</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">

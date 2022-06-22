@@ -1,6 +1,7 @@
 # essential libraries
 suppressPackageStartupMessages(library(knitr))
 suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(poissonreg))
 suppressPackageStartupMessages(library(broom))
 suppressPackageStartupMessages(library(corrr))
 suppressPackageStartupMessages(library(tidymodels))

@@ -1,0 +1,35 @@
+```{r, echo=FALSE}
+# adjust and load as needed
+source(file = "setup.R")
+```
+
+# (PART) An unnumbered section {.unnumbered}
+
+# Introduction {#ch1-intro}
+
+## Objectives
+:::objectives
+Objectives
+:::
+
+We can do links
+
+1. [Back to the start](#ch1-intro)
+
+## Background
+Lots of background.
+
+## Exercise
+:::exercise
+We can add exercises
+
+<details><summary>Answer</summary>
+With answers
+</details>
+:::
+
+## Key points
+
+:::keypoints
+Adding key points
+:::

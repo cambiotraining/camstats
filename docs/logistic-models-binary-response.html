@@ -123,13 +123,14 @@
 <li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li><a class="active" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
 <li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li><a class="" href="poisson-regression-count-response.html"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></li>
 <li class="book-part">Resampling techniques</li>
-<li><a class="" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
-<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
+<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
 <li class="book-part">Unsupervised learning</li>
-<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
-<li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
-<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
+<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
+<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -206,7 +207,7 @@
 <h2>
 <span class="header-section-number">3.4</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data"><i class="fas fa-link"></i></a>
 </h2>
-<p>First we load the data, then we visualise it. If needed, load the tidyverse package using:</p>
+<p>First we load the data, then we visualise it.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
@@ -284,9 +285,9 @@ First, we load and inspect the data:</p>
 <code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">&lt;-</span> <span class="va">dia_mod</span> <span class="op">%&gt;%</span> 
   <span class="fu">fit</span><span class="op">(</span><span class="va">test_result</span> <span class="op">~</span> <span class="va">glucose</span>,
       data <span class="op">=</span> <span class="va">diabetes</span><span class="op">)</span></code></pre></div>
-<p>We can look at the output directly, but I prefer to tidy the data up using the <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> function from <code>broom</code> package:</p>
+<p>We can look at the output directly, but I prefer to tidy the data up using the <code>tidy()</code> function from <code>broom</code> package:</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -316,7 +317,7 @@ P(positive \ test \ result) = \frac{1}{1 + {e}^{-(-5.61 +  0.040 \cdot glucose)}
 <span class="va">diabetes_newdata</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>glucose <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">188</span>, <span class="fl">122</span>, <span class="fl">83</span>, <span class="fl">76</span>, <span class="fl">144</span><span class="op">)</span><span class="op">)</span>
 
 <span class="co"># predict if the patients have diabetes or not</span>
-<span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">dia_fit</span>,
+<span class="fu">augment</span><span class="op">(</span><span class="va">dia_fit</span>,
         new_data <span class="op">=</span> <span class="va">diabetes_newdata</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 5 × 4
 ##   glucose .pred_class .pred_negative .pred_positive
@@ -383,7 +384,7 @@ Answer
       data <span class="op">=</span> <span class="va">penguins</span><span class="op">)</span></code></pre></div>
 <p>Once we’ve fitted the data to the model, we can have a look at the model parameters:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">pgn_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">pgn_fit</span> <span class="op">%&gt;%</span> <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   term           estimate std.error statistic       p.value
 ##   &lt;chr&gt;             &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
@@ -518,7 +519,7 @@ Answer
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> 
   <span class="fu">extract_fit_parsnip</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 2 × 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -539,7 +540,7 @@ Answer
 <p>The results we generated above do not differ much from the values we obtained with the entire data set. However, these are based on 3/4 of the data (our training data set). Because of this, we still have our test data set available to apply this workflow to data the model has not yet seen.</p>
 <div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dia_aug</span> <span class="op">&lt;-</span> 
-<span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">dia_fit</span>, <span class="va">test_data</span><span class="op">)</span>
+<span class="fu">augment</span><span class="op">(</span><span class="va">dia_fit</span>, <span class="va">test_data</span><span class="op">)</span>
 
 <span class="va">dia_aug</span></code></pre></div>
 <pre><code>## # A tibble: 183 × 6
@@ -581,7 +582,7 @@ Answer
 <p>In addition to the ROC curve and AUC we also have a whole range of model parameters associated with the fitted model. We’re not going through all of them at this point, but one in particular should be familiar.</p>
 <p>We extract these parameters as follows:</p>
 <div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu">glance</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 8
 ##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
 ##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
@@ -639,7 +640,7 @@ Answer
 <div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> 
   <span class="fu">extract_fit_parsnip</span><span class="op">(</span><span class="op">)</span> <span class="op">%&gt;%</span> 
-  <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+  <span class="fu">tidy</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 3 × 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
@@ -649,7 +650,7 @@ Answer
 <p>Apply the fitted model to the test data set:</p>
 <div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dia_aug</span> <span class="op">&lt;-</span> 
-<span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span><span class="va">dia_fit</span>, <span class="va">test_data</span><span class="op">)</span>
+<span class="fu">augment</span><span class="op">(</span><span class="va">dia_fit</span>, <span class="va">test_data</span><span class="op">)</span>
 
 <span class="va">dia_aug</span></code></pre></div>
 <pre><code>## # A tibble: 183 × 6
@@ -682,7 +683,7 @@ Answer
 ## 1 roc_auc binary         0.761</code></pre>
 <p>Another way to assess the model fit is to look at the Akaike Information Criterion (AIC).</p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="va">dia_fit</span> <span class="op">%&gt;%</span> <span class="fu">glance</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## # A tibble: 1 × 8
 ##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
 ##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;

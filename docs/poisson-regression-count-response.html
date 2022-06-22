@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en" class="no-js">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Chapter 5 Poisson Regression – Count Response | CamStats</title>
+<meta name="author" content="Martin van Rongen and Matt Castle">
+<meta name="description" content="5.1 Objectives  Questions How do we analyse count data? Objectives Be able to perform a poisson regression on count data   5.2 Libraries and functions  tidyverse Library Description tidyverse A...">
+<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta property="og:title" content="Chapter 5 Poisson Regression – Count Response | CamStats">
+<meta property="og:type" content="book">
+<meta property="og:description" content="5.1 Objectives  Questions How do we analyse count data? Objectives Be able to perform a poisson regression on count data   5.2 Libraries and functions  tidyverse Library Description tidyverse A...">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Chapter 5 Poisson Regression – Count Response | CamStats">
+<meta name="twitter:description" content="5.1 Objectives  Questions How do we analyse count data? Objectives Be able to perform a poisson regression on count data   5.2 Libraries and functions  tidyverse Library Description tidyverse A...">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<!-- CSS : implied media="all" --><link rel="stylesheet" type="text/css" href="stylesheets/full-stylesheet.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/styleguide.css">
+<link rel="stylesheet" type="text/css" href="stylesheets/style.css">
+<!-- JS --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://kit.fontawesome.com/6ecbd6c532.js" crossorigin="anonymous"></script><script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="libs/bootstrap-4.6.0/bootstrap.min.css" rel="stylesheet">
+<script src="libs/bootstrap-4.6.0/bootstrap.bundle.min.js"></script><script src="libs/bs3compat-0.3.1/transition.js"></script><script src="libs/bs3compat-0.3.1/tabs.js"></script><script src="libs/bs3compat-0.3.1/bs3compat.js"></script><link href="libs/bs4_book-1.0.0/bs4_book.css" rel="stylesheet">
+<script src="libs/bs4_book-1.0.0/bs4_book.js"></script><link href="libs/panelset-0.2.6/panelset.css" rel="stylesheet">
+<script src="libs/panelset-0.2.6/panelset.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><script type="text/javascript" src="//use.typekit.com/hyb5bko.js"></script><script type="text/javascript">try{Typekit.load();}catch(e){}</script><script type="text/javascript">  document.documentElement.className += " js";</script>
+</head>
+<body class="campl-theme-2" data-spy="scroll" data-target="#toc">
+
+<!--[if lt IE 7]>
+<div class="lt-ie9 lt-ie8 lt-ie7">
+<![endif]-->
+<!--[if IE 7]>
+<div class="lt-ie9 lt-ie8">
+<![endif]-->
+<!--[if IE 8]>
+<div class="lt-ie9">
+<![endif]-->
+
+	<a href="#primary-nav" class="campl-skipTo">skip to primary navigation</a>
+	<a href="#content" class="campl-skipTo">skip to content</a>
+
+	<div class="campl-row campl-page-header campl-sub-section-page">
+		<div class="campl-wrap clearfix">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<div class="campl-breadcrumb" id="breadcrumb">
+						<ul class="campl-unstyled-list campl-horizontal-navigation clearfix">
+<li class="first-child">
+								<a href="https://bioinfotraining.bio.cam.ac.uk/" class="campl-home ir">Home</a>
+							</li>
+							<li>
+								<a href="">Courses</a>
+							</li>
+							<li>
+								<a href="">Training Materials</a>
+							</li>
+							<li>
+								<a href="index.html">CamStats
+							</a>
+</li>
+						</ul>
+</div>
+					<!--<p class="campl-page-title">Bioinformatics Training Materials</p>-->
+
+					<!-- <p class="campl-mobile-parent"><a href=""><span class="campl-back-btn campl-menu-indicator"></span>Studying at Cambridge</a></p> -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="campl-row campl-page-header">
+		<div class="campl-wrap clearfix campl-local-navigation" id="local-nav">
+			<div class="campl-local-navigation-container">
+				<ul class="campl-unstyled-list">
+<li><a href="https://training.cam.ac.uk/bioinformatics/search">Course schedule</a></li>
+					<li>
+<a href="#" class="campl-selected">Additional information</a>
+						<ul class="campl-unstyled-list local-dropdown-menu">
+<li><a href="#">Additional resources</a></li>
+							<li><a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">Where to find us?</a></li>
+							<li><a href="#">Frequently asked questions</a></li>
+						</ul>
+</li>
+					<li><a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Further training</a></li>
+				</ul>
+</div>
+		</div>
+
+
+
+		<div class="campl-wrap clearfix campl-page-sub-title campl-recessed-sub-title">
+			<div class="campl-column12">
+				<div class="campl-content-container">
+					<p class="campl-sub-title">CamStats</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+		<div class="campl-row campl-content campl-recessed-content">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column9  campl-main-content" id="content">
+					<div class="campl-content-container">
+						<div>
+<div class="row">
+  <header class="col-sm-12 col-lg-3 sidebar sidebar-book"><a class="sr-only sr-only-focusable" href="#content">Skip to main content</a>
+
+    <div class="d-flex align-items-start justify-content-between">
+      <br><button class="btn btn-outline-primary d-lg-none ml-2 mt-1" type="button" data-toggle="collapse" data-target="#main-nav" aria-expanded="true" aria-controls="main-nav"><i class="fas fa-bars"></i><span class="sr-only">Show table of contents</span></button>
+    </div>
+
+    <div id="main-nav" class="collapse-lg">
+      <form role="search">
+        <input id="search" class="form-control" type="search" placeholder="Search" aria-label="Search">
+</form>
+
+      <nav aria-label="Table of contents"><h2>Table of contents</h2>
+        <ul class="book-toc list-unstyled">
+<li><a class="" href="index.html"><span class="header-section-number">1</span> Overview</a></li>
+<li class="book-part">Generalised linear models</li>
+<li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
+<li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
+<li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li><a class="active" href="poisson-regression-count-response.html"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></li>
+<li class="book-part">Resampling techniques</li>
+<li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
+<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
+<li class="book-part">Unsupervised learning</li>
+<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
+<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
+</ul>
+
+        <div class="book-extra">
+          
+        </div>
+      </nav>
+</div>
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="poisson-regression-count-response" class="section level1" number="5">
+<h1>
+<span class="header-section-number">5</span> Poisson Regression – Count Response<a class="anchor" aria-label="anchor" href="#poisson-regression-count-response"><i class="fas fa-link"></i></a>
+</h1>
+<div id="objectives-3" class="section level2" number="5.1">
+<h2>
+<span class="header-section-number">5.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-3"><i class="fas fa-link"></i></a>
+</h2>
+<div class="objectives">
+<p><strong>Questions</strong></p>
+<ul>
+<li>How do we analyse count data?</li>
+</ul>
+<p><strong>Objectives</strong></p>
+<ul>
+<li>Be able to perform a poisson regression on count data</li>
+</ul>
+</div>
+</div>
+<div id="libraries-and-functions-2" class="section level2" number="5.2">
+<h2>
+<span class="header-section-number">5.2</span> Libraries and functions<a class="anchor" aria-label="anchor" href="#libraries-and-functions-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div class="inline-table"><table class="table table-sm">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Library</th>
+<th align="left">Description</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left"><code>tidyverse</code></td>
+<td align="left">A collection of R packages designed for data science</td>
+</tr>
+<tr class="even">
+<td align="left"><code>tidymodels</code></td>
+<td align="left">A collection of packages for modelling and machine learning using tidyverse principles</td>
+</tr>
+<tr class="odd">
+<td align="left"><code>poissonreg</code></td>
+<td align="left">Enables the <code>parsnip</code> package to fit various types of Poisson regression models</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+</div>
+</div>
+<div id="datasets-2" class="section level2" number="5.3">
+<h2>
+<span class="header-section-number">5.3</span> Datasets<a class="anchor" aria-label="anchor" href="#datasets-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">Islands</span></p>
+<p>The example in this section uses the following data set:</p>
+<p><code>data/islands.csv</code></p>
+<p>This is a data set comprising 35 observations of two variables (one dependent and one predictor). This records the number of species recorded on different small islands along with the area (km<sup>2</sup>)of the islands. The variables are <code>species</code> and <code>area</code>.</p>
+</div>
+</div>
+</div>
+<div id="visualise-the-data-2" class="section level2" number="5.4">
+<h2>
+<span class="header-section-number">5.4</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-2"><i class="fas fa-link"></i></a>
+</h2>
+<p>First we load the data, then we visualise it.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+First, we load and inspect the data:</p>
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">islands</span> <span class="op">&lt;-</span> <span class="fu">read_csv</span><span class="op">(</span><span class="st">"data/island.csv"</span><span class="op">)</span>
+
+<span class="va">islands</span></code></pre></div>
+<pre><code>## # A tibble: 35 × 2
+##    species  area
+##      &lt;dbl&gt; &lt;dbl&gt;
+##  1     114  12.1
+##  2     130  13.4
+##  3     113  13.7
+##  4     109  14.5
+##  5     118  16.8
+##  6     136  19.0
+##  7     149  19.6
+##  8     162  20.6
+##  9     145  20.9
+## 10     148  21.0
+## # … with 25 more rows</code></pre>
+<p>Looking at the data, we can see that there are two columns: <code>species</code>, which contains the number of species recorded on each island and <code>area</code>, which contains the surface area of the island in square kilometers.</p>
+<p>We can plot the data:</p>
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">islands</span> <span class="op">%&gt;%</span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">area</span>, y <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
+</div>
+</div>
+<p>It looks as though <code>area</code> may have an effect on the number of species that we observe on each island. We note that the response variable is count data and so we try to construct a Poisson regression.</p>
+</div>
+<div id="model-building-2" class="section level2" number="5.5">
+<h2>
+<span class="header-section-number">5.5</span> Model building<a class="anchor" aria-label="anchor" href="#model-building-2"><i class="fas fa-link"></i></a>
+</h2>
+<p>To create a poisson regression we do the following:</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>Again, similar to what we’ve done for the logistic models, we will use the <code>parsnip</code> package from the <code>tidymodels</code> library. Yes, the workflow still seems a bit faffy, but it provides a common syntax for a whole range of modelling libraries. This means that the syntax will stay the same as you do different kind of model comparisons.</p>
+<p>If you haven’t loaded <code>tidymodels</code> yet, now is a really good time. We also need to load <code>poissonreg</code>, which adds extra functionality to <code>parsnip</code>.</p>
+<div class="sourceCode" id="cb79"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("tidymodels")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://tidymodels.tidymodels.org">tidymodels</a></span><span class="op">)</span>
+<span class="co"># install.packages("poissonreg")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/tidymodels/poissonreg">poissonreg</a></span><span class="op">)</span></code></pre></div>
+<p>Remember that the workflow in <code>parsnip</code> is a bit different to what we’re used to so far. Using <code>parsnip</code> we approach things in a more systematic manner. We specify a model in three steps:</p>
+<ol style="list-style-type: decimal">
+<li>
+<strong>Specify the type of model based on its mathematical structure</strong> (e.g., linear regression, random forest, K-nearest neighbors, etc).</li>
+<li>
+<strong>When required, declare the mode of the model.</strong> The mode reflects the type of prediction outcome. For numeric outcomes, the mode is regression; for qualitative outcomes, it is classification. If a model can only create one type of model, such as logistic regression, the mode is already set.</li>
+<li>
+<strong>Specify the engine for fitting the model.</strong> This usually is the software package or library that should be used.</li>
+</ol>
+<p>So, we can create the model as follows:</p>
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/poisson_reg.html">poisson_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_args.html">set_mode</a></span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"glm"</span><span class="op">)</span></code></pre></div>
+<p>Again, note that we are not actually specifying any of the variables yet. All we’ve done is tell R what kind of model we’re planning to use. If we want to see how <code>parsnip</code> converts this code to the package syntax, we can check this with <code><a href="https://parsnip.tidymodels.org/reference/translate.html">translate()</a></code>:</p>
+<div class="sourceCode" id="cb81"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_mod</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/translate.html">translate</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Poisson Regression Model Specification (regression)
+## 
+## Computational engine: glm 
+## 
+## Model fit template:
+## stats::glm(formula = missing_arg(), data = missing_arg(), weights = missing_arg(), 
+##     family = stats::poisson)</code></pre>
+<p>This shows that we have a poisson regression model, where the outcome is going to be a regression. The model fit template tells us that we’ll be using the <code><a href="https://rdrr.io/r/stats/glm.html">glm()</a></code> function from the <code>stats</code> package, which can take a <code>formula</code>, <code>data</code>, <code>weights</code> and <code>family</code> argument. The <code>family</code> argument is already set to poisson.</p>
+<p>Now we’ve specified what kind of model we’re planning to use, we can fit our data to it, using the <code><a href="https://generics.r-lib.org/reference/fit.html">fit()</a></code> function:</p>
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op">&lt;-</span> <span class="va">isl_mod</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">species</span> <span class="op">~</span> <span class="va">area</span>,
+      data <span class="op">=</span> <span class="va">islands</span><span class="op">)</span></code></pre></div>
+<p>We can look at the output directly, but I prefer to tidy the data up using the <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> function from <code>broom</code> package:</p>
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   4.24     0.0413      103.  0        
+## 2 area          0.0356   0.00125      28.6 2.73e-179</code></pre>
+<p>The output is strikingly similar to the logistic regression models (who’d have guessed, eh?) and the main numbers to extract from the output are the two numbers in the <code>estimate</code> column.</p>
+</div>
+</div>
+<p>These are the coefficients of the Poisson model equation and need to be placed in the following formula in order to estimate the expected number of species as a function of island size:</p>
+<p><span class="math display">\[\begin{equation}
+E(species) = {e}^{(4.24 + 0.036 \times area)}
+\end{equation}\]</span></p>
+<p>Interpreting this requires a bit of thought (not much, but a bit).</p>
+<p>The intercept coefficient (<span class="math inline">\(\beta_0\)</span>), 4.24, is related to the number of species we would expect on an island of zero area (this is statistics, not real life. You’d do well to remember that before you worry too much about what that even means). But in order to turn this number into something meaningful we have to exponentiate it. Since <span class="math inline">\({e}^{(4.24) \approx 70}\)</span>, we can say that the baseline number of species the model expects on any island is 70. This isn’t actually the interesting bit though.</p>
+<p>The coefficient of <code>area</code> (<span class="math inline">\(\beta_1\)</span>) is the fun bit. For starters we can see that it is a positive number which does mean that increasing area leads to increasing numbers of species. Good so far - since this matches what we saw when we plotted our data. But what does the value 0.036 actually mean?</p>
+<p>Well, if we exponentiate it too we get <span class="math inline">\({e}^{(0.036)} \approx 1.04\)</span>. This means that for every increase in area of 1 km<sup>2</sup> (the original units of the <code>area</code> variable) the number of species on the island is multiplied by 1.04. So, an island of area 1 km<sup>2</sup> is predicted to have <span class="math inline">\(1.04 \times 70 \approx 72\)</span> species.</p>
+<p>So, in order to interpret Poisson coefficients, you have to exponentiate them.</p>
+</div>
+<div id="model-predictions-1" class="section level2" number="5.6">
+<h2>
+<span class="header-section-number">5.6</span> Model predictions<a class="anchor" aria-label="anchor" href="#model-predictions-1"><i class="fas fa-link"></i></a>
+</h2>
+<p>Now that we can interpret the Poisson coefficients, it would be good to see if using a poisson regression to describe these data is actually a good idea.</p>
+<p>Visualisation is always useful, so in order to get an idea of how our data fits a Poisson regression, we’ll plot the Poisson regression curve. Next, we overlay our original data.</p>
+<div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<p>First, we create a table that contains data for the curve, starting for an <code>area</code> with value 1 to 50, in steps of 1.</p>
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>area <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">50</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<p>Next, we feed our model these data:</p>
+<div class="sourceCode" id="cb87"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">curve</span> <span class="op">&lt;-</span> <span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span></code></pre></div>
+<p>This gives the predicted number of <code>species</code> for each given value of <code>area</code>. If we have a closer look at these data we can see that, for example, for an <code>area</code> with a surface area of 4 km<sup>2</sup> the predicted number of species is around 80. Nice.</p>
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">curve</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 6 × 2
+##    area .pred
+##   &lt;dbl&gt; &lt;dbl&gt;
+## 1     1  72.0
+## 2     2  74.6
+## 3     3  77.3
+## 4     4  80.1
+## 5     5  83.0
+## 6     6  86.0</code></pre>
+<p>Using these data, we can now plot all the <em>predicted</em> number of species and overlay our original <em>measured</em> data.</p>
+<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">ggplot</span><span class="op">(</span><span class="va">curve</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">area</span>, <span class="va">.pred</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_line</span><span class="op">(</span>colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">islands</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">area</span>, <span class="va">species</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-12-1.png" width="672"></div>
+</div>
+</div>
+<p>That looks like a pretty decent fit, really. But of course we want to have a (slightly) less hand-wavy conclusion than that.</p>
+<div id="goodness-of-fit" class="section level3" number="5.6.1">
+<h3>
+<span class="header-section-number">5.6.1</span> Goodness-of-fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can use the model’s residual deviance to assess how much the predicted values differ from the observed. This gives us an idea of how well-specified the model is. When a model is “true”, <em>i.e.</em> the model makes pretty accurate predictions, then we expect the residual deviance to be distributed as a <span class="math inline">\(\chi^2\)</span>
+random variable with degrees of freedom equal to the model’s residual degrees of freedom.</p>
+<p>We can get these parameters as follows and we’ll store them in a new object, so we can extract them in a bit.</p>
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1          857.      34  -139.  283.  286.     30.4          33    35</code></pre>
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_parameters</span> <span class="op">&lt;-</span> <span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<p>The values we are interested in are in the <code>deviance</code> and <code>df.residual</code> columns, respectively.</p>
+<p>Next, we use the <code><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq()</a></code> function to calculate the correct probability.</p>
+<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq</a></span><span class="op">(</span><span class="va">isl_parameters</span><span class="op">$</span><span class="va">deviance</span>,
+       <span class="va">isl_parameters</span><span class="op">$</span><span class="va">df.residual</span>,
+       lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 0.595347</code></pre>
+<p>This gives us a value of around 0.60. This suggests that this model is actually a pretty good one (if it wasn’t then the value would be close to zero) and that the data are pretty well supported by the model.</p>
+<div class="note">
+<p>The <code><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq()</a></code> function gives the lower tail probability that <span class="math inline">\(\chi^2 \le x\)</span> by default. We’re actually interested in the probability that <span class="math inline">\(\chi^2 \ge x\)</span>. These two probabilities must sum to one, so we get the upper tail probability by setting the argument <code>lower.tail = FALSE</code>. An alternative way would be to use the default, but do <code>1 - pchisq()</code>.</p>
+</div>
+<p>For Poisson models this has an extra interpretation. This can be used to assess whether we have significant overdispersion in our data. For a Poisson model to be appropriate we need that the variance of the data to be exactly the same as the mean of the data. If there is overdispersion then the data would spread out more for higher predicted values of species than for lower ones. Our visualisation shows that this isn’t really happening. The spread is unlikely to be perfectly homogeneous, but we don’t want the data to spread out too much.</p>
+<p>The easy way to check this is to look at the ratio of the residual deviance to the residual degrees of freedom (in this case 0.922). For a Poisson model to be valid, this ratio should be about 1. If the ratio is significantly bigger than 1 then we say that we have over-dispersion in the model and we wouldn’t be able to trust any of the significance testing using a Poisson regression.</p>
+</div>
+<div id="confidence-intervals" class="section level3" number="5.6.2">
+<h3>
+<span class="header-section-number">5.6.2</span> Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals"><i class="fas fa-link"></i></a>
+</h3>
+<p>We can also assess how reliable our model is by looking at the confidence intervals of the estimated parameters.</p>
+<p>We extracted the parameters of the model by using</p>
+<div class="sourceCode" id="cb96"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic   p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   4.24     0.0413      103.  0        
+## 2 area          0.0356   0.00125      28.6 2.73e-179</code></pre>
+<p>Although we focussed on the <code>estimate</code> column, we can see that the associated standard errors for each estimate is also given in the <code>std.error</code> column. We can use these values to calculate the 95% confidence intervals.</p>
+<p>We can either do this by hand through multiplying the standard errors by 1.96. We can then subtract from (giving the lower confidence estimate) or add to (giving the higher confidence estimate) the estimated parameter. This gives a pretty decent approximation.</p>
+<p>But then again, life is short, so we can just use the additional argument that is available for the <code><a href="https://generics.r-lib.org/reference/tidy.html">tidy()</a></code> function. You can look at what columns are returned, but I’m selecting the relevant ones here:</p>
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>conf.int <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># default is FALSE</span>
+                 conf.level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  <span class="co"># is the default</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span>, <span class="va">conf.low</span>, <span class="va">conf.high</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 4
+##   term        estimate conf.low conf.high
+##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;
+## 1 (Intercept)   4.24     4.16      4.32  
+## 2 area          0.0356   0.0332    0.0381</code></pre>
+<p>What we’re interested in here is the confidence intervals for the <code>area</code> parameter. Before we delve into that, I’m also going to calculate the exponent for these confidence intervals. We can do this using the <code><a href="https://rdrr.io/r/base/Log.html">exp()</a></code> function.</p>
+<div class="sourceCode" id="cb100"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">isl_fit</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>conf.int <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># default is FALSE</span>
+                 conf.level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span>  <span class="co"># is the default</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span>, <span class="va">conf.low</span>, <span class="va">conf.high</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>conf.low_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">conf.low</span><span class="op">)</span>,
+         conf.high_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">conf.high</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 6
+##   term        estimate conf.low conf.high conf.low_exp conf.high_exp
+##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+## 1 (Intercept)   4.24     4.16      4.32          64.1          75.3 
+## 2 area          0.0356   0.0332    0.0381         1.03          1.04</code></pre>
+<p>These values are a bit familiar, since we’ve previously determined based on the <code>area</code> coefficient that for each increase in square kilometer, the number of species increases by approximately 1.04.</p>
+<p>What these values tell us is that we can be 95% certain that for every increase in square kilometer of island area size, the number of species increases somewhere between 1.034 and 1.039.</p>
+<div class="note">
+<p>If there was no association between <code>area</code> and <code>species</code>, then the <span class="math inline">\(\beta_1\)</span> coefficient would be zero. That would mean that the exponent would be <span class="math inline">\({e}^{\beta_1}=1\)</span>. The interval that we calculated for <span class="math inline">\({e}^{\beta_1}\)</span> lies between 1.034 and 1.039 and therefore does not include 1, so the model with <code>area</code> is preferred over the model without <code>area</code>.</p>
+<p>Similarly, the interval for <span class="math inline">\(\beta_1\)</span> (0.033 - 0.038) does not include 0, again showing the significance of <code>area</code> as a predictor of <code>species</code>.</p>
+</div>
+</div>
+</div>
+<div id="exercise-seatbelts" class="section level2" number="5.7">
+<h2>
+<span class="header-section-number">5.7</span> Exercise: Seatbelts<a class="anchor" aria-label="anchor" href="#exercise-seatbelts"><i class="fas fa-link"></i></a>
+</h2>
+<div class="exercise">
+<p><span id="exr:unlabeled-div-4" class="exercise"><strong>Exercise 5.1  </strong></span>The <code>Seatbelts</code> data set in R is a multiple time-series data set that was commissioned by the Department of Transport in 1984 to measure differences in deaths before and after front seatbelt legislation was introduced on 31st January 1983. It provides monthly total numerical data on a number of incidents including those related to death and injury in Road Traffic Accidents (RTA’s). The data set starts in January 1969 and observations run until December 1984.</p>
+<p>I’d like you to do the following:</p>
+<ol style="list-style-type: decimal">
+<li>Load the data (see code below)</li>
+<li>Visualise the data and create a poisson regression model</li>
+<li>Plot the regression model on top of the data</li>
+<li>Assess if the model is a decent predictor for the number of fatalities</li>
+</ol>
+<details><summary>
+Loading the data
+</summary><div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span>
+We can load the data directly in R, but unfortunately the data is not in a very friendly format. So we need to do a bit of data wrangling and tidying.
+We can make our life (a bit) easier with the <code>janitor</code> library - it’s an addition to tidyverse and has a <code><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names()</a></code> function that enables you to clean up messy column names. Install it if needed, then load it.</p>
+<p>Don’t worry too much about what the code means that tidies the data. Just copy/paste it, so that you end up with a tidy <code>seatbelts</code> object.</p>
+<div class="sourceCode" id="cb102"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># install.packages("janitor")</span>
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/sfirke/janitor">janitor</a></span><span class="op">)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: 'janitor'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     chisq.test, fisher.test</code></pre>
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="va">Seatbelts</span><span class="op">)</span>
+
+<span class="va">seatbelts</span> <span class="op">&lt;-</span> <span class="va">Seatbelts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
+  <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
+  <span class="fu">mutate</span><span class="op">(</span>Year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html">floor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">time</a></span><span class="op">(</span><span class="va">Seatbelts</span><span class="op">)</span><span class="op">)</span>,
+         Year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html">as.numeric</a></span><span class="op">(</span><span class="va">Year</span><span class="op">)</span>,
+         Month <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/time.html">cycle</a></span><span class="op">(</span><span class="va">Seatbelts</span><span class="op">)</span>,
+                        labels <span class="op">=</span> <span class="va">month.abb</span><span class="op">)</span>,
+         law <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/factor.html">factor</a></span><span class="op">(</span><span class="va">law</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://rdrr.io/pkg/janitor/man/clean_names.html">clean_names</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="co"># check if the data is now in a decent format</span>
+<span class="va">seatbelts</span></code></pre></div>
+<pre><code>## # A tibble: 192 × 10
+##    drivers_killed drivers front  rear   kms petrol_price van_killed law    year
+##             &lt;dbl&gt;   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt; &lt;fct&gt; &lt;dbl&gt;
+##  1            107    1687   867   269  9059        0.103         12 0      1969
+##  2             97    1508   825   265  7685        0.102          6 0      1969
+##  3            102    1507   806   319  9963        0.102         12 0      1969
+##  4             87    1385   814   407 10955        0.101          8 0      1969
+##  5            119    1632   991   454 11823        0.101         10 0      1969
+##  6            106    1511   945   427 12391        0.101         13 0      1969
+##  7            110    1559  1004   522 13460        0.104         11 0      1969
+##  8            106    1630  1091   536 14055        0.104          6 0      1969
+##  9            107    1579   958   405 12106        0.104         10 0      1969
+## 10            134    1653   850   437 11372        0.103         16 0      1969
+## # … with 182 more rows, and 1 more variable: month &lt;fct&gt;</code></pre>
+</div>
+</div>
+</details><details><summary>
+Answer
+</summary><div class="panelset">
+<div class="panel">
+<p><span class="panel-name">tidyverse</span></p>
+<div id="visualise-the-data-3" class="section level3" number="5.7.1">
+<h3>
+<span class="header-section-number">5.7.1</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>The data tracks the number of drivers killed in road traffic accidents, before and after the seatbelt law was introduced. The information on whether the law was in place is encoded in the <code>law</code> column as <code>0</code> (law not in place) or <code>1</code> (law in place).</p>
+<p>There are many more observations when the law was <em>not</em> in place, so we need to keep this in mind when we’re interpreting the data.</p>
+<p>First we have a look at the data comparing no law vs law:</p>
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seatbelts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">law</span>, <span class="va">drivers_killed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_boxplot</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-19-1.png" width="672"></div>
+<p>The data are recorded by month and year, so we can also display the number of drivers killed by year:</p>
+<div class="sourceCode" id="cb108"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">seatbelts</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span><span class="va">year</span>, <span class="va">drivers_killed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-20-1.png" width="672"></div>
+<p>The data look a bit weird. There is quite some variation within years (keeping in mind that the data are aggregated monthly). The data also seems to wave around a bit… with some vague peaks (e.g. 1972 - 1973) and some troughs (e.g. around 1976).</p>
+<p>So my initial thought is that these data are going to be a bit tricky to interpret. But that’s OK.</p>
+</div>
+<div id="model-building-3" class="section level3" number="5.7.2">
+<h3>
+<span class="header-section-number">5.7.2</span> Model building<a class="anchor" aria-label="anchor" href="#model-building-3"><i class="fas fa-link"></i></a>
+</h3>
+<p>We’re dealing with count data, so we’re going to use a poisson regression.</p>
+<p>As before, we first define the model type.</p>
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_mod</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/poisson_reg.html">poisson_reg</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_args.html">set_mode</a></span><span class="op">(</span><span class="st">"regression"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://parsnip.tidymodels.org/reference/set_engine.html">set_engine</a></span><span class="op">(</span><span class="st">"glm"</span><span class="op">)</span></code></pre></div>
+<p>And check that everything is in order.</p>
+<div class="sourceCode" id="cb110"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_mod</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://parsnip.tidymodels.org/reference/translate.html">translate</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Poisson Regression Model Specification (regression)
+## 
+## Computational engine: glm 
+## 
+## Model fit template:
+## stats::glm(formula = missing_arg(), data = missing_arg(), weights = missing_arg(), 
+##     family = stats::poisson)</code></pre>
+<p>Next, we fit our data to the model we just specified:</p>
+<div class="sourceCode" id="cb112"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_fit</span> <span class="op">&lt;-</span> <span class="va">stb_mod</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu"><a href="https://generics.r-lib.org/reference/fit.html">fit</a></span><span class="op">(</span><span class="va">drivers_killed</span> <span class="op">~</span> <span class="va">year</span>,
+      data <span class="op">=</span> <span class="va">seatbelts</span><span class="op">)</span></code></pre></div>
+<p>And we can extract the estimated coefficients from these fitted data:</p>
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_fit</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 5
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)  37.2      2.80         13.3 2.62e-40
+## 2 year         -0.0164   0.00142     -11.6 5.88e-31</code></pre>
+</div>
+<div id="visualise-the-model" class="section level3" number="5.7.3">
+<h3>
+<span class="header-section-number">5.7.3</span> Visualise the model<a class="anchor" aria-label="anchor" href="#visualise-the-model"><i class="fas fa-link"></i></a>
+</h3>
+<p>To see if the model is actually a decent prediction for our data, we can plot it.</p>
+<p>To do this, we create modelled values for our predictor variable <code>year</code>. Because we have monthly data, we create a sequence of “years” in 1/12th intervals - one for each month.</p>
+<p>Next, we ask the model to predict the number of drivers killed based on these values.</p>
+<p>Lastly, we can plot those predicted values against the observed values in our data set.</p>
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># create the sequence of values that are used</span>
+<span class="co"># in predicting number of deaths</span>
+<span class="va">model</span> <span class="op">&lt;-</span> <span class="fu">tibble</span><span class="op">(</span>year <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html">seq</a></span><span class="op">(</span><span class="fl">1969</span>, <span class="fl">1984</span>, <span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="fl">12</span><span class="op">)</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># fit these data to the model</span>
+<span class="va">stb_curve</span> <span class="op">&lt;-</span> <span class="va">stb_fit</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/augment.html">augment</a></span><span class="op">(</span>new_data <span class="op">=</span> <span class="va">model</span><span class="op">)</span>
+
+<span class="co"># plot the predicted values</span>
+<span class="co"># and overlay the observed values</span>
+<span class="fu">ggplot</span><span class="op">(</span><span class="va">seatbelts</span>, <span class="fu">aes</span><span class="op">(</span><span class="va">year</span>, <span class="va">drivers_killed</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
+  <span class="fu">geom_point</span><span class="op">(</span>data <span class="op">=</span> <span class="va">stb_curve</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">.pred</span><span class="op">)</span>,
+             colour <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></code></pre></div>
+<div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-25-1.png" width="672"></div>
+<p>That does not look like a very good fit, but then again the data look rather messy as well.</p>
+</div>
+<div id="goodness-of-fit-1" class="section level3" number="5.7.4">
+<h3>
+<span class="header-section-number">5.7.4</span> Goodness-of-fit<a class="anchor" aria-label="anchor" href="#goodness-of-fit-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Let’s check the goodness-of-fit.</p>
+<p>First we store the parameter estimates in an object. Then we use the <code><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq()</a></code> function to calculate the probability that the residual deviance is actually distributed as a <span class="math inline">\(\chi^2\)</span> random variable with degrees of freedom equal to the model’s residual degrees of freedom.</p>
+<p>Yes, you can read that sentence three times and still wonder what that really means. Suffice to say is that the outcome gives us a measure of how well-specified the model is.</p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_parameter</span> <span class="op">&lt;-</span> <span class="va">stb_fit</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/glance.html">glance</a></span><span class="op">(</span><span class="op">)</span>
+
+<span class="va">stb_parameter</span></code></pre></div>
+<pre><code>## # A tibble: 1 × 8
+##   null.deviance df.null logLik   AIC   BIC deviance df.residual  nobs
+##           &lt;dbl&gt;   &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;    &lt;dbl&gt;       &lt;int&gt; &lt;int&gt;
+## 1          984.     191 -1062. 2127. 2134.     850.         190   192</code></pre>
+<div class="sourceCode" id="cb118"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/stats/Chisquare.html">pchisq</a></span><span class="op">(</span><span class="va">stb_parameter</span><span class="op">$</span><span class="va">deviance</span>,
+       <span class="va">stb_parameter</span><span class="op">$</span><span class="va">df.residual</span>,
+       lower.tail <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+<pre><code>## [1] 3.12987e-84</code></pre>
+<p>Well, that’s a bit of a blow. The probability value is extremely low, suggesting that the model is not very well-specified. Which kind of matches what we already saw in the plot. It might still be better than the null model (“the data can be modelled as the average across all the observations”), but we seem to be missing some parameters here.</p>
+</div>
+<div id="confidence-intervals-1" class="section level3" number="5.7.5">
+<h3>
+<span class="header-section-number">5.7.5</span> Confidence intervals<a class="anchor" aria-label="anchor" href="#confidence-intervals-1"><i class="fas fa-link"></i></a>
+</h3>
+<p>Similar to the <code>islands</code> example, we can also calculate the confidence intervals associated with our estimated parameters.</p>
+<div class="sourceCode" id="cb120"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="va">stb_fit</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> <span class="fu"><a href="https://generics.r-lib.org/reference/tidy.html">tidy</a></span><span class="op">(</span>conf.int <span class="op">=</span> <span class="cn">TRUE</span>,        <span class="co"># default is FALSE</span>
+                 conf.level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>  <span class="co"># is the default</span>
+  <span class="fu">select</span><span class="op">(</span><span class="va">term</span>, <span class="va">estimate</span>, <span class="va">conf.low</span>, <span class="va">conf.high</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="fu">mutate</span><span class="op">(</span>conf.low_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">conf.low</span><span class="op">)</span>,
+         conf.high_exp <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html">exp</a></span><span class="op">(</span><span class="va">conf.high</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<pre><code>## # A tibble: 2 × 6
+##   term        estimate conf.low conf.high conf.low_exp conf.high_exp
+##   &lt;chr&gt;          &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;         &lt;dbl&gt;
+## 1 (Intercept)  37.2     31.7      42.7        5.78e+13      3.34e+18
+## 2 year         -0.0164  -0.0191   -0.0136     9.81e- 1      9.86e- 1</code></pre>
+<p>We’re interested in the confidence interval for the <code>year</code> variable. Remember that if there is no association at all between <code>year</code> and <code>drivers_killed</code> then the parameter <span class="math inline">\(e^{\beta_1} = 1\)</span>.</p>
+<p>In our case the interval we calculated for <span class="math inline">\(e^{\beta_1}\)</span> lies between 0.981 and 0.986. This does not include 1, so it seems that the model that takes <code>year</code> into account is still preferred over a model that doesn’t.</p>
+</div>
+</div>
+</div>
+</details>
+</div>
+</div>
+<div id="key-points-2" class="section level2" number="5.8">
+<h2>
+<span class="header-section-number">5.8</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-2"><i class="fas fa-link"></i></a>
+</h2>
+<div class="keypoints">
+<ul>
+<li>
+</ul>
+</div>
+
+</div>
+</div>
+
+
+
+  <div class="chapter-nav">
+<div class="prev"><a href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></div>
+<div class="next"><a href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></div>
+</div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
+    <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
+      <ul class="nav navbar-nav">
+<li><a class="nav-link" href="#poisson-regression-count-response"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></li>
+<li><a class="nav-link" href="#objectives-3"><span class="header-section-number">5.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#libraries-and-functions-2"><span class="header-section-number">5.2</span> Libraries and functions</a></li>
+<li><a class="nav-link" href="#datasets-2"><span class="header-section-number">5.3</span> Datasets</a></li>
+<li><a class="nav-link" href="#visualise-the-data-2"><span class="header-section-number">5.4</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#model-building-2"><span class="header-section-number">5.5</span> Model building</a></li>
+<li>
+<a class="nav-link" href="#model-predictions-1"><span class="header-section-number">5.6</span> Model predictions</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#goodness-of-fit"><span class="header-section-number">5.6.1</span> Goodness-of-fit</a></li>
+<li><a class="nav-link" href="#confidence-intervals"><span class="header-section-number">5.6.2</span> Confidence intervals</a></li>
+</ul>
+</li>
+<li>
+<a class="nav-link" href="#exercise-seatbelts"><span class="header-section-number">5.7</span> Exercise: Seatbelts</a><ul class="nav navbar-nav">
+<li><a class="nav-link" href="#visualise-the-data-3"><span class="header-section-number">5.7.1</span> Visualise the data</a></li>
+<li><a class="nav-link" href="#model-building-3"><span class="header-section-number">5.7.2</span> Model building</a></li>
+<li><a class="nav-link" href="#visualise-the-model"><span class="header-section-number">5.7.3</span> Visualise the model</a></li>
+<li><a class="nav-link" href="#goodness-of-fit-1"><span class="header-section-number">5.7.4</span> Goodness-of-fit</a></li>
+<li><a class="nav-link" href="#confidence-intervals-1"><span class="header-section-number">5.7.5</span> Confidence intervals</a></li>
+</ul>
+</li>
+<li><a class="nav-link" href="#key-points-2"><span class="header-section-number">5.8</span> Key points</a></li>
+</ul>
+
+      <div class="book-extra">
+        <ul class="list-unstyled">
+          
+        </ul>
+</div>
+    </nav>
+</div>
+
+</div>
+</div> <!-- .container -->
+
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="campl-row campl-local-footer">
+			<div class="campl-wrap clearfix">
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Contact us</h3>
+						 <div class="content">
+						   <p>Bioinformatics Training Department of Genetics University of Cambridge Downing Street Cambridge CB2 3EH United Kingdom</p>
+						   <h3>Contact:</h3> <a href="mailto:%20bioinfotraining@bio.cam.ac.uk">bioinfotraining@bio.cam.ac.uk</a>
+						 </div>
+					</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/undergraduate">Undergraduate training</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate">Postgraduate training</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>Postgraduate Courses by Theme</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/programming">Basic Skills and Programming</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/services">Databases and Services</a>
+							</li>
+							<li>
+							  <a href="https://bioinfotraining.bio.cam.ac.uk/postgraduate/specialized">Specialised Topics</a>
+							</li>
+						</ul>
+</div>
+				</div>
+				<div class="campl-column3 campl-footer-navigation last">
+					<div class="campl-content-container campl-navigation-list">
+						<h3>About Bioinformatics Training</h3>
+						<ul class="campl-unstyled-list">
+<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about">About the Facility</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/findus">How to find us</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/about/visitors">Visiting Cambridge</a>
+							</li>
+							<li>
+								<a href="https://bioinfotraining.bio.cam.ac.uk/privacy-and-cookie-policies">Privacy and Cookies policy</a>
+							</li>
+						</ul>
+</div>
+				</div>
+			</div>
+		</div>
+
+<!--[if lte IE 8]>
+</div>
+<![endif]-->
+
+	<script type="text/javascript" src="javascripts/libs/ios-orientationchange-fix.js"></script><script type="text/javascript" src="javascripts/libs/jquery-min.js"></script><script type="text/javascript" src="javascripts/libs/modernizr.js"></script><script type="text/javascript" src="javascripts/custom.js"></script><!-- dynamically load mathjax for compatibility with self-contained --><script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script><script type="text/x-mathjax-config">const popovers = document.querySelectorAll('a.footnote-ref[data-toggle="popover"]');
+for (let popover of popovers) {
+  const div = document.createElement('div');
+  div.setAttribute('style', 'position: absolute; top: 0, left:0; width:0, height:0, overflow: hidden; visibility: hidden;');
+  div.innerHTML = popover.getAttribute('data-content');
+
+  var has_math = div.querySelector("span.math");
+  if (has_math) {
+    document.body.appendChild(div);
+    MathJax.Hub.Queue(["Typeset", MathJax.Hub, div]);
+    MathJax.Hub.Queue(function() {
+      popover.setAttribute('data-content', div.innerHTML);
+      document.body.removeChild(div);
+    })
+  }
+}
+</script>
+</body>
+</html>

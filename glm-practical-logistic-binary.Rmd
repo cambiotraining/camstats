@@ -53,7 +53,7 @@ This is a data set comprising 768 observations of three variables (one dependent
 :::::
 
 ## Visualise the data
-First we load the data, then we visualise it. If needed, load the tidyverse package using:
+First we load the data, then we visualise it.
 
 ::::: {.panelset}
 ::: {.panel}

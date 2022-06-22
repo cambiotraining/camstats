@@ -3,16 +3,16 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<title>Chapter 5 Introduction | CamStats</title>
+<title>Chapter 6 Introduction | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
-<meta name="description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
+<meta name="description" content="6.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="generator" content="bookdown 0.25 with bs4_book()">
-<meta property="og:title" content="Chapter 5 Introduction | CamStats">
+<meta property="og:title" content="Chapter 6 Introduction | CamStats">
 <meta property="og:type" content="book">
-<meta property="og:description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
+<meta property="og:description" content="6.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Chapter 5 Introduction | CamStats">
-<meta name="twitter:description" content="5.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
+<meta name="twitter:title" content="Chapter 6 Introduction | CamStats">
+<meta name="twitter:description" content="6.1 Objectives  Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests. By the end of this practical participants should be able to perform Monte Carlo...">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Place favicon.ico & apple-touch-icon.png in the root of your domain and delete these references --><link rel="shortcut icon" href="favicon.ico">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -123,13 +123,14 @@
 <li><a class="" href="glm-intro.html"><span class="header-section-number">2</span> Introduction</a></li>
 <li><a class="" href="logistic-models-binary-response.html"><span class="header-section-number">3</span> Logistic Models – Binary Response</a></li>
 <li><a class="" href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></li>
+<li><a class="" href="poisson-regression-count-response.html"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></li>
 <li class="book-part">Resampling techniques</li>
-<li><a class="active" href="resampling-intro.html"><span class="header-section-number">5</span> Introduction</a></li>
-<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></li>
+<li><a class="active" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
+<li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
 <li class="book-part">Unsupervised learning</li>
-<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">7</span> Principal component analysis (PCA)</a></li>
-<li><a class="" href="kmeans.html"><span class="header-section-number">8</span> K-means clustering</a></li>
-<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">9</span> Hierarchical clustering</a></li>
+<li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
+<li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
+<li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
 </ul>
 
         <div class="book-extra">
@@ -137,13 +138,13 @@
         </div>
       </nav>
 </div>
-  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="resampling-intro" class="section level1" number="5">
+  </header><main class="col-sm-12 col-md-9 col-lg-7" id="content"><div id="resampling-intro" class="section level1" number="6">
 <h1>
-<span class="header-section-number">5</span> Introduction<a class="anchor" aria-label="anchor" href="#resampling-intro"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6</span> Introduction<a class="anchor" aria-label="anchor" href="#resampling-intro"><i class="fas fa-link"></i></a>
 </h1>
-<div id="objectives-3" class="section level2" number="5.1">
+<div id="objectives-4" class="section level2" number="6.1">
 <h2>
-<span class="header-section-number">5.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6.1</span> Objectives<a class="anchor" aria-label="anchor" href="#objectives-4"><i class="fas fa-link"></i></a>
 </h2>
 <div class="objectives">
 <p><strong>Aim: To introduce R/Python commands and algorithms for conducting simple permutation tests.</strong></p>
@@ -161,9 +162,9 @@
 <p>and understand how to apply these techniques more generally.</p>
 </div>
 </div>
-<div id="background-1" class="section level2" number="5.2">
+<div id="background-1" class="section level2" number="6.2">
 <h2>
-<span class="header-section-number">5.2</span> Background<a class="anchor" aria-label="anchor" href="#background-1"><i class="fas fa-link"></i></a>
+<span class="header-section-number">6.2</span> Background<a class="anchor" aria-label="anchor" href="#background-1"><i class="fas fa-link"></i></a>
 </h2>
 <p>All traditional statistical test make use of various named distributions (normally the normal distribution, lol, for parametric tests like the t-test or ANOVA) in order to work properly, or they require certain assumptions to be made about the parent distribution (such as the shape of the distribution is symmetric for non-parametric tests like Wilcoxon). If these assumptions are met then traditional statistical tests are fine, but what can we do when we can’t assume normality or if the distribution of the data is just weird?</p>
 <p>Resampling techniques are the tools that work here. They can allow us to test hypotheses about our data using only the data itself (without appeal to any assumptions about the shape or form of the parent distribution). They are in some ways a much simpler approach to statistics, but because they rely on the ability to generate thousands and tens of thousands of random numbers very quickly, they simply weren’t considered practical back in the day. Even now, they aren’t widely used because they require the user (you, in case you’d forgotten what’s going on at this time of day) to do more than click a button on a stats package or even know the name of the test. These techniques require a mix of statistical knowledge and programming; a combination of skills that isn’t all that common! There are three broad areas of resampling methods (although they are all quite closely related):</p>
@@ -184,14 +185,14 @@
 </div>
 </div>
   <div class="chapter-nav">
-<div class="prev"><a href="logistic-regression---proportion-response.html"><span class="header-section-number">4</span> Logistic regression - proportion response</a></div>
-<div class="next"><a href="single-predictor-permutation-tests.html"><span class="header-section-number">6</span> Single predictor permutation tests</a></div>
+<div class="prev"><a href="poisson-regression-count-response.html"><span class="header-section-number">5</span> Poisson Regression – Count Response</a></div>
+<div class="next"><a href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></div>
 </div></main><div class="col-md-3 col-lg-2 d-none d-md-block sidebar sidebar-chapter">
     <nav id="toc" data-toggle="toc" aria-label="On this page"><h2>On this page</h2>
       <ul class="nav navbar-nav">
-<li><a class="nav-link" href="#resampling-intro"><span class="header-section-number">5</span> Introduction</a></li>
-<li><a class="nav-link" href="#objectives-3"><span class="header-section-number">5.1</span> Objectives</a></li>
-<li><a class="nav-link" href="#background-1"><span class="header-section-number">5.2</span> Background</a></li>
+<li><a class="nav-link" href="#resampling-intro"><span class="header-section-number">6</span> Introduction</a></li>
+<li><a class="nav-link" href="#objectives-4"><span class="header-section-number">6.1</span> Objectives</a></li>
+<li><a class="nav-link" href="#background-1"><span class="header-section-number">6.2</span> Background</a></li>
 </ul>
 
       <div class="book-extra">
