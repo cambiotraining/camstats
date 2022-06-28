@@ -487,8 +487,8 @@ random_state = 42
 kmeans.fit(points_py)
 ```
 
-```
-## KMeans(init='random', n_clusters=3, random_state=42)
+```{=html}
+<style>#sk-container-id-1 {color: black;background-color: white;}#sk-container-id-1 pre{padding: 0;}#sk-container-id-1 div.sk-toggleable {background-color: white;}#sk-container-id-1 label.sk-toggleable__label {cursor: pointer;display: block;width: 100%;margin-bottom: 0;padding: 0.3em;box-sizing: border-box;text-align: center;}#sk-container-id-1 label.sk-toggleable__label-arrow:before {content: "▸";float: left;margin-right: 0.25em;color: #696969;}#sk-container-id-1 label.sk-toggleable__label-arrow:hover:before {color: black;}#sk-container-id-1 div.sk-estimator:hover label.sk-toggleable__label-arrow:before {color: black;}#sk-container-id-1 div.sk-toggleable__content {max-height: 0;max-width: 0;overflow: hidden;text-align: left;background-color: #f0f8ff;}#sk-container-id-1 div.sk-toggleable__content pre {margin: 0.2em;color: black;border-radius: 0.25em;background-color: #f0f8ff;}#sk-container-id-1 input.sk-toggleable__control:checked~div.sk-toggleable__content {max-height: 200px;max-width: 100%;overflow: auto;}#sk-container-id-1 input.sk-toggleable__control:checked~label.sk-toggleable__label-arrow:before {content: "▾";}#sk-container-id-1 div.sk-estimator input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-label input.sk-toggleable__control:checked~label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 input.sk-hidden--visually {border: 0;clip: rect(1px 1px 1px 1px);clip: rect(1px, 1px, 1px, 1px);height: 1px;margin: -1px;overflow: hidden;padding: 0;position: absolute;width: 1px;}#sk-container-id-1 div.sk-estimator {font-family: monospace;background-color: #f0f8ff;border: 1px dotted black;border-radius: 0.25em;box-sizing: border-box;margin-bottom: 0.5em;}#sk-container-id-1 div.sk-estimator:hover {background-color: #d4ebff;}#sk-container-id-1 div.sk-parallel-item::after {content: "";width: 100%;border-bottom: 1px solid gray;flex-grow: 1;}#sk-container-id-1 div.sk-label:hover label.sk-toggleable__label {background-color: #d4ebff;}#sk-container-id-1 div.sk-serial::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: 0;}#sk-container-id-1 div.sk-serial {display: flex;flex-direction: column;align-items: center;background-color: white;padding-right: 0.2em;padding-left: 0.2em;position: relative;}#sk-container-id-1 div.sk-item {position: relative;z-index: 1;}#sk-container-id-1 div.sk-parallel {display: flex;align-items: stretch;justify-content: center;background-color: white;position: relative;}#sk-container-id-1 div.sk-item::before, #sk-container-id-1 div.sk-parallel-item::before {content: "";position: absolute;border-left: 1px solid gray;box-sizing: border-box;top: 0;bottom: 0;left: 50%;z-index: -1;}#sk-container-id-1 div.sk-parallel-item {display: flex;flex-direction: column;z-index: 1;position: relative;background-color: white;}#sk-container-id-1 div.sk-parallel-item:first-child::after {align-self: flex-end;width: 50%;}#sk-container-id-1 div.sk-parallel-item:last-child::after {align-self: flex-start;width: 50%;}#sk-container-id-1 div.sk-parallel-item:only-child::after {width: 0;}#sk-container-id-1 div.sk-dashed-wrapped {border: 1px dashed gray;margin: 0 0.4em 0.5em 0.4em;box-sizing: border-box;padding-bottom: 0.4em;background-color: white;}#sk-container-id-1 div.sk-label label {font-family: monospace;font-weight: bold;display: inline-block;line-height: 1.2em;}#sk-container-id-1 div.sk-label-container {text-align: center;}#sk-container-id-1 div.sk-container {/* jupyter's `normalize.less` sets `[hidden] { display: none; }` but bootstrap.min.css set `[hidden] { display: none !important; }` so we also need the `!important` here to be able to override the default hidden behavior on the sphinx rendered scikit-learn.org. See: https://github.com/scikit-learn/scikit-learn/issues/21755 */display: inline-block !important;position: relative;}#sk-container-id-1 div.sk-text-repr-fallback {display: none;}</style><div id="sk-container-id-1" class="sk-top-container"><div class="sk-text-repr-fallback"><pre>KMeans(init=&#x27;random&#x27;, n_clusters=3, random_state=42)</pre><b>In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. <br />On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.</b></div><div class="sk-container" hidden><div class="sk-item"><div class="sk-estimator sk-toggleable"><input class="sk-toggleable__control sk-hidden--visually" id="sk-estimator-id-1" type="checkbox" checked><label for="sk-estimator-id-1" class="sk-toggleable__label sk-toggleable__label-arrow">KMeans</label><div class="sk-toggleable__content"><pre>KMeans(init=&#x27;random&#x27;, n_clusters=3, random_state=42)</pre></div></div></div></div></div>
 ```
 
 :::
@@ -513,8 +513,8 @@ tidy_clust
 ## # A tibble: 3 × 5
 ##   bill_depth_scaled bill_length_scaled  size withinss cluster
 ##               <dbl>              <dbl> <int>    <dbl> <fct>  
-## 1             0.560             -0.943   153     88.0 1      
-## 2             0.799              1.10     64     39.0 2      
+## 1             0.799              1.10     64     39.0 1      
+## 2             0.560             -0.943   153     88.0 2      
 ## 3            -1.09               0.590   125     59.4 3
 ```
 
@@ -582,13 +582,14 @@ When we performed the clustering, the centers were calculated. These values give
 ```python
 # calculate the cluster centers
 kclusts_py = kmeans.cluster_centers_
+kclusts_py = pd.DataFrame(kclusts_py, columns = ['0', '1'])
 
 # convert to tibble and rename columns
 # use base0_ = True because indices are 0-based
 kclusts_py = \
 tibble(kclusts_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_ = True)
+       bill_length_scaled = 1)
 
 # and show the coordinates
 kclusts_py
@@ -611,11 +612,12 @@ Next, we want to visualise to which data points belong to which cluster. We can 
 
 ```python
 # convert NumPy arrays to data frame
-# use base0_ = True because indices are 0-based
+points_py = pd.DataFrame(points_py, columns = ['0', '1'])
+
 points_py = \
 tibble(points_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_ = True)
+       bill_length_scaled = 1)
 
 # merge with original data
 # add predicted clusters
@@ -869,8 +871,8 @@ tidy_clust
 ## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           <dbl>          <dbl> <int>    <dbl> <fct>  
-## 1          8.98           10.5   431     442. 1      
-## 2          9.16           13.7   220     237. 2
+## 1          9.16           13.7   220     237. 1      
+## 2          8.98           10.5   431     442. 2
 ```
 
 #### Visualise the clusters {.unnumbered}

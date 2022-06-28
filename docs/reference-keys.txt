@@ -67,7 +67,8 @@ libraries-and-functions-3
 purpose-and-aim
 data-and-hypotheses
 load-and-visualise-the-data
-permutation-test-theory
+permutation-tests
+performing-permutation-tests
 exercise-rats-on-a-wheel
 resampling-based-on-a-linear-regression
 key-points-3

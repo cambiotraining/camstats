@@ -502,13 +502,14 @@ When we performed the clustering, the centers were calculated. These values give
 ```{python}
 # calculate the cluster centers
 kclusts_py = kmeans.cluster_centers_
+kclusts_py = pd.DataFrame(kclusts_py, columns = ['0', '1'])
 
 # convert to tibble and rename columns
 # use base0_ = True because indices are 0-based
 kclusts_py = \
 tibble(kclusts_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_ = True)
+       bill_length_scaled = 1)
 
 # and show the coordinates
 kclusts_py
@@ -522,11 +523,12 @@ Next, we want to visualise to which data points belong to which cluster. We can 
 
 ```{python, warning=F}
 # convert NumPy arrays to data frame
-# use base0_ = True because indices are 0-based
+points_py = pd.DataFrame(points_py, columns = ['0', '1'])
+
 points_py = \
 tibble(points_py) >> \
 rename(bill_depth_scaled = 0,
-       bill_length_scaled = 1, base0_ = True)
+       bill_length_scaled = 1)
 
 # merge with original data
 # add predicted clusters

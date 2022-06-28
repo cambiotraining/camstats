@@ -6,7 +6,7 @@
 <title>Chapter 7 Single predictor permutation tests | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
 <meta name="description" content="7.1 Objectives  Objectives Understand how resampling techniques work in R Be able to carry out permutation techniques on single predictors Be able to define the statistic to permute Understand the...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 7 Single predictor permutation tests | CamStats">
 <meta property="og:type" content="book">
 <meta property="og:description" content="7.1 Objectives  Objectives Understand how resampling techniques work in R Be able to carry out permutation techniques on single predictors Be able to define the statistic to permute Understand the...">
@@ -249,25 +249,67 @@
 <p>Specifically, how likely would it be to get a difference this big if there were no difference between the two groups? Let’s find out!</p>
 </div>
 </div>
-<div id="permutation-test-theory" class="section level2" number="7.5">
+<div id="permutation-tests" class="section level2" number="7.5">
 <h2>
-<span class="header-section-number">7.5</span> Permutation Test Theory<a class="anchor" aria-label="anchor" href="#permutation-test-theory"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.5</span> Permutation Tests<a class="anchor" aria-label="anchor" href="#permutation-tests"><i class="fas fa-link"></i></a>
 </h2>
 <p>The key idea behind permutation techniques is that if the null hypothesis is true, and there is no difference between the two groups then if I were to switch some of the mice from one group to the next then this wouldn’t change the difference between the groups too much. If on the other hand there actually is a difference between the groups (with one group having much higher weights than the other), then if I were to switch some mice between the groups then this should average out the two groups leading to a smaller difference in group means.</p>
 <p>So, what we do is we shuffle the mice weights around lots and lots of times, calculating the difference between the group means each time. Once we have done this shuffling hundreds or thousands of times, we will have loads of possible values for the difference in the two group means. At this stage we can look at our actual difference (the one we calculated from our original data) and see how this compares to all of the simulated differences.
 We can calculate how many of the simulated differences are bigger than our real difference and this proportion is exactly the p-value that we’re looking for!
 Let look at how to carry this out in practice.</p>
+</div>
+<div id="performing-permutation-tests" class="section level2" number="7.6">
+<h2>
+<span class="header-section-number">7.6</span> Performing permutation tests<a class="anchor" aria-label="anchor" href="#performing-permutation-tests"><i class="fas fa-link"></i></a>
+</h2>
+<p>For this example we’ll be using the <code>mice</code> data set.</p>
+<div class="highlight">
+<p><strong>Initialising random number generators</strong></p>
+<p>Before we start resampling, it’s important that we initialise the random number generator. Although it’s not required for the analysis to work, it does make the analysis more reproducible.</p>
+<p>If we did not do this, then the results would be different every time we’d rerun the analysis. This is not a problem, but for the sake of consistency in the materials we’re setting the ‘seed’ for the random number generators.</p>
+</div>
 <div class="panelset">
 <div class="panel">
-<p><span class="panel-name">tidyverse</span></p>
+<p><span class="panel-name">tidyverse</span>
+Before the development of the <code>tidymodels</code> package, reiterating the analysis would require looping over the data many times and calculating the statistic of interest.</p>
+<p>Behind the scenes, this is still what’s happening but the <code>infer</code> packages (part of tidymodels) makes this more explicit and verbose.</p>
+<div class="highlight">
+<p>This workflow takes into account several steps:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>specify()</code> the variables of interest in your data</li>
+<li>
+<code>hypothesise()</code> to define the null hypothesis</li>
+<li>
+<code>generate()</code> replicates</li>
+<li>
+<code>calculate()</code> the summary statistic of interest</li>
+<li>
+<code>visualise()</code> the resulting distribution and confidence interval.</li>
+</ol>
+</div>
+<p>So in our case we can fill in these steps:</p>
+<ol style="list-style-type: decimal">
+<li>
+<code>specify(weight ~ diet)</code> here we state the response variable we’re interested in (<code>weight</code>) and the predictor variable (<code>diet</code>)</li>
+<li>We <code>hypothesise()</code> that the two variables are independent of one another - in order words, our null hypothesis is “the world is a wonderful and boring place, where the <code>weight</code> of these mice does not depend on the <code>diet</code> they’ve been given.”</li>
+<li>The <code>generate()</code> function generates (ha!) a number of resamples (<code>reps = ...</code>) and uses the permutation method (<code>type = "permute"</code>). We can also do bootstrapping or draw them from a theoretical distribution by changing the type. See <code>?generate</code>
+</li>
+<li>Next, we <code>calculate()</code> the metric/statistic of interest - see <code>?calculate</code> for all the options, but the statistic we’re interested in here is the difference in means (<code>"diff in means"</code>) and provide it with the order we want to compare in</li>
+<li>We store that output in an object called <code>mice_resample</code>
+</li>
+<li>Lastly we <code>visualise()</code> the results, which creates a <code>ggplot</code> object. To this we can add our actual, calculated difference in means (which we stored in <code>mice_diff</code>) using the <code>shade_p_value()</code> function - which plots the p-value region on top of this output</li>
+<li>Grab a cup of tea if this takes a while…</li>
+</ol>
 <div class="sourceCode" id="cb128"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
+<code class="sourceCode R"><span class="co"># initialise the random number generator</span>
+<span class="fu"><a href="https://rdrr.io/r/base/Random.html">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span>
 
 <span class="va">mice_resample</span> <span class="op">&lt;-</span> <span class="va">mice</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">specify</span><span class="op">(</span><span class="va">weight</span> <span class="op">~</span> <span class="va">diet</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">hypothesise</span><span class="op">(</span>null <span class="op">=</span> <span class="st">"independence"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
-  <span class="fu">calculate</span><span class="op">(</span><span class="st">"diff in means"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"highfat"</span><span class="op">)</span><span class="op">)</span>
+  <span class="fu">calculate</span><span class="op">(</span>stat <span class="op">=</span> <span class="st">"diff in means"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"highfat"</span><span class="op">)</span><span class="op">)</span>
 
 <span class="va">mice_resample</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">visualise</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span>
@@ -294,10 +336,12 @@ Let look at how to carry this out in practice.</p>
 <div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-8-1.png" width="672"></div>
 </div>
 </div>
+<p>So, what does this tell us? Well, we can see the difference in means we observed in our data - indicated by the vertical red line - is quite far away to the right in the simulated null distribution.</p>
+<p>This iteration, where we resample the data 1,000 times, gives us a single p-value. Remember that we created a simulated distribution in differences in means, and compare that to the <em>actual</em> difference in means. We then asked, how likely is it that we’re going to see a difference in mean that is more extreme than the one we actually observed?</p>
+<p>To get a better sense of how reliable this particularly p-value might be, we repeat the whole process many times and obtain the resulting p-values and visualise these p-values as a distribution.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span></p>
-<p>To get a better sense of how reliable this p-value might be, we repeat the whole process many times and obtain the resulting p-values.</p>
 <p>One way of getting the p-value from a single iteration is as follows:</p>
 <div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># get a two-tailed p-value</span>
@@ -309,7 +353,10 @@ Let look at how to carry this out in practice.</p>
 ##   p_value
 ##     &lt;dbl&gt;
 ## 1   0.074</code></pre>
-<p>If we want to repeat the iterations many times we can wrap the whole workflow that we used to obtain the p-value within the <code><a href="https://rdrr.io/r/base/lapply.html">replicate()</a></code> function and tell it how many times we want to repeat it. Here we repeat the whole process 100 times:</p>
+<p>So this p-value tells us that, using a threshold of <code>p &lt; 0.05</code>, it is possible that we would observe a difference in means like we did, if that difference came from a distribution like the one we simulated.</p>
+<p>However, I think you can agree that this p-value is awfully close to the arbitrary threshold that we’ve imposed here. What would be useful is to find out how reliable that p-value actually is.</p>
+<p>In order to do that, we want to get a distribution of p-values, based on simulated null distributions.</p>
+<p>If we want to repeat the iterations many times we can wrap the whole workflow that we used to obtain the p-value within the <code><a href="https://rdrr.io/r/base/lapply.html">replicate()</a></code> function and tell it how many times we want to repeat it. Here we repeat the whole process 100 times.</p>
 <div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># remove the set.seed()</span>
 <span class="co"># otherwise we get the same result 100 times</span>
@@ -321,22 +368,30 @@ Let look at how to carry this out in practice.</p>
   <span class="fu">generate</span><span class="op">(</span>reps <span class="op">=</span> <span class="fl">1000</span>, type <span class="op">=</span> <span class="st">"permute"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">calculate</span><span class="op">(</span><span class="st">"diff in means"</span>, order <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"control"</span>, <span class="st">"highfat"</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">get_p_value</span><span class="op">(</span>obs_stat <span class="op">=</span> <span class="va">mice_diff</span>, direction <span class="op">=</span> <span class="st">"two-sided"</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="co"># pull out the calculated p-value</span>
   <span class="fu">pull</span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="co"># store the p-value in a tibble</span>
   <span class="fu">as_tibble</span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+  <span class="co"># with a column for the repeat number</span>
+  <span class="co"># and a column that contains the p-value</span>
   <span class="fu">mutate</span><span class="op">(</span>n_rep <span class="op">=</span> <span class="fl">1</span><span class="op">:</span><span class="fu">n</span><span class="op">(</span><span class="op">)</span>,
          p_value <span class="op">=</span> <span class="va">value</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">select</span><span class="op">(</span><span class="op">-</span><span class="va">value</span><span class="op">)</span>
 
+<span class="co"># plot the data in a histogram</span>
 <span class="fu">ggplot</span><span class="op">(</span><span class="va">resample_replicates</span>, <span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">p_value</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_histogram</span><span class="op">(</span>bins <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="resampling-practical-single_files/figure-html/unnamed-chunk-10-1.png" width="672"></div>
-<p>You might get a warning about reporting a p-value of zero. This depends on the number of <code>reps</code> chosen in the <code>generate()</code> function. If it’s too low then, due to the simulation-based nature of the package it could be that the observed statistic is more extreme than the test statistic generated to form the null hypothesis. If that happens, the approximate p-value is zero. Ending in a warning, because a true p-value of zero is impossible.</p>
+<p>You might get a warning about reporting a p-value of zero. This depends on the number of <code>reps</code> chosen in the <code>generate()</code> function. If it’s too low then, due to the simulation-based nature of the package it could be that the observed statistic is more extreme than the test statistic generated to form the null hypothesis. If that happens, the approximate p-value is zero. This results in a warning, because a true p-value of zero is impossible (well, maybe it is if you did not do the experiment in the first place?).</p>
+<p>The distribution shows us that a large chunk of the calculated p-values are rather close to the <code>p &lt; 0.05</code> threshold. Some are smaller, and some are larger.</p>
+<p>What to do with this? Well, I would personally report this particular graph and explain that it means that there is quite some uncertainty associated with these p-values. Because they are so close to the threshold I would want to draw any firm conclusions whether I would deem this difference in weight means significant between the two <code>diet</code> groups.</p>
 </div>
 </div>
+<p>A very elaborate way of saying “I’m not sure.” :-)</p>
 </div>
-<div id="exercise-rats-on-a-wheel" class="section level2" number="7.6">
+<div id="exercise-rats-on-a-wheel" class="section level2" number="7.7">
 <h2>
-<span class="header-section-number">7.6</span> Exercise: Rats on a wheel<a class="anchor" aria-label="anchor" href="#exercise-rats-on-a-wheel"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.7</span> Exercise: Rats on a wheel<a class="anchor" aria-label="anchor" href="#exercise-rats-on-a-wheel"><i class="fas fa-link"></i></a>
 </h2>
 <div class="exercise">
 <p><span id="exr:unlabeled-div-5" class="exercise"><strong>Exercise 7.1  </strong></span>The data set <code>data/rats.csv</code> contains information on the length of time that 24 rats were able to stay balanced on a rotating wheel. 12 of the rats were assigned to the control group and the other 12 were given a dose of a centrally acting muscle relaxant. The animals were placed on a rotating cylinder and the length of time that each rat remained on the cylinder was measured, up to a maximum of 300 seconds. The data set contains two variables time and group.
@@ -465,9 +520,9 @@ Answer
 </details>
 </div>
 </div>
-<div id="resampling-based-on-a-linear-regression" class="section level2" number="7.7">
+<div id="resampling-based-on-a-linear-regression" class="section level2" number="7.8">
 <h2>
-<span class="header-section-number">7.7</span> Resampling based on a linear regression<a class="anchor" aria-label="anchor" href="#resampling-based-on-a-linear-regression"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.8</span> Resampling based on a linear regression<a class="anchor" aria-label="anchor" href="#resampling-based-on-a-linear-regression"><i class="fas fa-link"></i></a>
 </h2>
 <p>So far you’ve seen two examples of how we can use permutation techniques to look at our data: by looking at the difference in means (the mice-on-a-diet example) and by comparing the difference in proportion (rats-on-a-wheel exercise).</p>
 <p>You might have noticed from the code that there is very little difference in the approach, which is good! We’re going to adjust the code slightly, so that we can do a similar resampling exercise using a linear model. To look at this, we’re using a data set about penguins.</p>
@@ -663,9 +718,9 @@ Answer
 </div>
 </div>
 </div>
-<div id="key-points-3" class="section level2" number="7.8">
+<div id="key-points-3" class="section level2" number="7.9">
 <h2>
-<span class="header-section-number">7.8</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-3"><i class="fas fa-link"></i></a>
+<span class="header-section-number">7.9</span> Key points<a class="anchor" aria-label="anchor" href="#key-points-3"><i class="fas fa-link"></i></a>
 </h2>
 <div class="keypoints">
 <ul>
@@ -697,10 +752,11 @@ Answer
 <li>
 <a class="nav-link" href="#data-and-hypotheses"><span class="header-section-number">7.4</span> Data and hypotheses</a><ul class="nav navbar-nav"><li><a class="nav-link" href="#load-and-visualise-the-data"><span class="header-section-number">7.4.1</span> Load and visualise the data</a></li></ul>
 </li>
-<li><a class="nav-link" href="#permutation-test-theory"><span class="header-section-number">7.5</span> Permutation Test Theory</a></li>
-<li><a class="nav-link" href="#exercise-rats-on-a-wheel"><span class="header-section-number">7.6</span> Exercise: Rats on a wheel</a></li>
-<li><a class="nav-link" href="#resampling-based-on-a-linear-regression"><span class="header-section-number">7.7</span> Resampling based on a linear regression</a></li>
-<li><a class="nav-link" href="#key-points-3"><span class="header-section-number">7.8</span> Key points</a></li>
+<li><a class="nav-link" href="#permutation-tests"><span class="header-section-number">7.5</span> Permutation Tests</a></li>
+<li><a class="nav-link" href="#performing-permutation-tests"><span class="header-section-number">7.6</span> Performing permutation tests</a></li>
+<li><a class="nav-link" href="#exercise-rats-on-a-wheel"><span class="header-section-number">7.7</span> Exercise: Rats on a wheel</a></li>
+<li><a class="nav-link" href="#resampling-based-on-a-linear-regression"><span class="header-section-number">7.8</span> Resampling based on a linear regression</a></li>
+<li><a class="nav-link" href="#key-points-3"><span class="header-section-number">7.9</span> Key points</a></li>
 </ul>
 
       <div class="book-extra">

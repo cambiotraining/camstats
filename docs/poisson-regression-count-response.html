@@ -6,7 +6,7 @@
 <title>Chapter 5 Poisson Regression – Count Response | CamStats</title>
 <meta name="author" content="Martin van Rongen and Matt Castle">
 <meta name="description" content="5.1 Objectives  Questions How do we analyse count data? Objectives Be able to perform a poisson regression on count data   5.2 Libraries and functions  tidyverse Library Description tidyverse A...">
-<meta name="generator" content="bookdown 0.25 with bs4_book()">
+<meta name="generator" content="bookdown 0.26 with bs4_book()">
 <meta property="og:title" content="Chapter 5 Poisson Regression – Count Response | CamStats">
 <meta property="og:type" content="book">
 <meta property="og:description" content="5.1 Objectives  Questions How do we analyse count data? Objectives Be able to perform a poisson regression on count data   5.2 Libraries and functions  tidyverse Library Description tidyverse A...">
@@ -234,7 +234,7 @@ First, we load and inspect the data:</p>
 <p>Looking at the data, we can see that there are two columns: <code>species</code>, which contains the number of species recorded on each island and <code>area</code>, which contains the surface area of the island in square kilometers.</p>
 <p>We can plot the data:</p>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">islands</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
+<code class="sourceCode R"><span class="va">islands</span> <span class="op">%&gt;%</span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">area</span>, y <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>

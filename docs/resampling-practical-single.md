@@ -114,26 +114,65 @@ Right, so the difference between the two group means in about 3.02, hoorah! But 
 
 Specifically, how likely would it be to get a difference this big if there were no difference between the two groups? Let's find out!
 
-## Permutation Test Theory
+## Permutation Tests
 The key idea behind permutation techniques is that if the null hypothesis is true, and there is no difference between the two groups then if I were to switch some of the mice from one group to the next then this wouldn’t change the difference between the groups too much. If on the other hand there actually is a difference between the groups (with one group having much higher weights than the other), then if I were to switch some mice between the groups then this should average out the two groups leading to a smaller difference in group means.
 
 So, what we do is we shuffle the mice weights around lots and lots of times, calculating the difference between the group means each time. Once we have done this shuffling hundreds or thousands of times, we will have loads of possible values for the difference in the two group means. At this stage we can look at our actual difference (the one we calculated from our original data) and see how this compares to all of the simulated differences.
 We can calculate how many of the simulated differences are bigger than our real difference and this proportion is exactly the p-value that we’re looking for!
 Let look at how to carry this out in practice.
 
+## Performing permutation tests
+
+For this example we'll be using the `mice` data set.
+
+:::highlight
+**Initialising random number generators**
+
+Before we start resampling, it's important that we initialise the random number generator. Although it's not required for the analysis to work, it does make the analysis more reproducible.
+
+If we did not do this, then the results would be different every time we'd rerun the analysis. This is not a problem, but for the sake of consistency in the materials we're setting the 'seed' for the random number generators.
+:::
+
 ::::: {.panelset}
 
 ::: {.panel}
 [tidyverse]{.panel-name}
+Before the development of the `tidymodels` package, reiterating the analysis would require looping over the data many times and calculating the statistic of interest.
+
+Behind the scenes, this is still what's happening but the `infer` packages (part of tidymodels) makes this more explicit and verbose.
+
+:::highlight
+
+This workflow takes into account several steps:
+
+1. `specify()` the variables of interest in your data
+2. `hypothesise()` to define the null hypothesis
+3. `generate()` replicates
+4. `calculate()` the summary statistic of interest
+5. `visualise()` the resulting distribution and confidence interval.
+:::
+
+So in our case we can fill in these steps:
+
+1. `specify(weight ~ diet)` here we state the response variable we're interested in (`weight`) and the predictor variable (`diet`)
+2. We `hypothesise()` that the two variables are independent of one another - in order words, our null hypothesis is "the world is a wonderful and boring place, where the `weight` of these mice does not depend on the `diet` they've been given."
+3. The `generate()` function generates (ha!) a number of resamples (`reps = ...`) and uses the permutation method (`type = "permute"`). We can also do bootstrapping or draw them from a theoretical distribution by changing the type. See `?generate`
+4. Next, we `calculate()` the metric/statistic of interest - see `?calculate` for all the options, but the statistic we're interested in here is the difference in means (`"diff in means"`) and provide it with the order we want to compare in
+5. We store that output in an object called `mice_resample`
+6. Lastly we `visualise()` the results, which creates a `ggplot` object. To this we can add our actual, calculated difference in means (which we stored in `mice_diff`) using the `shade_p_value()` function - which plots the p-value region on top of this output
+7. Grab a cup of tea if this takes a while...
+
+
 
 ```r
+# initialise the random number generator
 set.seed(123)
 
 mice_resample <- mice %>% 
   specify(weight ~ diet) %>% 
   hypothesise(null = "independence") %>% 
   generate(reps = 1000, type = "permute") %>% 
-  calculate("diff in means", order = c("control", "highfat"))
+  calculate(stat = "diff in means", order = c("control", "highfat"))
 
 mice_resample %>% 
   visualise() +
@@ -169,17 +208,21 @@ abline(v = mice_diff , col="black" , lwd=2)
 <img src="resampling-practical-single_files/figure-html/unnamed-chunk-8-1.png" width="672" />
 
 :::
-
 :::::
+
+So, what does this tell us? Well, we can see the difference in means we observed in our data - indicated by the vertical red line - is quite far away to the right in the simulated null distribution.
+
+This iteration, where we resample the data 1,000 times, gives us a single p-value. Remember that we created a simulated distribution in differences in means, and compare that to the _actual_ difference in means. We then asked, how likely is it that we're going to see a difference in mean that is more extreme than the one we actually observed?
+
+To get a better sense of how reliable this particularly p-value might be, we repeat the whole process many times and obtain the resulting p-values and visualise these p-values as a distribution. 
 
 ::::: {.panelset}
 
 ::: {.panel}
 [tidyverse]{.panel-name}
 
-To get a better sense of how reliable this p-value might be, we repeat the whole process many times and obtain the resulting p-values. 
-
 One way of getting the p-value from a single iteration is as follows:
+
 
 ```r
 # get a two-tailed p-value
@@ -196,7 +239,13 @@ p_value
 ## 1   0.074
 ```
 
-If we want to repeat the iterations many times we can wrap the whole workflow that we used to obtain the p-value within the `replicate()` function and tell it how many times we want to repeat it. Here we repeat the whole process 100 times:
+So this p-value tells us that, using a threshold of `p < 0.05`, it is possible that we would observe a difference in means like we did, if that difference came from a distribution like the one we simulated.
+
+However, I think you can agree that this p-value is awfully close to the arbitrary threshold that we've imposed here. What would be useful is to find out how reliable that p-value actually is.
+
+In order to do that, we want to get a distribution of p-values, based on simulated null distributions.
+
+If we want to repeat the iterations many times we can wrap the whole workflow that we used to obtain the p-value within the `replicate()` function and tell it how many times we want to repeat it. Here we repeat the whole process 100 times.
 
 
 ```r
@@ -210,22 +259,32 @@ resample_replicates <- replicate(100, mice %>%
   generate(reps = 1000, type = "permute") %>% 
   calculate("diff in means", order = c("control", "highfat")) %>% 
   get_p_value(obs_stat = mice_diff, direction = "two-sided") %>% 
+  # pull out the calculated p-value
   pull()) %>% 
+  # store the p-value in a tibble
   as_tibble() %>% 
+  # with a column for the repeat number
+  # and a column that contains the p-value
   mutate(n_rep = 1:n(),
          p_value = value) %>% 
   select(-value)
 
+# plot the data in a histogram
 ggplot(resample_replicates, aes(x = p_value)) +
   geom_histogram(bins = 10)
 ```
 
 <img src="resampling-practical-single_files/figure-html/unnamed-chunk-10-1.png" width="672" />
 
-You might get a warning about reporting a p-value of zero. This depends on the number of `reps` chosen in the `generate()` function. If it's too low then, due to the simulation-based nature of the package it could be that the observed statistic is more extreme than the test statistic generated to form the null hypothesis. If that happens, the approximate p-value is zero. Ending in a warning, because a true p-value of zero is impossible.
+You might get a warning about reporting a p-value of zero. This depends on the number of `reps` chosen in the `generate()` function. If it's too low then, due to the simulation-based nature of the package it could be that the observed statistic is more extreme than the test statistic generated to form the null hypothesis. If that happens, the approximate p-value is zero. This results in a warning, because a true p-value of zero is impossible (well, maybe it is if you did not do the experiment in the first place?).
 
+The distribution shows us that a large chunk of the calculated p-values are rather close to the `p < 0.05` threshold. Some are smaller, and some are larger.
+
+What to do with this? Well, I would personally report this particular graph and explain that it means that there is quite some uncertainty associated with these p-values. Because they are so close to the threshold I would want to draw any firm conclusions whether I would deem this difference in weight means significant between the two `diet` groups.
 :::
 :::::
+
+A very elaborate way of saying "I'm not sure." :-)
 
 
 
