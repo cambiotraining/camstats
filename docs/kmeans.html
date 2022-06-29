@@ -127,7 +127,7 @@
 <li class="book-part">Resampling techniques</li>
 <li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
 <li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
-<li class="book-part">Unsupervised learning</li>
+<li class="book-part">Multivariate analysis</li>
 <li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
 <li><a class="active" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
 <li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
@@ -606,9 +606,9 @@ When we performed the clustering, the centers were calculated. These values give
 <pre><code>## # A tibble: 3 × 5
 ##   bill_depth_scaled bill_length_scaled  size withinss cluster
 ##               &lt;dbl&gt;              &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1             0.799              1.10     64     39.0 1      
+## 1            -1.09               0.590   125     59.4 1      
 ## 2             0.560             -0.943   153     88.0 2      
-## 3            -1.09               0.590   125     59.4 3</code></pre>
+## 3             0.799              1.10     64     39.0 3</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
@@ -630,8 +630,8 @@ When we performed the clustering, the centers were calculated. These values give
 <code class="sourceCode R"><span class="va">kclusts_r</span><span class="op">$</span><span class="va">centers</span>  <span class="co"># get centroid coordinates</span></code></pre></div>
 <pre><code>##   penguins.bill_depth_mm penguins.bill_length_mm
 ## 1              0.7985421               1.1018368
-## 2             -1.0937700               0.5903143
-## 3              0.5595723              -0.9431819</code></pre>
+## 2              0.5595723              -0.9431819
+## 3             -1.0937700               0.5903143</code></pre>
 <div class="note">
 <p>The initial centroids get randomly placed in the data. This, combined with the iterative nature of the process, means that the values that you will see are going to be slightly different from the values here. That’s normal!</p>
 </div>
@@ -878,8 +878,8 @@ Answer
 <pre><code>## # A tibble: 2 × 5
 ##   beak_depth_mm beak_length_mm  size withinss cluster
 ##           &lt;dbl&gt;          &lt;dbl&gt; &lt;int&gt;    &lt;dbl&gt; &lt;fct&gt;  
-## 1          9.16           13.7   220     237. 1      
-## 2          8.98           10.5   431     442. 2</code></pre>
+## 1          8.98           10.5   431     442. 1      
+## 2          9.16           13.7   220     237. 2</code></pre>
 </div>
 <div id="visualise-the-clusters" class="section level4 unnumbered">
 <h4>Visualise the clusters<a class="anchor" aria-label="anchor" href="#visualise-the-clusters"><i class="fas fa-link"></i></a>

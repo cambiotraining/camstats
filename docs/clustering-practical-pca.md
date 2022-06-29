@@ -1,6 +1,6 @@
 `<style>.panelset{--panel-tab-font-family: inherit;}</style>`{=html}
 
-# (PART) Unsupervised learning {.unnumbered}
+# (PART) Multivariate analysis {.unnumbered}
 
 # Principal component analysis (PCA)
 
@@ -46,7 +46,7 @@ The `penguins` data set comes from `palmerpenguins` package (for more informatio
 :::::
 
 ## Visualise the data
-First of all, let's have a look at the data. It is always a good idea to get a sense of how your data.
+First of all, let's have a look at the data. It is always a good idea to get a sense of what your data look like.
 
 ::::: {.panelset}
 ::: {.panel}
@@ -99,7 +99,7 @@ library(corrr)
 penguins_corr <- penguins %>%
   select(where(is.numeric)) %>%  # select the numerical columns
   correlate() %>%                # calculate the correlations
-  rearrange()                    # arrange highly correlated variables together
+  shave()
 ```
 
 ```
@@ -109,21 +109,20 @@ penguins_corr <- penguins %>%
 ```
 
 ```r
-penguins_corr
+# plot the correlation matrix
+penguins_corr %>%
+  rplot()
 ```
 
 ```
-## # A tibble: 5 × 6
-##   term         flipper_length_… body_mass_g bill_length_mm    year bill_depth_mm
-##   <chr>                   <dbl>       <dbl>          <dbl>   <dbl>         <dbl>
-## 1 flipper_len…           NA          0.871          0.656   0.170        -0.584 
-## 2 body_mass_g             0.871     NA              0.595   0.0422       -0.472 
-## 3 bill_length…            0.656      0.595         NA       0.0545       -0.235 
-## 4 year                    0.170      0.0422         0.0545 NA            -0.0604
-## 5 bill_depth_…           -0.584     -0.472         -0.235  -0.0604       NA
+## Don't know how to automatically pick scale for object of type noquote. Defaulting to continuous.
 ```
+
+<img src="clustering-practical-pca_files/figure-html/unnamed-chunk-3-1.png" width="672" />
 
 We get a message (not an error) that the correlation method used is `pearson`, which is the default. We also get a message about how the missing values are treated, with only complete pairwise comparisons made.
+
+Lastly, when plotting the matrix we also get a message about `ggplot()` not knowing how to automatically pick a scale - and defaulting to continuous. That's fine with us, since the correlation coefficients are on a continuous scale.
 :::
 :::::
 

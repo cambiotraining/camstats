@@ -127,7 +127,7 @@
 <li class="book-part">Resampling techniques</li>
 <li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
 <li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
-<li class="book-part">Unsupervised learning</li>
+<li class="book-part">Multivariate analysis</li>
 <li><a class="" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
 <li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
 <li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
@@ -234,7 +234,7 @@ First, we load and inspect the data:</p>
 <p>Looking at the data, we can see that there are two columns: <code>species</code>, which contains the number of species recorded on each island and <code>area</code>, which contains the surface area of the island in square kilometers.</p>
 <p>We can plot the data:</p>
 <div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">islands</span> <span class="op">%&gt;%</span> 
+<code class="sourceCode R"><span class="va">islands</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span> 
   <span class="fu">ggplot</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">area</span>, y <span class="op">=</span> <span class="va">species</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span>
   <span class="fu">geom_point</span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <div class="inline-figure"><img src="glm-practical-poisson_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>

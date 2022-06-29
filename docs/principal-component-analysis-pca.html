@@ -127,7 +127,7 @@
 <li class="book-part">Resampling techniques</li>
 <li><a class="" href="resampling-intro.html"><span class="header-section-number">6</span> Introduction</a></li>
 <li><a class="" href="single-predictor-permutation-tests.html"><span class="header-section-number">7</span> Single predictor permutation tests</a></li>
-<li class="book-part">Unsupervised learning</li>
+<li class="book-part">Multivariate analysis</li>
 <li><a class="active" href="principal-component-analysis-pca.html"><span class="header-section-number">8</span> Principal component analysis (PCA)</a></li>
 <li><a class="" href="kmeans.html"><span class="header-section-number">9</span> K-means clustering</a></li>
 <li><a class="" href="hierarchical-clustering.html"><span class="header-section-number">10</span> Hierarchical clustering</a></li>
@@ -223,7 +223,7 @@ The <code>penguins</code> data set comes from <code>palmerpenguins</code> packag
 <h2>
 <span class="header-section-number">8.5</span> Visualise the data<a class="anchor" aria-label="anchor" href="#visualise-the-data-4"><i class="fas fa-link"></i></a>
 </h2>
-<p>First of all, let’s have a look at the data. It is always a good idea to get a sense of how your data.</p>
+<p>First of all, let’s have a look at the data. It is always a good idea to get a sense of what your data look like.</p>
 <div class="panelset">
 <div class="panel">
 <p><span class="panel-name">tidyverse</span>
@@ -263,21 +263,18 @@ First, we load the <code>corrr</code> package, which allows us to plot a correla
 <span class="va">penguins_corr</span> <span class="op">&lt;-</span> <span class="va">penguins</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
   <span class="fu">select</span><span class="op">(</span><span class="fu">where</span><span class="op">(</span><span class="va">is.numeric</span><span class="op">)</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>  <span class="co"># select the numerical columns</span>
   <span class="fu"><a href="https://corrr.tidymodels.org/reference/correlate.html">correlate</a></span><span class="op">(</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>                <span class="co"># calculate the correlations</span>
-  <span class="fu"><a href="https://corrr.tidymodels.org/reference/rearrange.html">rearrange</a></span><span class="op">(</span><span class="op">)</span>                    <span class="co"># arrange highly correlated variables together</span></code></pre></div>
+  <span class="fu"><a href="https://corrr.tidymodels.org/reference/shave.html">shave</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <pre><code>## 
 ## Correlation method: 'pearson'
 ## Missing treated using: 'pairwise.complete.obs'</code></pre>
 <div class="sourceCode" id="cb169"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">penguins_corr</span></code></pre></div>
-<pre><code>## # A tibble: 5 × 6
-##   term         flipper_length_… body_mass_g bill_length_mm    year bill_depth_mm
-##   &lt;chr&gt;                   &lt;dbl&gt;       &lt;dbl&gt;          &lt;dbl&gt;   &lt;dbl&gt;         &lt;dbl&gt;
-## 1 flipper_len…           NA          0.871          0.656   0.170        -0.584 
-## 2 body_mass_g             0.871     NA              0.595   0.0422       -0.472 
-## 3 bill_length…            0.656      0.595         NA       0.0545       -0.235 
-## 4 year                    0.170      0.0422         0.0545 NA            -0.0604
-## 5 bill_depth_…           -0.584     -0.472         -0.235  -0.0604       NA</code></pre>
+<code class="sourceCode R"><span class="co"># plot the correlation matrix</span>
+<span class="va">penguins_corr</span> <span class="op"><a href="https://rdrr.io/pkg/janitor/man/pipe.html">%&gt;%</a></span>
+  <span class="fu"><a href="https://corrr.tidymodels.org/reference/rplot.html">rplot</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<pre><code>## Don't know how to automatically pick scale for object of type noquote. Defaulting to continuous.</code></pre>
+<div class="inline-figure"><img src="clustering-practical-pca_files/figure-html/unnamed-chunk-3-1.png" width="672"></div>
 <p>We get a message (not an error) that the correlation method used is <code>pearson</code>, which is the default. We also get a message about how the missing values are treated, with only complete pairwise comparisons made.</p>
+<p>Lastly, when plotting the matrix we also get a message about <code>ggplot()</code> not knowing how to automatically pick a scale - and defaulting to continuous. That’s fine with us, since the correlation coefficients are on a continuous scale.</p>
 </div>
 </div>
 <p>We can see that there is, for example, a strong positive correlation between <code>flipper_length_mm</code> and <code>body_mass_g</code>. Other variable combinations seem reasonably well-correlated, such as <code>flipper_length_mm</code> and <code>bill_length_mm</code> (positive) or <code>flipper_length_mm</code> and <code>bill_depth_mm</code> (negative).</p>
